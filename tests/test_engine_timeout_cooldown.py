@@ -20,7 +20,7 @@ def _setup(monkeypatch, first_response: str, keyed: bool = False, cfg_extra: dic
 
     monkeypatch.setattr(runner, "get_engine_key_entries", fake_entries)
 
-    def fake_call(eng, prompt, cwd, active_key=None):
+    def fake_call(eng, prompt, cwd, active_key=None, *, role=None):
         if eng["name"] == "A":
             return {"status": "ERROR", "response": first_response}
         return {"status": "SUCCESS", "response": "ok"}
@@ -107,7 +107,7 @@ def test_keyed_engine_skipped_on_next_call_after_timeout(monkeypatch):
     monkeypatch.setattr(runner, "mark_engine_quota", fake_mark)
     called: list[str] = []
 
-    def fake_call(eng, prompt, cwd, active_key=None):
+    def fake_call(eng, prompt, cwd, active_key=None, *, role=None):
         called.append(eng["name"])
         if eng["name"] == "A":
             return {"status": "ERROR", "response": "agent timed out after 1800s"}

@@ -28,7 +28,7 @@ from . import yaml_io
 from . import runner, multi_repo, todo_scan, ci_bootstrap, deep_scan, feature_gen
 from . import autonomous_upgrades, context_slicer, doctor, gui_patches, mcp_server, metrics, playground, routing
 from .redact import redact_secrets
-from . import keys, key_ping, providers, byop
+from . import keys, key_ping, providers, byop, byop_store
 from .multi_repo import add_repo_to_config
 # หมายเหตุ: mcp_server import gui กลับ จึง import แบบ lazy ใน _api_mcp_call_preview เพื่อกัน circular import
 
@@ -1104,6 +1104,65 @@ def _api_byop_disconnect(body: dict, cfg: dict) -> dict:
     return byop.disconnect()
 
 
+def _byop_pool_view() -> dict:
+    """คลังคีย์ BYOP (mask แล้ว) + โมเดลตามบทบาท. ไม่มีค่าคีย์ดิบ."""
+    return {
+        "ok": True,
+        "keys": byop_store.list_keys(),
+        "models": byop_store.list_models(),
+        "roles": sorted(keys.VALID_ROLES),
+        "default_model": byop.DEFAULT_MODEL,
+    }
+
+
+def _byop_catalog_ids() -> set[str]:
+    """รายการโมเดลจริงของ Pollinations (ใช้คีย์ที่เลือกอยู่ถ้ามี). ดึงไม่ได้ให้ raise ValueError."""
+    names = keys.fetch_provider_models("opencode-pollinations", api_key=byop_store.active_key_value())
+    return {str(n) for n in names if str(n).startswith(byop_store.PROVIDER_ID + "/")}
+
+
+def _api_byop_models_catalog(body: dict, cfg: dict) -> dict:
+    return {"ok": True, "models": sorted(_byop_catalog_ids())}
+
+
+def _api_byop_models_roles(body: dict, cfg: dict) -> dict:
+    result = byop_store.set_roles(str(body.get("id") or ""), list(body.get("roles") or []))
+    return {"ok": True, "model": result}
+
+
+def _api_byop_models_test(body: dict, cfg: dict) -> dict:
+    return {"ok": True, "result": byop_store.check_model(str(body.get("id") or ""))}
+
+
+def _api_byop_pool(body: dict, cfg: dict) -> dict:
+    return _byop_pool_view()
+
+
+def _api_byop_keys_select(body: dict, cfg: dict) -> dict:
+    selected = byop_store.set_selected([str(n) for n in (body.get("keys") or [])])
+    return {"ok": True, "selected": selected}
+
+
+def _api_byop_keys_remove(body: dict, cfg: dict) -> dict:
+    byop_store.remove_key(str(body.get("key") or ""))
+    return {"ok": True}
+
+
+def _api_byop_keys_scan(body: dict, cfg: dict) -> dict:
+    return {"ok": True, "results": byop_store.scan_keys()}
+
+
+def _api_byop_models_add(body: dict, cfg: dict) -> dict:
+    # ตรวจกับรายการจริงของ Pollinations ก่อนบันทึก (ไม่ให้ชื่อโมเดลพิมพ์ผิดค้างใน state)
+    model = byop_store.add_model(str(body.get("id") or ""), list(body.get("roles") or []),
+                                 known_ids=_byop_catalog_ids())
+    return {"ok": True, "model": model}
+
+
+def _api_byop_models_remove(body: dict, cfg: dict) -> dict:
+    return {"ok": True, "removed": byop_store.remove_model(str(body.get("id") or ""))}
+
+
 _ENGINE_UPDATE_FIELDS = frozenset({
     "name", "provider", "command", "model", "timeout_minutes", "path",
     "trains_on_data", "enabled", "api_keys",
@@ -1528,7 +1587,7 @@ def _byop_page(message: str, *, ok: bool) -> str:
     )
 
 
-_GET_TOKEN_PATHS = frozenset({"/api/repo/file-content", "/api/byop/status"})  # GET ที่ต้องส่ง X-Token
+_GET_TOKEN_PATHS = frozenset({"/api/repo/file-content", "/api/byop/status", "/api/byop/pool"})  # GET ที่ต้องส่ง X-Token
 
 ROUTES: dict[str, Callable[[dict, dict], dict]] = {
     "/api/slots/assign": _api_slots_assign,
@@ -1582,6 +1641,14 @@ ROUTES: dict[str, Callable[[dict, dict], dict]] = {
     "/api/ci/toggle": _api_ci_toggle,
     "/api/ci/bootstrap-toggle": _api_ci_bootstrap_toggle,
     "/api/byop/disconnect": _api_byop_disconnect,
+    "/api/byop/keys/select": _api_byop_keys_select,
+    "/api/byop/keys/remove": _api_byop_keys_remove,
+    "/api/byop/keys/scan": _api_byop_keys_scan,
+    "/api/byop/models/add": _api_byop_models_add,
+    "/api/byop/models/remove": _api_byop_models_remove,
+    "/api/byop/models/catalog": _api_byop_models_catalog,
+    "/api/byop/models/roles": _api_byop_models_roles,
+    "/api/byop/models/test": _api_byop_models_test,
 }
 
 
@@ -1663,6 +1730,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, status())
             if url.path == "/api/byop/status":
                 return self._send(200, byop.status())
+            if url.path == "/api/byop/pool":
+                return self._send(200, _byop_pool_view())
             if url.path == "/api/doctor":
                 return self._send(200, doctor.run_doctor_checks(root=runner.ROOT, state_dir=runner.STATE))
             if url.path == "/api/metrics":

@@ -521,7 +521,7 @@ def _engine_filter_env(monkeypatch):
     monkeypatch.setattr(runner, "get_engine_key_entries", lambda *a, **k: [])
     used = []
 
-    def fake_call(eng, prompt, cwd, active_key=None):
+    def fake_call(eng, prompt, cwd, active_key=None, *, role=None):
         used.append(eng["name"])
         return {"status": "SUCCESS", "response": "ok"}
 

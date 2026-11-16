@@ -22,6 +22,13 @@ class ByopModelPickerTests(unittest.TestCase):
         section_open_tag = card.split('id="byopModelSection"', 1)[1].split(">", 1)[0]
         self.assertIn("hidden", section_open_tag)  # ซ่อนจนกว่าจะเชื่อมต่อแล้ว
 
+    def test_byop_card_role_form_uses_a_catalog_dropdown_with_custom_fallback(self):
+        card = _byop_card()
+        self.assertIn('id="byopModelSelect"', card)
+        self.assertIn('id="byopCatalogBtn"', card)
+        self.assertIn('id="byopModelCustom"', card)
+        self.assertNotIn('id="byopModelId"', card)  # ช่องพิมพ์อิสระเดิมถูกแทนที่แล้ว
+
     def test_byop_status_no_longer_points_to_another_card(self):
         self.assertNotIn("การ์ด Pollinations.ai", SIDEBAR)
 

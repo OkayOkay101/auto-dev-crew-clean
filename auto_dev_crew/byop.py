@@ -23,10 +23,10 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from . import keys, providers
+from . import byop_store, keys, providers
+from .byop_store import PROVIDER_ID, ByopError
 from .redact import redact_secrets
 
-PROVIDER_ID = "pollinations"
 PROVIDER_NAME = "Pollinations"
 BASE_URL = "https://gen.pollinations.ai/v1"
 AUTH_BASE = "https://enter.pollinations.ai"
@@ -43,10 +43,6 @@ STATE_TTL_SECONDS = 600   # เอกสารกำหนดว่า authoriza
 
 _pending: dict[str, tuple[str, float]] = {}   # state -> (verifier, created_at)
 _pending_lock = threading.Lock()
-
-
-class ByopError(Exception):
-    """ข้อผิดพลาดที่แสดงให้ผู้ใช้เห็นได้ (ไม่มีค่าคีย์อยู่ในข้อความ)."""
 
 
 def key_var() -> str:
@@ -180,21 +176,22 @@ def connect(*, code: str, state: str, redirect_uri: str, env_path: Path | None =
         raise ByopError(f"ยังไม่ได้ตั้งค่า {APP_KEY_ENV} ใน .env")
     token = exchange_code(code=code, verifier=verifier, app_key=app_key, redirect_uri=redirect_uri)
 
-    var = key_var()
     kw = {"cfg_path": cfg_path} if cfg_path is not None else {}
     registered = PROVIDER_ID in providers.load_providers(providers_path, opencode_path)
-    # ถ้ามีคีย์เดิมอยู่แล้ว ให้ลบก่อนเขียนทับ (การเชื่อมต่อใหม่แทนที่คีย์เดิมเสมอ)
-    if keys.load_env_file(env_path).get(var):
-        keys.delete_dotenv_key(var, path=env_path)
-    if registered:
-        keys.save_dotenv({var: token}, path=env_path)
-    else:
+    has_pool = bool(byop_store.pool_vars(env_path))
+    if not registered and not has_pool:
+        # การเชื่อมต่อครั้งแรก: ลงทะเบียน provider พร้อมคีย์ตัวแรก (POLLINATIONS_API_KEY_1)
         providers.add_provider(
             pid=PROVIDER_ID, display_name=PROVIDER_NAME, base_url=BASE_URL, api_key=token,
             model=DEFAULT_MODEL, providers_path=providers_path, opencode_path=opencode_path,
             env_path=env_path, **kw,
         )
-    return {"ok": True, "provider": PROVIDER_ID, "key_var": var, "masked": keys.mask_key(token)}
+        var = key_var()
+    else:
+        # เชื่อมต่อครั้งถัดไป: เพิ่มเป็นคีย์ใหม่ต่อท้าย ไม่แตะคีย์เดิม
+        var = byop_store.add_key(token, env_path=env_path)
+    return {"ok": True, "provider": PROVIDER_ID, "key_var": var, "registered": registered or not has_pool,
+            "masked": keys.mask_key(token)}
 
 
 def status(*, env_path: Path | None = None) -> dict:

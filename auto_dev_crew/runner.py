@@ -44,7 +44,7 @@ from .keys import (
     get_opencode_auth_keys,
 )
 from .loop_breaker import AgentSpawnError, run_opencode_stream
-from . import sentinel_tracker
+from . import sentinel_tracker, byop_store
 from .triage import classify_task
 from .gui_check import run_gui_check
 from . import gui_check, playwright_env
@@ -892,9 +892,9 @@ def safe_engine_filename(name: str) -> str:
     return re.sub(r"[^\w.-]", "_", str(name))
 
 
-def _scan_kwargs(role: str | None) -> dict:
-    """ส่ง role ให้ call_single_engine เฉพาะบทบาท scan (บทบาทอื่นคงการเรียกเดิม)"""
-    return {"role": "scan"} if role == "scan" else {}
+def _role_kwargs(role: str | None) -> dict:
+    """ส่ง role ให้ call_single_engine ทุกบทบาท เพื่อให้โมเดลที่ผูกกับบทบาทถูกใช้ (role == "scan" ยังคงเปลี่ยนพฤติกรรมเดิมเท่านั้น)"""
+    return {"role": role} if role else {}
 
 
 def call_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | None = None, *, role: str | None = None) -> dict:
@@ -944,6 +944,7 @@ SCAN_READONLY_OPENCODE_CONFIG = {
 
 def _execute_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | None = None, *,
                            role: str | None = None) -> dict:
+    eng = byop_store.engine_for_role(eng, role)  # engine Pollinations ใช้โมเดลที่ผูกกับบทบาทนี้ (ถ้ามี)
     timeout = eng.get("timeout_minutes", 30) * 60
     try:
         base_cmd = engine_cmd(eng)
@@ -1129,7 +1130,7 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
                 log(f"เรียกเอเจนต์ด้วย {eng_name} ({eng.get('provider', eng['command'])}){role_label} [คีย์ #{key_pos}/{len(entries)}]", slot_id=slot_id)
                 try:
                     data = _call_with_usage_key(key_id, call_single_engine, eng, current_prompt, cwd,
-                                                active_key=active_key, **_scan_kwargs(role))
+                                                active_key=active_key, **_role_kwargs(role))
                 except AgentSpawnError as exc:
                     last_exc = exc
                     other_failure = True
@@ -1170,7 +1171,7 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
         else:
             log(f"เรียกเอเจนต์ด้วย {eng_name} ({eng.get('provider', eng['command'])})", slot_id=slot_id)
             try:
-                data = call_single_engine(eng, current_prompt, cwd, **_scan_kwargs(role))
+                data = call_single_engine(eng, current_prompt, cwd, **_role_kwargs(role))
             except AgentSpawnError as exc:
                 last_exc = exc
                 other_failure = True

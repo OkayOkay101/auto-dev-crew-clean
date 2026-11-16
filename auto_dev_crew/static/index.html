@@ -563,6 +563,29 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
         <button class="btn btn-sm" id="byopDisconnectBtn" type="button" disabled>ยกเลิกการเชื่อมต่อ</button>
       </div>
       <div id="byopStatus" role="status" class="muted">กำลังตรวจสอบ…</div>
+      <div id="byopPool" style="margin-top:12px; display:grid; gap:12px;">
+        <div>
+          <strong>คีย์ BYOP (เลือกใช้ได้หลายคีย์)</strong>
+          <div id="byopPoolKeys" style="display:grid; gap:6px; margin-top:6px;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button class="btn btn-sm" id="byopSaveSelBtn" type="button">บันทึกคีย์ที่เลือก</button>
+            <button class="btn btn-sm" id="byopScanBtn" type="button">🔎 สแกนคีย์ทั้งหมด</button>
+          </div>
+          <div id="byopScanOut" class="muted" style="margin-top:6px; font-size:12px; display:grid; gap:2px;"></div>
+        </div>
+        <div>
+          <strong>โมเดลตามบทบาท (coder / judge / scan)</strong>
+          <div id="byopModelList" style="display:grid; gap:6px; margin-top:6px;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center;">
+            <input id="byopModelId" class="mono" type="text" placeholder="pollinations/openai/gpt-6-luna" style="min-width:260px;">
+            <label><input type="checkbox" id="byopRole-coder"> coder</label>
+            <label><input type="checkbox" id="byopRole-judge"> judge</label>
+            <label><input type="checkbox" id="byopRole-scan"> scan</label>
+            <button class="btn btn-sm" id="byopModelAddBtn" type="button">+ เพิ่มโมเดล</button>
+          </div>
+        </div>
+        <div id="byopPoolMsg" role="status" class="muted"></div>
+      </div>
     </div>
     <div class="card" style="margin-top:16px" id="keyManagerCard">
       <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -3279,10 +3302,161 @@ async function byopDisconnect() {
   byopRefresh();
 }
 
+// ---------- BYOP คลังคีย์หลายตัว + สแกนคีย์ + โมเดลตามบทบาท (ดู auto_dev_crew/byop_store.py)
+function byopMuted(text) {
+  const s = document.createElement("span");
+  s.className = "muted";
+  s.textContent = text;
+  return s;
+}
+
+async function byopLoadPool() {
+  const box = document.getElementById("byopPoolMsg");
+  try {
+    const r = await fetch("/api/byop/pool", {headers: {"X-Token": TOKEN}});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const p = await r.json();
+    byopRenderKeys(p.keys || []);
+    byopRenderModels(p.models || []);
+  } catch (e) {
+    box.textContent = "โหลดคลังคีย์ไม่ได้: " + e.message;
+  }
+}
+
+function byopRenderKeys(rows) {
+  const list = document.getElementById("byopPoolKeys");
+  list.replaceChildren();
+  if (!rows.length) {
+    list.append(byopMuted("ยังไม่มีคีย์ · กดเชื่อมต่อ Pollinations เพื่อเพิ่มคีย์"));
+    return;
+  }
+  for (const row of rows) {
+    const line = document.createElement("div");
+    line.style.display = "flex";
+    line.style.gap = "8px";
+    line.style.alignItems = "center";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.className = "byop-key-check";
+    cb.value = row.var;
+    cb.checked = !!row.selected;
+    const txt = document.createElement("span");
+    txt.className = "mono";
+    txt.textContent = row.var + " · " + row.masked;
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn btn-sm";
+    del.textContent = "ลบ";
+    del.addEventListener("click", () => byopRemoveKey(row.var));
+    line.append(cb, txt, del);
+    list.append(line);
+  }
+}
+
+function byopRenderModels(models) {
+  const list = document.getElementById("byopModelList");
+  list.replaceChildren();
+  if (!models.length) {
+    list.append(byopMuted("ยังไม่มีโมเดลที่ผูกบทบาท"));
+    return;
+  }
+  for (const m of models) {
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.gap = "8px";
+    row.style.alignItems = "center";
+    const txt = document.createElement("span");
+    txt.className = "mono";
+    txt.textContent = m.id + " · " + m.roles.join(", ");
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn btn-sm";
+    del.textContent = "ลบ";
+    del.addEventListener("click", () => byopRemoveModel(m.id));
+    row.append(txt, del);
+    list.append(row);
+  }
+}
+
+async function byopSaveSelection() {
+  const box = document.getElementById("byopPoolMsg");
+  const keysChecked = [...document.querySelectorAll(".byop-key-check")].filter(c => c.checked).map(c => c.value);
+  try {
+    await post("/api/byop/keys/select", {keys: keysChecked});
+    box.textContent = "บันทึกคีย์ที่เลือกแล้ว (" + keysChecked.length + " คีย์)";
+  } catch (e) {
+    box.textContent = "บันทึกไม่สำเร็จ: " + e.message;
+  }
+}
+
+async function byopRemoveKey(name) {
+  const box = document.getElementById("byopPoolMsg");
+  if (!confirm("ลบคีย์ " + name + " ออกจาก .env ?")) return;
+  try {
+    await post("/api/byop/keys/remove", {key: name});
+  } catch (e) {
+    box.textContent = "ลบไม่สำเร็จ: " + e.message;
+    return;
+  }
+  byopRefresh();
+  byopLoadPool();
+}
+
+async function byopScan() {
+  const out = document.getElementById("byopScanOut");
+  out.textContent = "กำลังสแกน…";
+  try {
+    const res = await post("/api/byop/keys/scan", {});
+    const results = res.results || [];
+    out.replaceChildren();
+    if (!results.length) {
+      out.textContent = "ไม่มีคีย์ให้สแกน";
+      return;
+    }
+    for (const r of results) {
+      const line = document.createElement("div");
+      line.textContent = (r.ok ? "✅ " : "❌ ") + r.var + " — " + r.message;
+      out.append(line);
+    }
+  } catch (e) {
+    out.textContent = "สแกนไม่สำเร็จ: " + e.message;
+  }
+}
+
+async function byopAddModel() {
+  const box = document.getElementById("byopPoolMsg");
+  const idInput = document.getElementById("byopModelId");
+  const roles = ["coder", "judge", "scan"].filter(r => document.getElementById("byopRole-" + r).checked);
+  try {
+    await post("/api/byop/models/add", {id: idInput.value.trim(), roles: roles});
+    idInput.value = "";
+    box.textContent = "เพิ่มโมเดลแล้ว";
+  } catch (e) {
+    box.textContent = "เพิ่มโมเดลไม่สำเร็จ: " + e.message;
+    return;
+  }
+  byopLoadPool();
+}
+
+async function byopRemoveModel(id) {
+  const box = document.getElementById("byopPoolMsg");
+  try {
+    await post("/api/byop/models/remove", {id: id});
+  } catch (e) {
+    box.textContent = "ลบโมเดลไม่สำเร็จ: " + e.message;
+    return;
+  }
+  byopLoadPool();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("byopConnectBtn").addEventListener("click", byopConnect);
   document.getElementById("byopDisconnectBtn").addEventListener("click", byopDisconnect);
   byopRefresh();
+  byopLoadPool();
+  document.getElementById("byopSaveSelBtn").addEventListener("click", byopSaveSelection);
+  document.getElementById("byopScanBtn").addEventListener("click", byopScan);
+  document.getElementById("byopModelAddBtn").addEventListener("click", byopAddModel);
 });
 
 </script>

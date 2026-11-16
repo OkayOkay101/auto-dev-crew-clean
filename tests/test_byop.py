@@ -121,7 +121,7 @@ class ConnectTests(unittest.TestCase):
                     byop.connect(code="c", state="forged", redirect_uri="http://localhost/cb", **paths)
             ex.assert_not_called()
 
-    def test_reconnect_replaces_existing_key(self):
+    def test_reconnect_keeps_existing_key_and_adds_a_new_one(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(os.environ, {}, clear=False):
             paths = self._workspace(tmp)
             paths["env_path"].write_text(
@@ -130,9 +130,8 @@ class ConnectTests(unittest.TestCase):
             with mock.patch("auto_dev_crew.byop.exchange_code", return_value="sk_new_value_5678"):
                 byop.connect(code="c2", state="st2", redirect_uri="http://localhost/cb", **paths)
             env_text = paths["env_path"].read_text(encoding="utf-8")
-            self.assertIn("sk_new_value_5678", env_text)
-            self.assertNotIn("sk_old_value_1234", env_text)
-            self.assertEqual(env_text.count("POLLINATIONS_API_KEY_1="), 1)
+            self.assertIn("POLLINATIONS_API_KEY_1=sk_old_value_1234", env_text)
+            self.assertIn("POLLINATIONS_API_KEY_2=sk_new_value_5678", env_text)
 
 
 class StatusAndDisconnectTests(unittest.TestCase):

@@ -52,7 +52,7 @@ def test_call_agent_records_success_and_failure_per_key(monkeypatch):
                         "api_keys": ["${TEST_KEYOUT_1}"]}]}
     outcomes = iter(["ERROR", "SUCCESS"])
 
-    def fake_call(eng, prompt, cwd, active_key=None):
+    def fake_call(eng, prompt, cwd, active_key=None, *, role=None):
         status = next(outcomes)
         runner.record_usage(eng, {"status": status}, False)
         return {"status": status, "response": "ok"}

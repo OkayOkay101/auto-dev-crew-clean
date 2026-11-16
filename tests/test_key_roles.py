@@ -180,7 +180,7 @@ class TestKeyIdStability(unittest.TestCase):
             ]
         }
 
-        def fake_call(eng, prompt, cwd, active_key=None):
+        def fake_call(eng, prompt, cwd, active_key=None, *, role=None):
             if eng["name"] == "high06-eng":
                 raise QuotaExhausted("429 rate limit on judge key")
             return {"status": "SUCCESS", "response": "ok", "usage": {"total_tokens": 1}}

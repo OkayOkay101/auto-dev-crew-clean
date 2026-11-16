@@ -887,10 +887,40 @@ header.topbar { min-height: 58px; }
         <button class="btn btn-sm" id="byopDisconnectBtn" type="button" disabled>ยกเลิกการเชื่อมต่อ</button>
       </div>
       <div id="byopStatus" role="status" class="muted">กำลังตรวจสอบ…</div>
+      <div id="byopPool" style="margin-top:12px; display:grid; gap:12px;">
+        <div>
+          <strong>คีย์ BYOP (เลือกใช้ได้หลายคีย์)</strong>
+          <div id="byopPoolKeys" style="display:grid; gap:6px; margin-top:6px;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button class="btn btn-sm" id="byopSaveSelBtn" type="button">บันทึกคีย์ที่เลือก</button>
+            <button class="btn btn-sm" id="byopScanBtn" type="button">🔎 สแกนคีย์ทั้งหมด</button>
+          </div>
+          <div id="byopScanOut" class="muted" style="margin-top:6px; font-size:12px; display:grid; gap:2px;"></div>
+        </div>
+        <div>
+          <strong>โมเดลตามบทบาท (coder / judge / scan)</strong>
+          <p class="help" style="margin:4px 0 0; font-size:12px;">บทบาทหนึ่งมีโมเดลเดียว: ถ้าผูกบทบาทที่มีอยู่แล้วกับโมเดลใหม่ ระบบจะย้ายให้โมเดลใหม่ และแจ้งให้ทราบ · กดชิปเพื่อสลับบทบาท · 🧪 ทดสอบจะใช้โควตา Pollen 1 ครั้ง</p>
+          <div id="byopModelList" style="display:grid; gap:6px; margin-top:6px;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center;">
+            <select id="byopModelSelect" aria-label="เลือกโมเดลจาก Pollinations" style="min-width:260px;">
+              <option value="">กำลังโหลดรายการโมเดล…</option>
+            </select>
+            <input id="byopModelCustom" class="mono" type="text" placeholder="พิมพ์รหัสโมเดล เช่น pollinations/openai/gpt-6-luna" style="min-width:260px; display:none;" aria-label="รหัสโมเดลที่พิมพ์เอง">
+            <button class="btn btn-sm" id="byopCatalogBtn" type="button">🔄 ดึงรายการ</button>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; align-items:center;">
+            <label><input type="checkbox" id="byopRole-coder"> coder</label>
+            <label><input type="checkbox" id="byopRole-judge"> judge</label>
+            <label><input type="checkbox" id="byopRole-scan"> scan</label>
+            <button class="btn btn-sm" id="byopModelAddBtn" type="button">+ เพิ่มโมเดล</button>
+          </div>
+        </div>
+        <div id="byopPoolMsg" role="status" class="muted"></div>
+      </div>
       <div id="byopModelSection" hidden style="margin-top:10px; font-size:12px;">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
           <div style="display:flex; align-items:center; gap:6px;">
-            <span class="muted" style="font-size:11px;">โมเดล:</span>
+            <span class="muted" style="font-size:11px;" title="โมเดลเริ่มต้นของ engine Pollinations ใช้เมื่อบทบาทนั้นยังไม่มีโมเดลผูกไว้">โมเดลเริ่มต้น (engine):</span>
             <code class="mono" id="byop-model-display-opencode-pollinations" style="font-size:11px; background:var(--code-bg); padding:2px 5px; border-radius:4px;">-</code>
           </div>
           <button class="btn btn-sm" type="button" data-fetch-models="opencode-pollinations" data-scope="byop" data-current-model="" style="font-size:11px; padding:2px 7px;" title="ดึงโมเดลที่ใช้งานได้จริงจาก API ของ Pollinations">🔍 ดึงโมเดลจาก API</button>
@@ -1263,10 +1293,269 @@ async function byopDisconnect() {
   byopRefresh();
 }
 
+// ---------- BYOP คลังคีย์หลายตัว + สแกนคีย์ + โมเดลตามบทบาท (ดู auto_dev_crew/byop_store.py)
+function byopMuted(text) {
+  const s = document.createElement("span");
+  s.className = "muted";
+  s.textContent = text;
+  return s;
+}
+
+async function byopLoadPool() {
+  const box = document.getElementById("byopPoolMsg");
+  try {
+    const r = await fetch("/api/byop/pool", {headers: {"X-Token": TOKEN}});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const p = await r.json();
+    byopRenderKeys(p.keys || []);
+    byopRenderModels(p.models || []);
+  } catch (e) {
+    box.textContent = "โหลดคลังคีย์ไม่ได้: " + e.message;
+  }
+}
+
+function byopRenderKeys(rows) {
+  const list = document.getElementById("byopPoolKeys");
+  list.replaceChildren();
+  if (!rows.length) {
+    list.append(byopMuted("ยังไม่มีคีย์ · กดเชื่อมต่อ Pollinations เพื่อเพิ่มคีย์"));
+    return;
+  }
+  for (const row of rows) {
+    const line = document.createElement("div");
+    line.style.display = "flex";
+    line.style.gap = "8px";
+    line.style.alignItems = "center";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.className = "byop-key-check";
+    cb.value = row.var;
+    cb.checked = !!row.selected;
+    const txt = document.createElement("span");
+    txt.className = "mono";
+    txt.textContent = row.var + " · " + row.masked;
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn btn-sm";
+    del.textContent = "ลบ";
+    del.addEventListener("click", () => byopRemoveKey(row.var));
+    line.append(cb, txt, del);
+    list.append(line);
+  }
+}
+
+function byopRenderModels(models) {
+  const list = document.getElementById("byopModelList");
+  list.replaceChildren();
+  if (!models.length) {
+    list.append(byopMuted("ยังไม่มีโมเดลที่ผูกบทบาท"));
+    return;
+  }
+  for (const m of models) {
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.gap = "8px";
+    row.style.alignItems = "center";
+    row.style.flexWrap = "wrap";
+    const txt = document.createElement("span");
+    txt.className = "mono";
+    txt.textContent = m.id;
+    row.append(txt);
+    // ชิปบทบาท: กดเพื่อสลับ (ระบบย้ายบทบาทจากโมเดลอื่นให้เองเมื่อเปิด)
+    for (const role of ["coder", "judge", "scan"]) {
+      const on = m.roles.includes(role);
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "btn btn-sm";
+      chip.dataset.byopRole = role;
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      chip.style.padding = "1px 6px";
+      chip.style.fontSize = "11px";
+      chip.style.borderRadius = "10px";
+      chip.style.opacity = on ? "1" : "0.5";
+      chip.textContent = (on ? "✓ " : "") + role;
+      chip.addEventListener("click", () => byopToggleRole(m, role));
+      row.append(chip);
+    }
+    const test = document.createElement("button");
+    test.type = "button";
+    test.className = "btn btn-sm";
+    test.textContent = "🧪 ทดสอบ";
+    test.title = "ส่งข้อความทดสอบ 1 ครั้งด้วยคีย์ที่เลือกอยู่ (ใช้โควตา Pollen 1 ครั้ง)";
+    test.addEventListener("click", () => byopTestModel(m.id));
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn btn-sm";
+    del.textContent = "ลบ";
+    del.addEventListener("click", () => byopRemoveModel(m.id));
+    row.append(test, del);
+    list.append(row);
+  }
+}
+
+// ---------- BYOP: setMsg รวมข้อความสถานะของการ์ดไว้ที่จุดเดียว
+function byopSetMsg(text, ok) {
+  const box = document.getElementById("byopPoolMsg");
+  box.textContent = text;
+  box.style.color = ok === false ? "var(--bad)" : (ok === true ? "var(--ok)" : "");
+}
+
+async function byopToggleRole(model, role) {
+  const roles = model.roles.includes(role)
+    ? model.roles.filter(r => r !== role)
+    : [...model.roles, role];
+  try {
+    const res = await post("/api/byop/models/roles", {id: model.id, roles: roles});
+    const moved = (res.model && res.model.moved_from) || [];
+    byopSetMsg(moved.length
+      ? `ย้ายบทบาท ${role} ไปที่ ${model.id} (จาก ${moved.join(", ")})`
+      : `อัปเดตบทบาทของ ${model.id} แล้ว`, true);
+  } catch (e) {
+    byopSetMsg("เปลี่ยนบทบาทไม่สำเร็จ: " + e.message, false);
+    return;
+  }
+  byopLoadPool();
+}
+
+async function byopTestModel(id) {
+  byopSetMsg("⏳ กำลังทดสอบ " + id + " …", null);
+  try {
+    const res = await post("/api/byop/models/test", {id: id});
+    const r = res.result || {};
+    byopSetMsg((r.ok ? "✅ " : "❌ ") + id + " — " + (r.message || ""), !!r.ok);
+  } catch (e) {
+    byopSetMsg("ทดสอบไม่สำเร็จ: " + e.message, false);
+  }
+}
+
+// โหลดรายการโมเดลจริงจาก Pollinations ลง dropdown; ถ้าดึงไม่ได้ให้ใช้ช่องพิมพ์เอง
+async function byopLoadCatalog() {
+  const sel = document.getElementById("byopModelSelect");
+  const custom = document.getElementById("byopModelCustom");
+  const btn = document.getElementById("byopCatalogBtn");
+  btn.disabled = true;
+  sel.replaceChildren(new Option("กำลังโหลดรายการโมเดล…", ""));
+  try {
+    const res = await post("/api/byop/models/catalog", {});
+    const models = res.models || [];
+    sel.replaceChildren();
+    if (!models.length) {
+      sel.append(new Option("ไม่พบโมเดลในรายการ", ""));
+    } else {
+      sel.append(new Option("— เลือกโมเดล —", ""));
+      for (const m of models) sel.append(new Option(m, m));
+    }
+    sel.append(new Option("พิมพ์เอง…", "__custom__"));
+    custom.style.display = "none";
+  } catch (e) {
+    sel.replaceChildren(new Option("ดึงรายการไม่ได้", ""));
+    sel.append(new Option("พิมพ์เอง…", "__custom__"));
+    sel.value = "__custom__";
+    custom.style.display = "";
+    byopSetMsg("ดึงรายการโมเดลไม่สำเร็จ: " + e.message + " · พิมพ์รหัสโมเดลเองได้", false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function byopModelChoice() {
+  const sel = document.getElementById("byopModelSelect");
+  const custom = document.getElementById("byopModelCustom");
+  if (sel.value === "__custom__") return custom.value.trim();
+  return (sel.value || "").trim();
+}
+
+async function byopSaveSelection() {
+  const box = document.getElementById("byopPoolMsg");
+  const keysChecked = [...document.querySelectorAll(".byop-key-check")].filter(c => c.checked).map(c => c.value);
+  try {
+    await post("/api/byop/keys/select", {keys: keysChecked});
+    box.textContent = "บันทึกคีย์ที่เลือกแล้ว (" + keysChecked.length + " คีย์)";
+  } catch (e) {
+    box.textContent = "บันทึกไม่สำเร็จ: " + e.message;
+  }
+}
+
+async function byopRemoveKey(name) {
+  const box = document.getElementById("byopPoolMsg");
+  if (!confirm("ลบคีย์ " + name + " ออกจาก .env ?")) return;
+  try {
+    await post("/api/byop/keys/remove", {key: name});
+  } catch (e) {
+    box.textContent = "ลบไม่สำเร็จ: " + e.message;
+    return;
+  }
+  byopRefresh();
+  byopLoadPool();
+}
+
+async function byopScan() {
+  const out = document.getElementById("byopScanOut");
+  out.textContent = "กำลังสแกน…";
+  try {
+    const res = await post("/api/byop/keys/scan", {});
+    const results = res.results || [];
+    out.replaceChildren();
+    if (!results.length) {
+      out.textContent = "ไม่มีคีย์ให้สแกน";
+      return;
+    }
+    for (const r of results) {
+      const line = document.createElement("div");
+      line.textContent = (r.ok ? "✅ " : "❌ ") + r.var + " — " + r.message;
+      out.append(line);
+    }
+  } catch (e) {
+    out.textContent = "สแกนไม่สำเร็จ: " + e.message;
+  }
+}
+
+async function byopAddModel() {
+  const id = byopModelChoice();
+  const roles = ["coder", "judge", "scan"].filter(r => document.getElementById("byopRole-" + r).checked);
+  if (!id) { byopSetMsg("เลือกโมเดลจากรายการหรือพิมพ์รหัสก่อน", false); return; }
+  if (!roles.length) { byopSetMsg("ติ๊กบทบาทอย่างน้อยหนึ่งอย่างก่อนเพิ่มโมเดล", false); return; }
+  try {
+    const res = await post("/api/byop/models/add", {id: id, roles: roles});
+    const moved = (res.model && res.model.moved_from) || [];
+    document.getElementById("byopModelCustom").value = "";
+    ["coder", "judge", "scan"].forEach(r => { document.getElementById("byopRole-" + r).checked = false; });
+    byopSetMsg(moved.length
+      ? `เพิ่มโมเดลแล้ว · ย้ายบทบาทจาก ${moved.join(", ")} มาที่ ${id}`
+      : "เพิ่มโมเดลแล้ว", true);
+  } catch (e) {
+    byopSetMsg("เพิ่มโมเดลไม่สำเร็จ: " + e.message, false);
+    return;
+  }
+  byopLoadPool();
+}
+
+async function byopRemoveModel(id) {
+  const box = document.getElementById("byopPoolMsg");
+  try {
+    await post("/api/byop/models/remove", {id: id});
+  } catch (e) {
+    box.textContent = "ลบโมเดลไม่สำเร็จ: " + e.message;
+    return;
+  }
+  byopLoadPool();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("byopConnectBtn").addEventListener("click", byopConnect);
   document.getElementById("byopDisconnectBtn").addEventListener("click", byopDisconnect);
   byopRefresh();
+  byopLoadPool();
+  document.getElementById("byopSaveSelBtn").addEventListener("click", byopSaveSelection);
+  document.getElementById("byopScanBtn").addEventListener("click", byopScan);
+  document.getElementById("byopModelAddBtn").addEventListener("click", byopAddModel);
+  document.getElementById("byopCatalogBtn").addEventListener("click", byopLoadCatalog);
+  document.getElementById("byopModelSelect").addEventListener("change", (ev) => {
+    const custom = document.getElementById("byopModelCustom");
+    custom.style.display = ev.target.value === "__custom__" ? "" : "none";
+    if (ev.target.value === "__custom__") custom.focus();
+  });
+  byopLoadCatalog();
 });
 
 // ---------- ภาษา (ไทย / English): แปลเฉพาะเมนู หัวหน้า และหน้าตั้งค่า ข้อมูลจริงยังเป็นภาษาไทย

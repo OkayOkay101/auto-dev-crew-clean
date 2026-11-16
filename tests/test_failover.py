@@ -100,7 +100,7 @@ def test_call_agent_hands_off_partial_to_next_engine(tmp_path):
     cfg = _cfg(("eng-a", {}), ("eng-b", {}))
     seen = []
 
-    def fake(eng, prompt, cwd, active_key=None):
+    def fake(eng, prompt, cwd, active_key=None, *, role=None):
         seen.append((eng["name"], prompt))
         if eng["name"] == "eng-a":
             raise runner.QuotaExhausted("quota", partial="half done")
@@ -119,7 +119,7 @@ def test_call_agent_busy_engine_does_not_change_prompt(tmp_path):
     cfg = _cfg(("eng-a", {}), ("eng-b", {}))
     seen = []
 
-    def fake(eng, prompt, cwd, active_key=None):
+    def fake(eng, prompt, cwd, active_key=None, *, role=None):
         seen.append(prompt)
         if eng["name"] == "eng-a":
             raise runner.EngineBusy("busy")
@@ -135,7 +135,7 @@ def test_call_agent_skips_near_limit_engine_without_cooldown(tmp_path):
     _write_usage([_row("eng-a", 1)] * 8)
     called = []
 
-    def fake(eng, prompt, cwd, active_key=None):
+    def fake(eng, prompt, cwd, active_key=None, *, role=None):
         called.append(eng["name"])
         return {"status": "SUCCESS", "response": "ok"}
 
