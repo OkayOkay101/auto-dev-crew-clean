@@ -362,7 +362,8 @@ html[data-ui-mode="pro"] [data-simple-only] { display: none !important; }
         <li data-simple-step="2" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
           <span class="step" aria-hidden="true">2</span>
           <span style="flex:1 1 200px"><strong>เชื่อม GitHub แล้วเลือก repo</strong> <span class="help" style="margin:0">ต้องเชื่อม GitHub ก่อน จึงจะเห็นและเลือกคลังโค้ดได้</span>
-            <span style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px"><span id="simpleGhStatus" class="pill" role="status">กำลังตรวจ…</span> <code id="simpleGhCmd" class="mono" style="display:none">gh auth login</code></span></span>
+            <span style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px"><span id="simpleGhStatus" class="pill" role="status">กำลังตรวจ…</span> <button class="btn btn-sm primary" id="simpleGhLoginBtn" type="button" style="display:none">🔗 เชื่อม GitHub</button> <button class="btn btn-sm" id="simpleGhCancelBtn" type="button" style="display:none">ยกเลิก</button> <code id="simpleGhCmd" class="mono" style="display:none">gh auth login</code></span>
+            <span id="simpleGhCodeBox" style="display:none; font-size:12.5px; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px"><span class="muted">กรอกรหัสนี้ที่หน้า GitHub:</span> <code id="simpleGhCode" class="mono" style="font-size:16px; letter-spacing:1px"></code> <a href="https://github.com/login/device" target="_blank" rel="noopener">เปิดหน้า GitHub</a></span></span>
           <button class="btn btn-sm" type="button" data-simple-go="overview">ไปที่คลังโค้ด</button>
         </li>
         <li data-simple-step="3" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
@@ -1858,23 +1859,124 @@ document.querySelectorAll("[data-sub]").forEach(b => b.onclick = () => go(b.clos
 document.querySelectorAll("[data-simple-go]").forEach(b => b.onclick = () => go(b.dataset.simpleGo, b.dataset.simpleSub || null));
 // สถานะ GitHub ของขั้นที่ 2 (อ่านอย่างเดียว · ใช้ textContent เท่านั้น)
 async function loadSimpleGhStatus() {
-  const pill = document.getElementById("simpleGhStatus");
-  const cmd = document.getElementById("simpleGhCmd");
-  if (!pill || !cmd) return;
+  if (!document.getElementById("simpleGhStatus")) return;
   try {
     const res = await (await fetch("/api/github/status")).json();
     if (!res.installed) {
-      pill.textContent = "ยังไม่ได้ติดตั้ง GitHub CLI (gh)"; pill.className = "pill warn"; cmd.style.display = "none";
+      ghSetPill("ยังไม่ได้ติดตั้ง GitHub CLI (gh)", "pill warn");
+      ghShow("simpleGhLoginBtn", false); ghShow("simpleGhCmd", false);
     } else if (res.logged_in) {
-      pill.textContent = "เชื่อมแล้ว: " + res.account; pill.className = "pill"; cmd.style.display = "none";
+      ghSetPill("เชื่อมแล้ว: " + res.account, "pill");
+      ghShow("simpleGhLoginBtn", false); ghShow("simpleGhCmd", false);
     } else {
-      pill.textContent = "ยังไม่ได้เชื่อม GitHub"; pill.className = "pill warn"; cmd.style.display = "";
+      ghSetPill("ยังไม่ได้เชื่อม GitHub", "pill warn");
+      ghShow("simpleGhLoginBtn", true); ghShow("simpleGhCmd", false);
     }
   } catch (_) {
-    pill.textContent = "ตรวจสถานะ GitHub ไม่ได้"; pill.className = "pill warn";
+    ghSetPill("ตรวจสถานะ GitHub ไม่ได้", "pill warn");
   }
 }
-loadSimpleGhStatus();
+
+// เชื่อม GitHub จากหน้าเว็บ: เซิร์ฟเวอร์รัน gh auth login --web แล้วคืนรหัส device ให้ผู้ใช้กรอกที่ github.com
+// ใช้ textContent เท่านั้น · ไม่รับ/ไม่เก็บรหัสผ่านหรือ token ในหน้านี้
+const GH_DEVICE_URL = "https://github.com/login/device";
+let ghPollTimer = null;
+function ghSetPill(text, cls) {
+  const pill = document.getElementById("simpleGhStatus");
+  if (!pill) return;
+  pill.textContent = text;
+  pill.className = cls;
+}
+function ghShow(id, on) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = on ? "" : "none";
+}
+function ghRenderCode(code) {
+  const el = document.getElementById("simpleGhCode");
+  if (el) el.textContent = code || "";
+  ghShow("simpleGhCodeBox", !!code);
+}
+function ghStopPoll() {
+  if (ghPollTimer) { clearInterval(ghPollTimer); ghPollTimer = null; }
+}
+function ghStartPoll() {
+  ghStopPoll();
+  ghPollTimer = setInterval(simpleGhPollState, 2000);
+}
+async function simpleGhPollState() {
+  try {
+    const st = await (await fetch("/api/github/login/state")).json();
+    if (st.pending) {
+      ghRenderCode(st.code);
+      ghShow("simpleGhCancelBtn", true); ghShow("simpleGhLoginBtn", false);
+      return;
+    }
+    ghStopPoll();
+    ghRenderCode("");
+    ghShow("simpleGhCancelBtn", false);
+    if (st.finished && st.exit_code !== 0) {
+      ghSetPill("เชื่อมไม่สำเร็จ ลองใหม่ได้", "pill warn");
+      const pill = document.getElementById("simpleGhStatus");
+      if (pill) pill.title = st.error || "";
+      ghShow("simpleGhLoginBtn", true); ghShow("simpleGhCmd", true);
+      return;
+    }
+    await loadSimpleGhStatus();
+  } catch (_) {
+    ghStopPoll();
+  }
+}
+async function simpleGhStart() {
+  const btn = document.getElementById("simpleGhLoginBtn");
+  if (btn) btn.disabled = true;
+  try {
+    const res = await (await fetch("/api/github/login/start", {
+      method: "POST",
+      headers: {"Content-Type": "application/json", "X-Token": TOKEN},
+      body: "{}",
+    })).json();
+    if (!res.ok) {
+      ghSetPill(res.error || "เริ่มเชื่อม GitHub ไม่ได้", "pill warn");
+      ghShow("simpleGhLoginBtn", true);
+      return;
+    }
+    ghSetPill("รอยืนยันบนเว็บ GitHub", "pill");
+    ghRenderCode(res.code);
+    ghShow("simpleGhLoginBtn", false); ghShow("simpleGhCancelBtn", true);
+    ghStartPoll();
+  } catch (_) {
+    ghSetPill("เชื่อม GitHub ไม่ได้ ลองใหม่", "pill warn");
+    ghShow("simpleGhLoginBtn", true);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+async function simpleGhCancel() {
+  ghStopPoll();
+  try {
+    await fetch("/api/github/login/cancel", {
+      method: "POST",
+      headers: {"Content-Type": "application/json", "X-Token": TOKEN},
+      body: "{}",
+    });
+  } catch (_) {}
+  ghRenderCode("");
+  ghShow("simpleGhCancelBtn", false); ghShow("simpleGhLoginBtn", true);
+  await loadSimpleGhStatus();
+}
+const ghLoginBtn = document.getElementById("simpleGhLoginBtn");
+if (ghLoginBtn) ghLoginBtn.addEventListener("click", simpleGhStart);
+const ghCancelBtn = document.getElementById("simpleGhCancelBtn");
+if (ghCancelBtn) ghCancelBtn.addEventListener("click", simpleGhCancel);
+/* end simple-gh */
+(async () => {
+  await loadSimpleGhStatus();
+  try {
+    // กลับมาเปิดหน้าใหม่ขณะยังรอยืนยันอยู่ ให้แสดงรหัสเดิมและรอต่อ
+    const st = await (await fetch("/api/github/login/state")).json();
+    if (st.pending) { ghRenderCode(st.code); ghShow("simpleGhLoginBtn", false); ghShow("simpleGhCancelBtn", true); ghStartPoll(); }
+  } catch (_) {}
+})();
 let initMain = "overview", initSub = null;
 try {
   const params = new URLSearchParams(location.search);

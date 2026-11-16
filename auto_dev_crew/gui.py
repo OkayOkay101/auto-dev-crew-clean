@@ -28,7 +28,7 @@ from . import yaml_io
 from . import runner, multi_repo, todo_scan, ci_bootstrap, deep_scan, feature_gen
 from . import autonomous_upgrades, context_slicer, doctor, gui_patches, mcp_server, metrics, playground, routing
 from .redact import redact_secrets
-from . import keys, key_ping, providers, byop, byop_store
+from . import keys, key_ping, providers, byop, byop_store, github_login
 from .multi_repo import add_repo_to_config
 # หมายเหตุ: mcp_server import gui กลับ จึง import แบบ lazy ใน _api_mcp_call_preview เพื่อกัน circular import
 
@@ -1591,6 +1591,17 @@ def _byop_page(message: str, *, ok: bool) -> str:
     )
 
 
+GH_LOGIN = github_login.GhLoginManager()  # ล็อกอิน GitHub ทีละครั้ง (device flow ของ gh)
+
+
+def _api_github_login_start(body: dict, cfg: dict) -> dict:
+    return GH_LOGIN.start()
+
+
+def _api_github_login_cancel(body: dict, cfg: dict) -> dict:
+    return GH_LOGIN.cancel()
+
+
 _GET_TOKEN_PATHS = frozenset({"/api/repo/file-content", "/api/byop/status", "/api/byop/pool"})  # GET ที่ต้องส่ง X-Token
 
 ROUTES: dict[str, Callable[[dict, dict], dict]] = {
@@ -1645,6 +1656,8 @@ ROUTES: dict[str, Callable[[dict, dict], dict]] = {
     "/api/ci/toggle": _api_ci_toggle,
     "/api/ci/bootstrap-toggle": _api_ci_bootstrap_toggle,
     "/api/byop/disconnect": _api_byop_disconnect,
+    "/api/github/login/start": _api_github_login_start,
+    "/api/github/login/cancel": _api_github_login_cancel,
     "/api/byop/keys/select": _api_byop_keys_select,
     "/api/byop/keys/remove": _api_byop_keys_remove,
     "/api/byop/keys/scan": _api_byop_keys_scan,
@@ -1742,6 +1755,9 @@ class Handler(BaseHTTPRequestHandler):
             if url.path == "/api/github/status":
                 # อ่านอย่างเดียว: คืนแค่ว่าติดตั้ง gh / ล็อกอินหรือยัง และชื่อบัญชี (ไม่มี token)
                 return self._send(200, {"ok": True, **doctor.gh_login_status()})
+            if url.path == "/api/github/login/state":
+                # สถานะการล็อกอินที่กำลังรอ: รหัส device (ใช้ครั้งเดียว) และข้อความ error ที่ผ่าน redact แล้ว
+                return self._send(200, {"ok": True, **GH_LOGIN.status()})
             if url.path == "/api/metrics":
                 group_by = q.get("by", "engine")
                 if group_by not in metrics.GROUP_FIELDS:
