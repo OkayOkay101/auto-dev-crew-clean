@@ -1,0 +1,98 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # ยกเลิกรันเก่าเฉพาะ PR เท่านั้น — บน main ต้องให้ทุก merge รันจนจบ
+  # (เดิม merge ที่ตามมาเร็ว ๆ ทำให้ CI ของ merge ก่อนหน้าโดนยกเลิก เช่น #63, #65)
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  tests:
+    # The runner, GUI, and process handling target Windows, so test there.
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt pytest
+      - name: Configure git identity for tests
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "ci"
+      - name: Run tests
+        run: python -m pytest -q
+
+  # Lint: ตรวจข้อผิดพลาดที่ทำให้โค้ดพัง (E9 syntax error) และ pyflakes (F: unused import/variable,
+  # ชื่อที่ไม่มีจริง, redefinition, f-string ที่ไม่มี placeholder) ไม่บังคับสไตล์ (E/W)
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: python -m pip install ruff==0.17.1
+      - name: Lint (syntax errors and pyflakes)
+        run: ruff check --select E9,F --output-format github auto_dev_crew scripts tests
+
+  # Security scan: dependency CVE (pip-audit) และ static analysis (bandit)
+  # bandit บล็อคเฉพาะความเสี่ยงระดับ High (-lll). ระดับ Medium ยังแสดงในรายงานแต่ไม่ทำให้ fail
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install security tools
+        run: python -m pip install pip-audit==2.10.1 bandit==1.9.4
+      - name: Dependency vulnerability scan
+        run: python -m pip_audit -r requirements.txt --progress-spinner off
+      - name: Static security scan (high severity blocks)
+        run: python -m bandit -r auto_dev_crew scripts -lll -q
+
+  # UI test: เปิด GUI จริงแล้วตรวจด้วย Playwright (headless Chromium)
+  # ใช้ตรรกะเดียวกับ scripts/gui_smoke.py ผ่าน auto_dev_crew.gui_check.run_gui_check
+  # อ่านอย่างเดียว ไม่กดปุ่มที่รันงานหรือสแกนจริง
+  ui:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Install Chromium for Playwright
+        run: python -m playwright install chromium
+      - name: GUI UI test (API + page load without JS errors)
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python -c "import sys; from auto_dev_crew.gui_check import run_gui_check; sys.exit(0 if run_gui_check(print) else 1)"
+      - name: Upload GUI screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gui-screenshot
+          path: state/gui_smoke.png
+          if-no-files-found: ignore

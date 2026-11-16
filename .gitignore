@@ -1,0 +1,18 @@
+state/
+__pycache__/
+*.pyc
+.opencode-runner/
+.superpowers/
+.pytest_cache/
+scratch/
+.env
+
+# config backup files
+*.bak
+*.bak-*
+
+
+# lock files from locks.cfg_file_lock
+*.yaml.lock
+*.json.lock
+.env.lock

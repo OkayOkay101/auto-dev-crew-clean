@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "tools": {
+    "skill": false
+  },
+  "autoupdate": false,
+  "provider": {
+    "pollinations": {
+      "name": "Pollinations",
+      "options": {
+        "baseURL": "https://gen.pollinations.ai/v1",
+        "apiKey": "{env:POLLINATIONS_API_KEY_1}"
+      },
+      "models": {
+        "openai/gpt-6-luna": {
+          "name": "openai/gpt-6-luna"
+        }
+      }
+    }
+  }
+}
