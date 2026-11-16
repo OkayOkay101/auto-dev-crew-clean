@@ -46,7 +46,6 @@
       btn.setAttribute("aria-pressed", String(btn.dataset.modeBtn === clean));
       btn.classList.toggle("active", btn.dataset.modeBtn === clean);
     });
-    document.dispatchEvent(new CustomEvent("adc:uimode", {detail: clean}));
   }
 
   function setUiComplexityMode(mode) {

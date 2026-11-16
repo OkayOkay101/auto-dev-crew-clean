@@ -276,10 +276,6 @@ header.topbar { min-height: 58px; }
 html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
 /* โหมดโปร: ซ่อนกล่องแนะนำ 4 ขั้นที่มี data-simple-only */
 html[data-ui-mode="pro"] [data-simple-only] { display: none !important; }
-/* โหมดง่าย: ทุกส่วนอยู่บนหน้าภาพรวมหน้าเดียว (ไม่สลับหน้า) · tools ไม่อยู่ในเมนูจึงยังซ่อน */
-html[data-ui-mode="simple"] .main-panel:not(#main-tools) { display: block; scroll-margin-top: 72px; }
-html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
-.simple-section-title { margin: 28px 0 12px; font-size: 18px; }
 
 /* ===== จอเล็ก ===== */
 @media (max-width: 1080px) { .studio-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -515,7 +511,6 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
 
   <!-- สตูดิโอเขียนโค้ด -->
   <section class="main-panel" id="main-studio" aria-labelledby="pageTitle">
-    <h2 class="simple-section-title" data-simple-only data-i18n>สตูดิโอ</h2>
     <p class="lead">สั่ง AI แก้โค้ดใน repo ที่เลือกได้ทันที ดูผลต่างก่อนเปิด PR และใช้เครื่องมือหาปัญหาในโค้ด</p>
     <div class="studio-bar">
       <div class="field">
@@ -751,7 +746,6 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
   </section>
 
   <section class="main-panel" id="main-settings" aria-labelledby="pageTitle">
-    <h2 class="simple-section-title" data-simple-only data-i18n>ตั้งค่า</h2>
     <div class="card" id="toolsCard" data-pro-only style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
       <div style="flex:1 1 260px; min-width:0"><h2 style="margin:0 0 4px; font-size:15px" data-i18n>🧰 เครื่องมือระบบ</h2><p class="muted" style="margin:0" data-i18n>ตรวจสุขภาพ, สนามทดลอง, MCP Hub, แบบทดสอบความปลอดภัย และแผน Revert</p></div>
       <button type="button" class="btn primary" id="openToolsBtn" data-i18n>เปิดเครื่องมือ</button>
@@ -874,7 +868,6 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
 
   <!-- งาน -->
   <section class="main-panel" id="main-work" aria-labelledby="pageTitle">
-    <h2 class="simple-section-title" data-simple-only data-i18n>งาน</h2>
     <p class="lead">ดูว่าเอเจนต์กำลังทำอะไร และงานที่ทำเสร็จแล้ว · รายการ issue / PR ทั้งหมดอยู่ในหน้าภาพรวม</p>
     <div class="subnav" role="group" aria-label="เมนูย่อย งาน" data-group="work">
       <button class="btn btn-sm" type="button" data-sub="log">บันทึกสด</button>
@@ -915,7 +908,6 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
 
   <!-- คีย์ -->
   <section class="main-panel" id="main-keys" aria-labelledby="pageTitle">
-    <h2 class="simple-section-title" data-simple-only data-i18n>คีย์ AI</h2>
     <p class="lead">คีย์ของผู้ให้บริการ AI ลำดับที่ระบบสลับใช้เมื่อโควตาหมด และสถิติการใช้งานวันนี้</p>
     <div class="grid" id="usageStats" style="margin-bottom:16px"></div>
     <div class="subnav" role="group" aria-label="เมนูย่อย คีย์ AI" data-group="keys">
@@ -1021,7 +1013,7 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
       </div>
     </div>
     </section>
-    <section class="tab" id="tab-failover" data-pro-only>
+    <section class="tab" id="tab-failover">
     <div class="card" id="failoverCard" data-pro-only>
       <div class="card-head">
         <h2>ลำดับสำรอง (failover)</h2>
@@ -1036,7 +1028,7 @@ html[data-ui-mode="simple"] .tab { display: block; scroll-margin-top: 72px; }
       </table></div>
     </div>
     </section>
-    <section class="tab" id="tab-recent" data-pro-only>
+    <section class="tab" id="tab-recent">
     <div class="card">
       <h2>การเรียก AI ล่าสุด</h2>
       <div class="table-wrap"><table>
@@ -1776,8 +1768,6 @@ applyLang(uiLang);
 const MAIN_SUBS = {overview: [], studio: [], work: ["log", "history"], keys: ["apikeys", "failover", "recent"], tools: [], settings: []};
 const DEFAULT_SUB = {work: "log", keys: "apikeys"};
 const SUB_SECTION = {history: "tab-history", log: "tab-log", apikeys: "tab-apikeys", failover: "tab-failover", recent: "tab-recent"};
-// โหมดง่ายคือโหมดเริ่มต้น (ค่าที่ไม่ใช่ "pro" ถือว่าเป็นง่าย)
-function isSimpleUi() { return document.documentElement.getAttribute("data-ui-mode") !== "pro"; }
 function go(main, sub, urlMode) {
   if (!MAIN_SUBS.hasOwnProperty(main)) main = "overview";
   if (MAIN_SUBS[main].length && !MAIN_SUBS[main].includes(sub)) sub = DEFAULT_SUB[main];
@@ -1797,11 +1787,7 @@ function go(main, sub, urlMode) {
   const TITLES = {overview: "ภาพรวม", studio: "สตูดิโอ", work: "งาน", keys: "คีย์ AI", tools: "เครื่องมือ", settings: "ตั้งค่า"};
   if ($("#pageTitle")) { $("#pageTitle").dataset.th = TITLES[main] || ""; $("#pageTitle").textContent = tr(TITLES[main] || ""); }
   document.title = (TITLES[main] ? tr(TITLES[main]) + " · " : "") + "Auto Dev Crew";
-  if (urlMode !== "init" && urlMode !== "pop") {
-    // โหมดง่าย: ทุกส่วนอยู่บนหน้าภาพรวมเดียว → เมนูแค่เลื่อนไปยังส่วนนั้น · โหมดโปร: เปลี่ยนหน้าแล้วเริ่มที่หัวหน้า
-    const target = isSimpleUi() && main !== "overview" ? document.getElementById("main-" + main) : null;
-    if (target) target.scrollIntoView({behavior: "smooth", block: "start"}); else window.scrollTo(0, 0);
-  }
+  if (urlMode !== "init" && urlMode !== "pop") window.scrollTo(0, 0); // เปลี่ยนหน้าแล้วเริ่มที่หัวหน้า
   // ให้ URL บอกหน้าปัจจุบัน (?main=&sub=) เพื่อรีเฟรช/แชร์ลิงก์/ปุ่มย้อนกลับได้
   if (urlMode !== "pop") {
     try {
@@ -1812,7 +1798,7 @@ function go(main, sub, urlMode) {
       if (q !== location.search || location.hash) history[urlMode === "init" ? "replaceState" : "pushState"](null, "", q);
     } catch {}
   }
-  if (main === "studio" || isSimpleUi()) { if (typeof loadStudioWorkspace === "function") loadStudioWorkspace(); }
+  if (main === "studio") { if (typeof loadStudioWorkspace === "function") loadStudioWorkspace(); }
   if (main === "tools") { if (typeof loadTools === "function") loadTools(); }
 }
 // ---------- เครื่องมือ: Doctor / Metrics / Playground / MCP preview (ข้อมูลจากเซิร์ฟเวอร์ใส่ผ่าน textContent เท่านั้น)
@@ -2012,9 +1998,6 @@ window.addEventListener("popstate", () => {
   const p = new URLSearchParams(location.search);
   go(p.get("main") || "overview", p.get("sub"), "pop");
 });
-
-// เปลี่ยนเป็นโหมดง่ายจากหน้าตั้งค่า/แถบบน: ส่วนสตูดิโอต้องโหลดข้อมูลด้วย เพราะแสดงบนหน้าภาพรวมทันที
-document.addEventListener("adc:uimode", (e) => { if (e.detail === "simple" && typeof loadStudioWorkspace === "function") loadStudioWorkspace(); });
 
 // ---------- theme
 $("#themeBtn").onclick = () => {

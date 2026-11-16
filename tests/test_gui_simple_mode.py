@@ -129,43 +129,5 @@ class TestSimpleFourSteps(unittest.TestCase):
             self.assertNotIn("data-pro-only", _open_tag_with_id(SIDEBAR, id_), id_)
 
 
-class TestSimpleModeOneOverviewPage(unittest.TestCase):
-    # โหมดง่าย: ทุกส่วน (สตูดิโอ / งาน / คีย์ AI / ตั้งค่า) อยู่บนหน้าภาพรวมหน้าเดียว ไม่สลับหน้า
-    def test_css_shows_all_main_panels_in_simple(self):
-        rule = SIDEBAR[SIDEBAR.index('html[data-ui-mode="simple"] .main-panel'):]
-        self.assertIn("display: block", rule.split("}", 1)[0])
-        self.assertIn(":not(#main-tools)", rule.split("}", 1)[0])
-
-    def test_css_shows_all_tabs_in_simple(self):
-        rule = SIDEBAR[SIDEBAR.index('html[data-ui-mode="simple"] .tab'):]
-        self.assertIn("display: block", rule.split("}", 1)[0])
-
-    def test_pro_only_tabs_tagged(self):
-        for id_ in ["tab-failover", "tab-recent"]:
-            self.assertIn("data-pro-only", _open_tag_with_id(SIDEBAR, id_), id_)
-
-    def test_each_simple_section_has_title(self):
-        self.assertEqual(SIDEBAR.count('class="simple-section-title"'), 4)
-        for panel in ["main-studio", "main-work", "main-keys", "main-settings"]:
-            start = SIDEBAR.index(f'id="{panel}"')
-            head = SIDEBAR[start:start + 400]
-            self.assertIn('class="simple-section-title" data-simple-only', head, panel)
-
-    def test_nav_in_simple_scrolls_instead_of_switching(self):
-        go_body = SIDEBAR[SIDEBAR.index("function go(main, sub, urlMode)"):]
-        go_body = go_body[:go_body.index("\n}\n")]
-        self.assertIn("isSimpleUi()", go_body)
-        self.assertIn("scrollIntoView", go_body)
-
-    def test_simple_loads_studio_on_every_nav(self):
-        go_body = SIDEBAR[SIDEBAR.index("function go(main, sub, urlMode)"):]
-        go_body = go_body[:go_body.index("\n}\n")]
-        self.assertIn('main === "studio" || isSimpleUi()', go_body)
-
-    def test_mode_switch_announces_change_for_studio_load(self):
-        self.assertIn('"adc:uimode"', MC_JS)
-        self.assertIn('addEventListener("adc:uimode"', SIDEBAR)
-
-
 if __name__ == "__main__":
     unittest.main()
