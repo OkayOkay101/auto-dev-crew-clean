@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import re
 import secrets
 import shutil
 import subprocess
@@ -30,6 +31,37 @@ def parse_gh_scopes(status_text: str) -> list[str]:
                 if tok:
                     scopes.append(tok)
     return scopes
+
+
+_GH_LOGIN_RE = re.compile(r"Logged in to \S+ (?:account|as) ([A-Za-z0-9][A-Za-z0-9-]*)")
+
+
+def parse_gh_login(status_text: str) -> dict[str, Any]:
+    """Read only the logged-in account name from `gh auth status` output. Never returns token text."""
+    for line in (status_text or "").splitlines():
+        m = _GH_LOGIN_RE.search(line)
+        if m:
+            return {"logged_in": True, "account": m.group(1)}
+    return {"logged_in": False, "account": None}
+
+
+def gh_login_status(which=shutil.which, run=subprocess.run) -> dict[str, Any]:
+    """Read-only GitHub CLI login state for the simple-mode setup step.
+
+    Returns only installed / logged_in / account. The raw `gh` output is redacted and parsed here,
+    so no token or other credential text can reach the caller.
+    """
+    gh_bin = which("gh")
+    if not gh_bin:
+        return {"installed": False, "logged_in": False, "account": None}
+    try:
+        proc = run([gh_bin, "auth", "status"], capture_output=True, text=True, timeout=8, check=False)
+    except (subprocess.TimeoutExpired, OSError):
+        return {"installed": True, "logged_in": False, "account": None}
+    combined = redact_secrets((proc.stdout or "") + "\n" + (proc.stderr or ""))
+    parsed = parse_gh_login(combined)
+    logged_in = bool(parsed["logged_in"]) and proc.returncode == 0
+    return {"installed": True, "logged_in": logged_in, "account": parsed["account"] if logged_in else None}
 
 
 def run_doctor_checks(root: Path | None = None, state_dir: Path | None = None) -> dict[str, Any]:

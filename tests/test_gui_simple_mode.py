@@ -90,5 +90,44 @@ class TestTutorial(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
 
 
+class TestSimpleFourSteps(unittest.TestCase):
+    # กล่อง "4 ขั้น" บนหน้าภาพรวม: เห็นเฉพาะโหมดง่าย และพาไปหน้าที่เกี่ยวข้อง
+    def test_guide_only_shows_in_simple_mode(self):
+        tag = _open_tag_with_id(SIDEBAR, "simpleGuide")
+        self.assertTrue(tag, "simpleGuide missing")
+        self.assertIn("data-simple-only", tag)
+        self.assertNotIn("data-pro-only", tag)
+        self.assertIn('html[data-ui-mode="pro"] [data-simple-only]', SIDEBAR)
+
+    def test_guide_is_inside_overview_panel(self):
+        overview = SIDEBAR.index('id="main-overview"')
+        studio = SIDEBAR.index('id="main-studio"')
+        guide = SIDEBAR.index('id="simpleGuide"')
+        self.assertTrue(overview < guide < studio)
+
+    def test_guide_has_exactly_four_steps(self):
+        self.assertEqual(SIDEBAR.count("data-simple-step="), 4)
+        for n in ["1", "2", "3", "4"]:
+            self.assertIn(f'data-simple-step="{n}"', SIDEBAR)
+
+    def test_each_step_button_goes_to_a_real_panel(self):
+        targets = re.findall(r'data-simple-go="([a-z]+)"', SIDEBAR)
+        self.assertEqual(len(targets), 4)
+        for t in targets:
+            self.assertIn(t, ["overview", "studio", "work", "keys"])
+
+    def test_guide_buttons_are_wired(self):
+        self.assertIn("[data-simple-go]", SIDEBAR)
+
+    def test_advanced_blocks_hidden_in_simple(self):
+        for id_ in ["slotsCard", "byopCard", "subFailover", "studioToolRow"]:
+            self.assertIn("data-pro-only", _open_tag_with_id(SIDEBAR, id_), id_)
+
+    def test_core_simple_flow_stays_visible(self):
+        # ขั้นที่ 1-3 ต้องใช้ได้ในโหมดง่าย
+        for id_ in ["keyManagerCard", "repoDropdown", "studioPrompt", "studioRepoSelect", "studioDispatchBtn"]:
+            self.assertNotIn("data-pro-only", _open_tag_with_id(SIDEBAR, id_), id_)
+
+
 if __name__ == "__main__":
     unittest.main()

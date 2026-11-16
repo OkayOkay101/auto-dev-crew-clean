@@ -274,6 +274,8 @@ header.topbar { min-height: 58px; }
 @media (max-width: 720px) { .mode-switch .mode-btn { padding: 4px 7px; } }
 /* โหมดง่าย: ซ่อนบล็อกขั้นสูงที่มี data-pro-only (โหมดโปรแสดงทั้งหมด) */
 html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
+/* โหมดโปร: ซ่อนกล่องแนะนำ 4 ขั้นที่มี data-simple-only */
+html[data-ui-mode="pro"] [data-simple-only] { display: none !important; }
 
 /* ===== จอเล็ก ===== */
 @media (max-width: 1080px) { .studio-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -349,6 +351,32 @@ html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
 <main id="content" tabindex="-1">
   <!-- ภาพรวม -->
   <section class="main-panel active" id="main-overview" aria-labelledby="pageTitle">
+    <div class="card" id="simpleGuide" data-simple-only style="margin-bottom:16px">
+      <div class="card-head"><h2>🚀 เริ่มใช้งานใน 4 ขั้น</h2></div>
+      <ol style="list-style:none; padding:0; margin:0; display:grid; gap:10px">
+        <li data-simple-step="1" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <span class="step" aria-hidden="true">1</span>
+          <span style="flex:1 1 200px"><strong>ใส่ API key</strong> <span class="help" style="margin:0">คีย์ของผู้ให้บริการ AI อย่างน้อยหนึ่งตัว</span></span>
+          <button class="btn btn-sm" type="button" data-simple-go="keys" data-simple-sub="apikeys">ไปที่คีย์ AI</button>
+        </li>
+        <li data-simple-step="2" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <span class="step" aria-hidden="true">2</span>
+          <span style="flex:1 1 200px"><strong>เชื่อม GitHub แล้วเลือก repo</strong> <span class="help" style="margin:0">ต้องเชื่อม GitHub ก่อน จึงจะเห็นและเลือกคลังโค้ดได้</span>
+            <span style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px"><span id="simpleGhStatus" class="pill" role="status">กำลังตรวจ…</span> <code id="simpleGhCmd" class="mono" style="display:none">gh auth login</code></span></span>
+          <button class="btn btn-sm" type="button" data-simple-go="overview">ไปที่คลังโค้ด</button>
+        </li>
+        <li data-simple-step="3" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <span class="step" aria-hidden="true">3</span>
+          <span style="flex:1 1 200px"><strong>สั่งงาน</strong> <span class="help" style="margin:0">บอก AI ว่าต้องทำอะไรใน repo ที่เลือก</span></span>
+          <button class="btn btn-sm" type="button" data-simple-go="studio">ไปที่สตูดิโอ</button>
+        </li>
+        <li data-simple-step="4" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <span class="step" aria-hidden="true">4</span>
+          <span style="flex:1 1 200px"><strong>ดูผลลัพธ์</strong> <span class="help" style="margin:0">ตรวจประวัติงานที่เอเจนต์ทำเสร็จแล้ว</span></span>
+          <button class="btn btn-sm" type="button" data-simple-go="work" data-simple-sub="history">ดูประวัติงาน</button>
+        </li>
+      </ol>
+    </div>
     <div class="ov-hero">
       <div class="card hero-state">
         <div class="big-status"><span class="dot" id="dot" aria-hidden="true"></span> <span id="bigStatus" role="status">กำลังโหลด…</span></div>
@@ -397,7 +425,7 @@ html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
     <div class="kpi-grid" id="stats"></div>
     <div id="activityStatusBanner"></div>
 
-    <div class="card" style="margin-top:16px">
+    <div class="card" id="slotsCard" data-pro-only style="margin-top:16px">
       <div class="card-head">
         <h2 title="ช่อง (slot) = ตัวทำงาน 1 ตัวที่รันงานหนึ่งชิ้นในเวลาเดียวกัน">ช่องทำงาน 3 ช่อง</h2>
         <span class="spacer"></span>
@@ -529,7 +557,7 @@ html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
           <div class="ov-actions">
             <button class="btn primary" id="studioDispatchBtn" type="button">🚀 สั่ง AI เขียนโค้ด</button>
           </div>
-          <div class="row tool-sec" style="gap:6px">
+          <div class="row tool-sec" id="studioToolRow" data-pro-only style="gap:6px">
             <span class="muted" style="margin-right:4px">ตรวจโค้ดใน repo:</span>
             <button class="btn btn-sm" id="studioBtnTest" type="button">🧪 รันเทสต์</button>
             <button class="btn btn-sm" id="studioBtnSyntax" type="button" title="ตรวจไวยากรณ์ไฟล์ Python">🔍 ตรวจไวยากรณ์</button>
@@ -883,12 +911,12 @@ html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
     <div class="grid" id="usageStats" style="margin-bottom:16px"></div>
     <div class="subnav" role="group" aria-label="เมนูย่อย คีย์ AI" data-group="keys">
       <button class="btn btn-sm" type="button" data-sub="apikeys">คีย์และผู้ให้บริการ</button>
-      <button class="btn btn-sm" type="button" data-sub="failover">ลำดับสำรอง</button>
+      <button class="btn btn-sm" id="subFailover" type="button" data-sub="failover" data-pro-only>ลำดับสำรอง</button>
       <button class="btn btn-sm" id="subRecent" type="button" data-sub="recent" data-pro-only>การใช้งานล่าสุด</button>
     </div>
 
     <section class="tab" id="tab-apikeys">
-    <div class="card" id="byopCard" style="margin-bottom:14px">
+    <div class="card" id="byopCard" data-pro-only style="margin-bottom:14px">
       <div class="card-head">
         <div style="min-width:0">
           <h2 style="margin:0 0 2px">Pollinations (BYOP: Bring Your Own Pollen)</h2>
@@ -1826,6 +1854,27 @@ $("#mcpRun").onclick = runMcpPreview;
 
 document.querySelectorAll("nav button[data-main]").forEach(b => b.onclick = () => go(b.dataset.main, null));
 document.querySelectorAll("[data-sub]").forEach(b => b.onclick = () => go(b.closest("[data-group]").dataset.group, b.dataset.sub));
+// ปุ่มในกล่อง "4 ขั้น" (โหมดง่าย) พาไปหน้าที่เกี่ยวข้อง
+document.querySelectorAll("[data-simple-go]").forEach(b => b.onclick = () => go(b.dataset.simpleGo, b.dataset.simpleSub || null));
+// สถานะ GitHub ของขั้นที่ 2 (อ่านอย่างเดียว · ใช้ textContent เท่านั้น)
+async function loadSimpleGhStatus() {
+  const pill = document.getElementById("simpleGhStatus");
+  const cmd = document.getElementById("simpleGhCmd");
+  if (!pill || !cmd) return;
+  try {
+    const res = await (await fetch("/api/github/status")).json();
+    if (!res.installed) {
+      pill.textContent = "ยังไม่ได้ติดตั้ง GitHub CLI (gh)"; pill.className = "pill warn"; cmd.style.display = "none";
+    } else if (res.logged_in) {
+      pill.textContent = "เชื่อมแล้ว: " + res.account; pill.className = "pill"; cmd.style.display = "none";
+    } else {
+      pill.textContent = "ยังไม่ได้เชื่อม GitHub"; pill.className = "pill warn"; cmd.style.display = "";
+    }
+  } catch (_) {
+    pill.textContent = "ตรวจสถานะ GitHub ไม่ได้"; pill.className = "pill warn";
+  }
+}
+loadSimpleGhStatus();
 let initMain = "overview", initSub = null;
 try {
   const params = new URLSearchParams(location.search);

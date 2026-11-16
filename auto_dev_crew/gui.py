@@ -1739,6 +1739,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, _byop_pool_view())
             if url.path == "/api/doctor":
                 return self._send(200, doctor.run_doctor_checks(root=runner.ROOT, state_dir=runner.STATE))
+            if url.path == "/api/github/status":
+                # อ่านอย่างเดียว: คืนแค่ว่าติดตั้ง gh / ล็อกอินหรือยัง และชื่อบัญชี (ไม่มี token)
+                return self._send(200, {"ok": True, **doctor.gh_login_status()})
             if url.path == "/api/metrics":
                 group_by = q.get("by", "engine")
                 if group_by not in metrics.GROUP_FIELDS:
