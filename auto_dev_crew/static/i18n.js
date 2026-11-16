@@ -5,6 +5,14 @@
  * พจนานุกรมอยู่ใน i18n_en.js (window.ADC_EN) ข้อความจริง เช่น ชื่อ issue และ log ของเอเจนต์ยังเป็นภาษาไทย */
 (function () {
   "use strict";
+  // ค่าเริ่มต้นเป็นภาษาไทย: เปิดเวอร์ชันนี้ครั้งแรกในเบราว์เซอร์ใด ให้ตั้ง adc_lang เป็นไทยหนึ่งครั้ง
+  // หลังจากนั้นผู้ใช้สลับเป็น English เองได้ตามปกติ (ค่าที่เลือกจะถูกจำและไม่ถูกเขียนทับอีก)
+  try {
+    if (!localStorage.getItem("adc_lang_default")) {
+      localStorage.setItem("adc_lang", "th");
+      localStorage.setItem("adc_lang_default", "th");
+    }
+  } catch (e) { /* storage ใช้ไม่ได้ ใช้ค่าเริ่มต้นในโค้ดด้านล่างแทน */ }
   var lang = "th";
   try { lang = localStorage.getItem("adc_lang") === "en" ? "en" : "th"; } catch (e) { /* ใช้ค่าเริ่มต้น */ }
   if (lang !== "en" || !window.ADC_EN) return;
@@ -14,11 +22,12 @@
   var KEYS = Object.keys(DICT)
     .filter(function (k) { return k.trim().length > 0; })
     .sort(function (a, b) { return b.length - a.length; });
-  // วลีที่แทนได้ภายในข้อความยาว: ยาว >= 12 ตัวอักษร หรือมีช่องว่าง/วงเล็บและยาว >= 3
-  // (คำไทยเดี่ยว ๆ เช่น "บรรทัด" "สถานะ" ไม่แทนในข้อความ เพราะจะไปทับข้อมูลจริง เช่น ชื่อ issue)
+  // วลีที่แทนได้ภายในข้อความยาว: ยาว >= 12 ตัวอักษร หรือมีช่องว่าง/วงเล็บและยาว >= 2
+  // (คำไทยเดี่ยว ๆ เช่น "บรรทัด" "สถานะ" ไม่แทนในข้อความ เพราะจะไปทับข้อมูลจริง เช่น ชื่อ issue
+  //  แต่คำสั้นที่มีช่องว่างกำกับ เช่น "พบ " "นำ " ปลอดภัยพอ เพราะหมายถึงข้อความของ UI ที่ตามด้วยตัวเลขหรือชื่อ)
   function isPhrase(k) {
     var t = k.trim();
-    return t.length >= 12 || (/[\s()]/.test(k) && t.length >= 3);
+    return t.length >= 12 || (/[\s()]/.test(k) && t.length >= 2);
   }
   var ATTRS = ["title", "placeholder", "aria-label"];
   var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 0 };

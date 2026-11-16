@@ -1502,8 +1502,7 @@ def _api_auto_issue_set(body: dict, cfg: dict) -> dict:
         raw["auto_issue"] = section
         keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
     view = _auto_issue_view({"auto_issue": section})
-    state = "เปิด" if view["enabled"] else "ปิด"
-    return {**view, "message": f"{state}การสร้าง issue อัตโนมัติหลังสแกนลึก (ความรุนแรงขั้นต่ำ: {view['min_severity']})"}
+    return {**view, "message": f"{'เปิด' if view['enabled'] else 'ปิด'}การสร้าง issue อัตโนมัติหลังสแกนลึก (ความรุนแรงขั้นต่ำ: {view['min_severity']})"}
 
 
 def _api_slots_assign(body: dict, cfg: dict) -> dict:
