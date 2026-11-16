@@ -887,6 +887,16 @@ header.topbar { min-height: 58px; }
         <button class="btn btn-sm" id="byopDisconnectBtn" type="button" disabled>ยกเลิกการเชื่อมต่อ</button>
       </div>
       <div id="byopStatus" role="status" class="muted">กำลังตรวจสอบ…</div>
+      <div id="byopModelSection" hidden style="margin-top:10px; font-size:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="muted" style="font-size:11px;">โมเดล:</span>
+            <code class="mono" id="byop-model-display-opencode-pollinations" style="font-size:11px; background:var(--code-bg); padding:2px 5px; border-radius:4px;">-</code>
+          </div>
+          <button class="btn btn-sm" type="button" data-fetch-models="opencode-pollinations" data-scope="byop" data-current-model="" style="font-size:11px; padding:2px 7px;" title="ดึงโมเดลที่ใช้งานได้จริงจาก API ของ Pollinations">🔍 ดึงโมเดลจาก API</button>
+        </div>
+        <div id="byop-model-box-opencode-pollinations" style="display:none; margin-top:6px; padding:8px; background:var(--card-bg); border:1px solid var(--line); border-radius:6px;"></div>
+      </div>
     </div>
     <div class="card" id="keyManagerCard">
       <div class="card-head">
@@ -1214,9 +1224,19 @@ async function byopRefresh() {
     const r = await fetch("/api/byop/status", {headers: {"X-Token": TOKEN}});
     const s = await r.json();
     if (!s.app_key_configured) box.textContent = "ยังไม่ได้ตั้งค่า POLLINATIONS_APP_KEY (pk_…) ใน .env: สร้าง App Key ที่ enter.pollinations.ai แล้วใส่ค่านี้ก่อน";
-    else if (s.connected) box.textContent = "เชื่อมต่อแล้ว · เลือกโมเดลที่การ์ด Pollinations.ai กดปุ่ม 🔍 ดึงโมเดลจาก API แล้วเลือกรายการ";
+    else if (s.connected) box.textContent = "เชื่อมต่อแล้ว · กดปุ่ม 🔍 ดึงโมเดลจาก API ด้านล่าง แล้วเลือกรายการ";
     else box.textContent = "ยังไม่ได้เชื่อมต่อ";
     dis.disabled = !s.connected;
+    const section = document.getElementById("byopModelSection");
+    section.hidden = !s.connected;
+    if (s.connected) {
+      // แสดงโมเดลปัจจุบันของ Pollinations (ค่าเดียวกับการ์ดคีย์ เพื่อให้สองที่ตรงกันเสมอ)
+      const cur = document.getElementById("model-display-opencode-pollinations");
+      const disp = document.getElementById("byop-model-display-opencode-pollinations");
+      if (cur && disp) disp.textContent = cur.textContent;
+      const fetchBtn = document.querySelector('button[data-fetch-models="opencode-pollinations"][data-scope="byop"]');
+      if (cur && fetchBtn) fetchBtn.dataset.currentModel = cur.textContent;
+    }
   } catch (e) {
     box.textContent = "ตรวจสถานะไม่ได้: " + e.message;
   }
@@ -1577,9 +1597,12 @@ let currentFilter = "all";
 let searchQuery = "";
 let favoriteOnly = false;
 
-function renderModelBoxContent(provName, currentModel, provModels, filterQ = "") {
+// scope = "" สำหรับการ์ดคีย์ที่วางเอง (ไอดีและพฤติกรรมเดิม), scope = "byop" สำหรับส่วนเลือกโมเดลในการ์ด BYOP
+function renderModelBoxContent(provName, currentModel, provModels, filterQ = "", scope = "") {
   const qLower = (filterQ || "").toLowerCase().trim();
   const matched = qLower ? provModels.filter(m => m.toLowerCase().includes(qLower)) : provModels;
+  const pre = scope ? `${scope}-` : "";
+  const sAttr = scope ? ` data-scope="${esc(scope)}"` : "";
 
   return `
     <div style="display:flex; flex-direction:column; gap:6px;">
@@ -1587,15 +1610,15 @@ function renderModelBoxContent(provName, currentModel, provModels, filterQ = "")
         <span>เลือกรุ่นโมเดล (พบ ${matched.length} จาก ${provModels.length} รุ่น):</span>
         <span style="color:var(--ok); font-size:10px;">✓ ข้อมูลจาก API</span>
       </div>
-      <input type="text" class="model-filter-input" data-filter-provider="${esc(provName)}" placeholder="🔎 พิมพ์ค้นหาโมเดล (เช่น llama, qwen, deepseek, flash)…" value="${esc(filterQ)}" style="width:100%; font-size:12px; padding:4px 7px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
-      <select id="model-select-${esc(provName)}" class="model-select-elem" data-provider="${esc(provName)}" style="width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);">
+      <input type="text" class="model-filter-input" data-filter-provider="${esc(provName)}"${sAttr} placeholder="🔎 พิมพ์ค้นหาโมเดล (เช่น llama, qwen, deepseek, flash)…" value="${esc(filterQ)}" style="width:100%; font-size:12px; padding:4px 7px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
+      <select id="${pre}model-select-${esc(provName)}" class="model-select-elem" data-provider="${esc(provName)}"${sAttr} style="width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);">
         ${matched.map(m => `<option value="${esc(m)}" ${m === currentModel ? 'selected' : ''}>${esc(m)}</option>`).join("")}
         <option value="__custom__">✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)…</option>
       </select>
-      <input type="text" id="model-custom-input-${esc(provName)}" placeholder="พิมพ์ชื่อ Model ID เช่น groq/…" style="display:none; width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
+      <input type="text" id="${pre}model-custom-input-${esc(provName)}" placeholder="พิมพ์ชื่อ Model ID เช่น groq/…" style="display:none; width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
       <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
-        <button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">ปิด</button>
-        <button class="btn btn-sm primary" type="button" data-save-model="${esc(provName)}">💾 ใช้โมเดลนี้</button>
+        <button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}"${sAttr}>ปิด</button>
+        <button class="btn btn-sm primary" type="button" data-save-model="${esc(provName)}"${sAttr}>💾 ใช้โมเดลนี้</button>
       </div>
     </div>
   `;
@@ -2404,15 +2427,17 @@ document.addEventListener("input", (ev) => {
     dirtyKeys[t.dataset.envKey] = t.value.trim();
   } else if (t.dataset.filterProvider) {
     const prov = t.dataset.filterProvider;
+    const scope = t.dataset.scope || "";
+    const pre = scope ? `${scope}-` : "";
     modelSearchQuery[prov] = t.value;
     const provModels = cachedModels[prov] || [];
     const qLower = t.value.toLowerCase().trim();
     const matched = qLower ? provModels.filter(m => m.toLowerCase().includes(qLower)) : provModels;
-    const sel = document.getElementById(`model-select-${prov}`);
+    const sel = document.getElementById(`${pre}model-select-${prov}`);
     if (sel) {
       sel.innerHTML = matched.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("") + '<option value="__custom__">✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)…</option>';
     }
-    const box = document.getElementById(`model-box-${prov}`);
+    const box = document.getElementById(`${pre}model-box-${prov}`);
     const countSpan = box ? box.querySelector("div > div > span") : null;
     if (countSpan) {
       countSpan.textContent = `เลือกรุ่นโมเดล (พบ ${matched.length} จาก ${provModels.length} รุ่น):`;
@@ -2424,7 +2449,8 @@ document.addEventListener("change", (ev) => {
   const t = ev.target;
   if (t && t.classList.contains("model-select-elem")) {
     const prov = t.dataset.provider;
-    const custInp = document.getElementById(`model-custom-input-${prov}`);
+    const pre = t.dataset.scope ? `${t.dataset.scope}-` : "";
+    const custInp = document.getElementById(`${pre}model-custom-input-${prov}`);
     if (custInp) {
       custInp.style.display = t.value === "__custom__" ? "block" : "none";
       if (t.value === "__custom__") custInp.focus();
@@ -2610,8 +2636,10 @@ document.addEventListener("click", async (ev) => {
     }
   } else if (t.dataset.fetchModels) {
     const provName = t.dataset.fetchModels;
+    const scope = t.dataset.scope || "";
+    const pre = scope ? `${scope}-` : "";
     const curModel = t.dataset.currentModel || "";
-    const box = document.getElementById(`model-box-${provName}`);
+    const box = document.getElementById(`${pre}model-box-${provName}`);
     if (!box) return;
 
     const card = t.closest(".provider-card");
@@ -2640,13 +2668,15 @@ document.addEventListener("click", async (ev) => {
         return;
       }
       cachedModels[provName] = models;
-      openModelBoxes[provName] = true;
+      if (!scope) {  // การ์ด BYOP ไม่เปิดกล่องของการ์ดคีย์ที่วางเอง จึงไม่แตะสถานะเปิด/ปิดของการ์ดนั้น
+        openModelBoxes[provName] = true;
+        saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
+      }
       saveStoredState("auto_dev_crew_cached_models", cachedModels);
-      saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
 
-      box.innerHTML = renderModelBoxContent(provName, curModel, models, modelSearchQuery[provName] || "");
-      const sel = document.getElementById(`model-select-${provName}`);
-      const custInp = document.getElementById(`model-custom-input-${provName}`);
+      box.innerHTML = renderModelBoxContent(provName, curModel, models, modelSearchQuery[provName] || "", scope);
+      const sel = document.getElementById(`${pre}model-select-${provName}`);
+      const custInp = document.getElementById(`${pre}model-custom-input-${provName}`);
       if (sel && custInp) {
         sel.onchange = () => {
           custInp.style.display = sel.value === "__custom__" ? "block" : "none";
@@ -2657,7 +2687,7 @@ document.addEventListener("click", async (ev) => {
       box.innerHTML = `
         <div style="color:var(--bad); font-size:11px; line-height:1.4;">
           ⚠️ ${esc(err.message)}
-          <div style="margin-top:4px;"><button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">ปิด</button></div>
+          <div style="margin-top:4px;"><button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}"${scope ? ` data-scope="${esc(scope)}"` : ""}>ปิด</button></div>
         </div>
       `;
     } finally {
@@ -2666,14 +2696,19 @@ document.addEventListener("click", async (ev) => {
     }
   } else if (t.dataset.cancelModel) {
     const provName = t.dataset.cancelModel;
-    openModelBoxes[provName] = false;
-    saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
-    const box = document.getElementById(`model-box-${provName}`);
+    const scope = t.dataset.scope || "";
+    if (!scope) {
+      openModelBoxes[provName] = false;
+      saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
+    }
+    const box = document.getElementById(`${scope ? scope + "-" : ""}model-box-${provName}`);
     if (box) box.style.display = "none";
   } else if (t.dataset.saveModel) {
     const provName = t.dataset.saveModel;
-    const sel = document.getElementById(`model-select-${provName}`);
-    const custInp = document.getElementById(`model-custom-input-${provName}`);
+    const scope = t.dataset.scope || "";
+    const pre = scope ? `${scope}-` : "";
+    const sel = document.getElementById(`${pre}model-select-${provName}`);
+    const custInp = document.getElementById(`${pre}model-custom-input-${provName}`);
     if (!sel) return;
     let chosen = sel.value;
     if (chosen === "__custom__") {
@@ -2687,13 +2722,21 @@ document.addEventListener("click", async (ev) => {
     t.disabled = true;
     try {
       await post("/api/engine-model", {name: provName, model: chosen});
-      const disp = document.getElementById(`model-display-${provName}`);
-      if (disp) disp.textContent = chosen;
-      openModelBoxes[provName] = false;
-      saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
-      const box = document.getElementById(`model-box-${provName}`);
+      // อัปเดตการแสดงผลทั้งสองที่ (การ์ดคีย์และการ์ด BYOP) ให้ตรงกันเสมอ
+      for (const id of [`model-display-${provName}`, `byop-model-display-${provName}`]) {
+        const disp = document.getElementById(id);
+        if (disp) disp.textContent = chosen;
+      }
+      if (!scope) {
+        openModelBoxes[provName] = false;
+        saveStoredState("auto_dev_crew_open_model_boxes", openModelBoxes);
+      }
+      const box = document.getElementById(`${pre}model-box-${provName}`);
       if (box) box.style.display = "none";
-      const fetchBtn = document.querySelector(`button[data-fetch-models="${provName}"]`);
+      const fetchSel = scope
+        ? `button[data-fetch-models="${provName}"][data-scope="${scope}"]`
+        : `button[data-fetch-models="${provName}"]:not([data-scope])`;
+      const fetchBtn = document.querySelector(fetchSel);
       if (fetchBtn) fetchBtn.dataset.currentModel = chosen;
       toast(`บันทึกโมเดล ${chosen} สำหรับ ${provName} สำเร็จ`);
       if (state && state.keys_catalog) {
