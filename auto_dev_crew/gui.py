@@ -1130,6 +1130,10 @@ def _api_byop_models_roles(body: dict, cfg: dict) -> dict:
     return {"ok": True, "model": result}
 
 
+def _api_byop_models_promote(body: dict, cfg: dict) -> dict:
+    return {"ok": True, "models": byop_store.promote_model(str(body.get("id") or ""))}
+
+
 def _api_byop_models_test(body: dict, cfg: dict) -> dict:
     return {"ok": True, "result": byop_store.check_model(str(body.get("id") or ""))}
 
@@ -1648,6 +1652,7 @@ ROUTES: dict[str, Callable[[dict, dict], dict]] = {
     "/api/byop/models/remove": _api_byop_models_remove,
     "/api/byop/models/catalog": _api_byop_models_catalog,
     "/api/byop/models/roles": _api_byop_models_roles,
+    "/api/byop/models/promote": _api_byop_models_promote,
     "/api/byop/models/test": _api_byop_models_test,
 }
 

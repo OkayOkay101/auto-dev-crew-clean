@@ -67,9 +67,32 @@
 
 - **A** ยืนยันแล้วว่า `/` เสิร์ฟ `index_sidebar.html` (UI หลัก) และ `/classic` เสิร์ฟ `index.html` (UI เดิมสำหรับย้อนกลับ) จึงคงการ์ดใน `index.html` ไว้ ไม่ได้ลบ
 - **B** ช่องพิมพ์เปลี่ยนเป็น dropdown จาก `POST /api/byop/models/catalog` มีตัวเลือก "พิมพ์เอง" และ fallback เมื่อดึงรายการไม่ได้ เพิ่มโมเดลจะถูกปฏิเสธถ้า ID ไม่อยู่ในรายการ
-- **C** บทบาทหนึ่งมีโมเดลเดียว (`byop_store._claim_roles`) การเพิ่มบทบาทที่มีอยู่แล้วจะย้ายให้โมเดลใหม่และแจ้งว่าย้ายจากตัวไหน ชิปบทบาทกดสลับได้ (`/api/byop/models/roles`)
+- **C** (ยกเลิกแล้ว ดูหัวข้อ 6) เดิมบทบาทหนึ่งมีโมเดลเดียว โดย `byop_store._claim_roles` ย้ายบทบาทให้โมเดลใหม่
 - **D** ปุ่ม 🧪 ทดสอบ เรียกเมื่อผู้ใช้กดเท่านั้น ส่ง 1 โทเคนต่อ 1 ครั้ง (`/api/byop/models/test`)
 - **E** ค่าเริ่มต้นส่งมาจาก `byop.DEFAULT_MODEL` ผ่าน API ไม่ฝัง placeholder ใน HTML แล้ว ข้อความสถานะของการ์ดรวมผ่าน `byopSetMsg` ยังเหลือ `config.yaml` ที่มี engine model ของตัวเอง ซึ่งไม่ได้แก้
 - **F** เทสต์: `tests/test_byop_model_flow.py` ใหม่ 22 เทสต์, แก้ `test_byop_routes.py` (ฉีด catalog) และ `test_byop_model_picker.py` เพิ่มอีก 1 เทสต์ ชุดเต็ม `pytest` ผ่าน 1326 passed, 6 skipped
 
 หมายเหตุ: `index.html` (classic) ยังเรียก `/api/byop/models/add` ด้วยช่องพิมพ์เดิม ใช้งานได้เมื่อออนไลน์เพราะมีการตรวจแคตตาล็อกฝั่งเซิร์ฟเวอร์ ยังไม่ได้ทดสอบในเบราว์เซอร์จริง
+
+## 6. การเปลี่ยนแปลงตามคำขอ: บทบาทหนึ่งมีได้หลายโมเดล + ค้นหาโมเดล
+
+คำขอ: ยกเลิกกฎ "บทบาทหนึ่งมีโมเดลเดียว" (ตอบข้อ 4 ของหัวข้อ 4 ว่า "หลายโมเดลต่อบทบาทได้") และเพิ่มการค้นหาในจุดที่เลือกโมเดล
+
+ที่ทำแล้ว (ยังไม่ commit):
+- `byop_store`: เอา `_claim_roles` ออก `add_model` และ `set_roles` ไม่ย้ายบทบาทจากโมเดลอื่นแล้ว ผลที่คืนไม่มี `moved_from` อีก
+- ลำดับในรายการ `models` คือลำดับความสำคัญ: `models_for_role(role)` คืนทุกโมเดลตามลำดับ, `model_for_role` คืนตัวแรก (โมเดลหลัก)
+- `promote_model(id)` ย้ายโมเดลไปต้นรายการ = เป็นโมเดลหลักของทุกบทบาทที่มันถือ (`POST /api/byop/models/promote`)
+- UI (`index_sidebar.html`): ช่องค้นหา `byopModelSearch` กรอง dropdown ของแคตตาล็อก, ป้าย "หลัก: …" บนแต่ละโมเดล, ปุ่ม "⬆ เป็นหลัก", ข้อความสถานะไม่อ้าง "ย้ายบทบาท" อีก
+- เทสต์: `tests/test_byop_model_flow.py` เปลี่ยนชุดบทบาทเป็น `MultiModelRoleTests` และเพิ่มเทสต์ promote/route ชุดเต็ม `pytest` ผ่าน 1330 passed, 6 skipped
+
+ยังไม่ครบ / ตัดสินใจไว้แล้ว:
+- **Fallback (เพิ่มแล้ว)**: `byop_store.engines_for_role` ขยาย Pollinations ที่บทบาทมีหลายโมเดลเป็นสำเนาต่อโมเดลตามลำดับ (`byop_model` ปักโมเดล) และ `runner._call_agent_pass` วนลองทีละตัว เมื่อโมเดลใดล้มเหลว (โควตา, ERROR, หมดเวลา) จะพักเฉพาะโมเดลนั้นในชื่อสถานะ `name@model` (`runner._status_name`) รอบถัดไปข้ามโมเดลที่ยังพักอยู่ ชื่อ key id เดิมไม่เปลี่ยน
+- ข้อจำกัด: โควตาหมดยังทำให้คีย์ถูกพักตามเดิม (คีย์เดียวกันใช้กับทุกโมเดล) และหน้า classic (`index.html`) ยังไม่มีปุ่มเป็นหลักและช่องค้นหา
+- หน้า GUI ที่แสดงสถานะ engine (`keys.py`) ยังอ่านสถานะด้วยชื่อ engine เดิม จึงยังไม่แสดงการพักรายโมเดล
+- ทดสอบ: `tests/test_byop_fallback.py` 10 เทสต์ ชุดเต็มผ่าน 1340 passed, 6 skipped
+
+**ผลทดสอบของจริง (16 พ.ย. 2026):**
+- ปุ่มทดสอบ (`_chat_probe`) เดิมใช้ `max_tokens: 1` ทำให้ gpt-oss ได้ 400 `output_token_limit_exceeded` ทั้งที่ใช้งานได้ แก้เป็น 64 แล้ว
+- opencode รู้จักเฉพาะโมเดลที่ประกาศใน `opencode.json` (มีแค่ gpt-6-luna) โมเดล BYOP อื่นจึงได้ "Model not found" แก้โดยประกาศโมเดลตอนรันผ่าน `OPENCODE_CONFIG_CONTENT` (`byop_store.opencode_declaration`) โดยไม่แก้ไฟล์ `opencode.json`
+- ผลเรียกจริงผ่าน `runner.call_agent` ด้วย `pollinations/openai/gpt-oss-20b` เป็นโมเดลหลักของ coder / judge / scan ตอบ "pong" สำเร็จทั้งสามบทบาท
+- `config.yaml` เป็นเทมเพลตที่ `engines: []` จึงไม่มี engine Pollinations ในการใช้งานปกติ การทดสอบใช้ engine ที่สร้างในหน่วยความจำ

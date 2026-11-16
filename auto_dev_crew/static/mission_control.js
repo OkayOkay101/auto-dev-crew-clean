@@ -37,14 +37,21 @@
   }
 
   // 1. Simple vs Pro Mode Controller
-  function setUiComplexityMode(mode) {
-    const clean = mode === "simple" ? "simple" : "pro";
+  // ผู้ใช้ครั้งแรก (ยังไม่เคยเลือกโหมด) = ง่าย · การเลือกของผู้ใช้จะถูกจำไว้ (adc_ui_mode)
+  // applyUiMode แสดงผลอย่างเดียว ไม่เขียน storage; setUiComplexityMode = การกดของผู้ใช้
+  function applyUiMode(mode) {
+    const clean = mode === "pro" ? "pro" : "simple";
     document.documentElement.setAttribute("data-ui-mode", clean);
-    storageSet("adc_ui_mode", clean);
     document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
       btn.setAttribute("aria-pressed", String(btn.dataset.modeBtn === clean));
       btn.classList.toggle("active", btn.dataset.modeBtn === clean);
     });
+  }
+
+  function setUiComplexityMode(mode) {
+    const clean = mode === "pro" ? "pro" : "simple";
+    applyUiMode(clean);
+    storageSet("adc_ui_mode", clean);
   }
 
   // 2. Category 8 Rubric Safety Self-Quiz Gate (Protects Level 3 & merge-all)
@@ -298,12 +305,130 @@
     document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
       btn.addEventListener("click", () => setUiComplexityMode(btn.dataset.modeBtn));
     });
-    setUiComplexityMode(storageGet("adc_ui_mode", "pro"));
+    applyUiMode(storageGet("adc_ui_mode", "simple"));
+  }
+
+  // 5. บทแนะนำการใช้งาน (Tutorial): เปิดอัตโนมัติครั้งแรก และเปิดซ้ำได้จากหน้าตั้งค่า
+  // ใช้ textContent เท่านั้น · ภาษาตาม adc_lang ของหน้า (th / en) ณ ตอนเปิด
+  const TUTORIAL_STEPS = [
+    {
+      target: null,
+      th: {title: "ยินดีต้อนรับสู่ Auto Dev Crew", body: "เริ่มต้นด้วยโหมด \"ง่าย\" ซึ่งแสดงเฉพาะเมนูที่จำเป็น เปลี่ยนเป็นโหมด \"โปร\" ได้ทุกเมื่อที่มุมบนขวา (ง่าย / โปร)"},
+      en: {title: "Welcome to Auto Dev Crew", body: "You start in Simple mode, which shows only the essentials. Switch to Pro any time with the Simple / Pro toggle at the top right."}
+    },
+    {
+      target: "overview",
+      th: {title: "ภาพรวม", body: "ดูว่าเอเจนต์กำลังทำอะไร และมีงานที่รอให้คุณตัดสินใจหรือไม่"},
+      en: {title: "Overview", body: "See what the agents are doing and whether anything is waiting for your decision."}
+    },
+    {
+      target: "studio",
+      th: {title: "สตูดิโอ", body: "บอก AI ว่าต้องทำอะไร ระบบจะสร้างเป็น issue ให้เอเจนต์ทำ"},
+      en: {title: "Studio", body: "Tell the AI what to do. The system turns it into an issue for an agent to work on."}
+    },
+    {
+      target: "keys",
+      th: {title: "คีย์ AI", body: "เพิ่มคีย์ของผู้ให้บริการ AI อย่างน้อยหนึ่งตัวก่อนเริ่มงาน"},
+      en: {title: "AI keys", body: "Add at least one AI provider key before you start work."}
+    },
+    {
+      target: "work",
+      th: {title: "งาน", body: "ดูบันทึกสดและประวัติงานที่เอเจนต์ทำไปแล้ว"},
+      en: {title: "Work", body: "Watch the live log and review the history of finished agent work."}
+    },
+    {
+      target: "settings",
+      th: {title: "ตั้งค่า", body: "เปลี่ยนภาษา และเปิดบทแนะนำนี้ดูอีกครั้งได้ที่นี่ · พร้อมแล้ว เริ่มจากปุ่ม ➕ สั่งงานใหม่ ที่มุมบนขวา"},
+      en: {title: "Settings", body: "Change the language and reopen this guide here. Ready? Start with the ➕ New task button at the top right."}
+    }
+  ];
+
+  // เสร็จหรือข้ามแล้ว = จำไว้ในเบราว์เซอร์นี้ (ถ้า storage ใช้ไม่ได้ บทแนะนำจะเปิดทุกครั้งที่โหลดหน้า)
+  function tutorialDone() {
+    return storageGet("adc_tutorial_done", "false") === "true";
+  }
+
+  function tutorialLang() {
+    return storageGet("adc_lang", "th") === "en" ? "en" : "th";
+  }
+
+  function goToPanel(main) {
+    const btn = document.querySelector(`nav.side button[data-main="${main}"]`);
+    if (btn) btn.click();
+  }
+
+  function openTutorial() {
+    const old = document.getElementById("adcTutorialDlg");
+    if (old) old.remove();
+    const lang = tutorialLang();
+    const ui = lang === "en"
+      ? {skip: "Skip", back: "Back", next: "Next", finish: "Finish", counter: (n, t) => `${n} / ${t}`}
+      : {skip: "ข้าม", back: "ย้อนกลับ", next: "ถัดไป", finish: "เสร็จสิ้น", counter: (n, t) => `${n} / ${t}`};
+
+    const dlg = el("dialog", {id: "adcTutorialDlg", "aria-labelledby": "adcTutorialTitle", style: "width:min(520px,94vw)"});
+    const head = el("h2", {id: "adcTutorialTitle", style: "margin:0 0 6px"});
+    const counter = el("p", {class: "muted", style: "margin:0 0 8px; font-size:12px"});
+    const body = el("p", {style: "margin:0 0 12px"});
+    const skipBtn = button(ui.skip, {class: "btn btn-sm"});
+    const backBtn = button(ui.back, {class: "btn btn-sm"});
+    const nextBtn = button(ui.next, {class: "btn btn-sm primary"});
+    const actions = el("div", {class: "row", style: "gap:8px; flex-wrap:wrap"});
+    actions.append(skipBtn, el("span", {class: "spacer"}), backBtn, nextBtn);
+    dlg.append(counter, head, body, actions);
+
+    let i = 0;
+    function render() {
+      const step = TUTORIAL_STEPS[i];
+      const text = step[lang];
+      head.textContent = text.title;
+      body.textContent = text.body;
+      counter.textContent = ui.counter(i + 1, TUTORIAL_STEPS.length);
+      backBtn.disabled = i === 0;
+      nextBtn.textContent = i === TUTORIAL_STEPS.length - 1 ? ui.finish : ui.next;
+      if (step.target) goToPanel(step.target);
+    }
+
+    // ทำงานซ้ำได้ (idempotent): บันทึกว่าดูแล้วและเอาออกจากหน้า
+    function onClosed() {
+      storageSet("adc_tutorial_done", "true");
+      dlg.remove();
+    }
+    // ไม่พึ่ง event "close" ที่อาจมาช้า: บันทึกและเอาออกทันที แล้วค่อยปิด dialog
+    function closeTutorial() {
+      if (dlg.open && typeof dlg.close === "function") dlg.close();
+      onClosed();
+    }
+
+    skipBtn.addEventListener("click", closeTutorial);
+    backBtn.addEventListener("click", () => {
+      if (i > 0) { i -= 1; render(); }
+    });
+    nextBtn.addEventListener("click", () => {
+      if (i < TUTORIAL_STEPS.length - 1) { i += 1; render(); }
+      else closeTutorial();
+    });
+    dlg.addEventListener("close", onClosed);
+
+    document.body.append(dlg);
+    render();
+    if (typeof dlg.showModal === "function") dlg.showModal();
+    else dlg.setAttribute("open", "");
+  }
+
+  function maybeAutoOpenTutorial() {
+    if (!tutorialDone()) setTimeout(openTutorial, 400);
+  }
+
+  function bindTutorial() {
+    const btn = document.getElementById("openTutorialBtn");
+    if (btn) btn.addEventListener("click", openTutorial);
   }
 
   function initMissionControl() {
     bindModeSwitch();
     mountMissionControlCard();
+    bindTutorial();
+    maybeAutoOpenTutorial();
   }
 
   if (document.readyState === "loading") {

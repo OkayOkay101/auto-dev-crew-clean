@@ -1,5 +1,3 @@
-# Generic template config (clean copy). Fill in your own owner, repos and enable engines.
-# API keys are read from .env (see .env.example); never put key values here.
 owner: example-owner
 parallel:
   enabled: true
@@ -14,7 +12,7 @@ parallel:
     slot_3:
       persona: null
       repo: null
-  active_slot: null
+  active_slot: 2
 evaluation:
   enabled: true
   engine: auto
@@ -53,7 +51,77 @@ ci:
   allow_no_ci: true
   auto_bootstrap_ci: false
 engine_timeout_cooldown_minutes: 20
-engines: []
+engines:
+- name: pollinations-luna
+  auth_provider: pollinations
+  path: ~/.opencode-bin/opencode.exe
+  provider: Pollinations.ai (OpenAI Compatible)
+  command: opencode
+  model: pollinations/openai/gpt-6-luna
+  timeout_minutes: 30
+  trains_on_data: false
+  enabled: false
+  roles:
+  - coder
+  - scan
+  api_keys:
+  - ${POLLINATIONS_API_KEY_1}
+- name: nvidia-nemotron
+  auth_provider: nvidia
+  path: ~/.opencode-bin/opencode.exe
+  provider: NVIDIA build
+  command: opencode
+  model: nvidia/nvidia/nemotron-3-ultra-550b-a55b
+  timeout_minutes: 45
+  trains_on_data: false
+  enabled: false
+  api_keys:
+  - ${NVIDIA_API_KEY_1}
+- name: pollinations-glyph
+  auth_provider: pollinations-glyph
+  path: ~/.opencode-bin/opencode.exe
+  provider: Pollinations.ai
+  command: opencode
+  model: pollinations/stealth/glyph-cluster
+  timeout_minutes: 30
+  trains_on_data: false
+  enabled: false
+  roles:
+  - coder
+  api_keys:
+  - ${POLLINATIONS_API_KEY_1}
+- name: pollinations-deepseek
+  auth_provider: pollinations-deepseek
+  path: ~/.opencode-bin/opencode.exe
+  provider: Pollinations.ai (DeepSeek, judge)
+  command: opencode
+  model: pollinations/deepseek/deepseek-v4.1-flash
+  timeout_minutes: 30
+  trains_on_data: false
+  enabled: false
+  roles:
+  - judge
+  api_keys:
+  - ${POLLINATIONS_API_KEY_1}
+- name: agy-ai-pro
+  provider: Google AI Pro
+  command: agy
+  path: ~/.gemini/bin/agy.exe
+  model: gemini-3.8-flash-high
+  timeout_minutes: 30
+  trains_on_data: false
+  enabled: false
+- name: opencode-pollinations
+  provider: Pollinations
+  command: opencode
+  path: ~/.opencode-bin/opencode.exe
+  model: pollinations/openai/gpt-6-luna
+  timeout_minutes: 30
+  trains_on_data: false
+  enabled: true
+  api_keys:
+  - ${POLLINATIONS_API_KEY_1}
+  provider_id: pollinations
 merge_mode: review-all
 max_fix_attempts: 3
 small_pr:
@@ -88,7 +156,18 @@ personas:
     quality:
     - improve-codebase-architecture
     - caveman-persona
-repos: []
+repos:
+- name: OkayOkay101/cyberpunk-pomodoro
+  base: main
+  setup: []
+  test: &id001
+  - node test-runner.js
+  scanners:
+    sentinel: []
+    quality: *id001
+  ci:
+    auto_bootstrap_ci: false
+  enabled: true
 autonomous:
   max_turns_per_session: 40
 todo_scan:

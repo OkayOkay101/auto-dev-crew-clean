@@ -1,4 +1,4 @@
-"""ระบบเพิ่มโมเดล BYOP: ตรวจกับแคตตาล็อก, ย้ายบทบาท (บทบาทหนึ่งมีโมเดลเดียว), ตั้งบทบาทจากชิป, ทดสอบโมเดล.
+"""ระบบเพิ่มโมเดล BYOP: ตรวจกับแคตตาล็อก, บทบาทหนึ่งมีได้หลายโมเดล (ตัวแรกเป็นหลัก), ตั้งบทบาทจากชิป, ทดสอบโมเดล.
 
 ทุกเทสต์ใช้ไฟล์ชั่วคราว และฉีดฟังก์ชันเครือข่ายเข้าไป จึงไม่แตะ .env / state จริง และไม่เรียก Pollinations.
 """
@@ -38,38 +38,55 @@ class CatalogCheckTests(_Workspace):
     def test_known_model_is_accepted(self):
         res = byop_store.add_model(LUNA, ["coder"], self.state, known_ids={LUNA})
         self.assertEqual(res["roles"], ["coder"])
-        self.assertEqual(res["moved_from"], [])
 
     def test_without_known_ids_no_catalog_check_is_done(self):
         byop_store.add_model("pollinations/anything", ["scan"], self.state)
         self.assertEqual(self.roles_of(), {"pollinations/anything": ["scan"]})
 
 
-class RoleExclusivityTests(_Workspace):
-    def test_adding_a_taken_role_moves_it_and_drops_empty_model(self):
+class MultiModelRoleTests(_Workspace):
+    def test_adding_a_second_model_to_a_taken_role_keeps_the_first(self):
         byop_store.add_model(LUNA, ["coder"], self.state)
         res = byop_store.add_model(SEARCH, ["coder"], self.state)
-        self.assertEqual(res["moved_from"], [LUNA])
-        self.assertEqual(self.roles_of(), {SEARCH: ["coder"]})
+        self.assertEqual(res["roles"], ["coder"])
+        self.assertEqual(self.roles_of(), {LUNA: ["coder"], SEARCH: ["coder"]})
 
-    def test_moving_one_role_keeps_the_other_roles_of_the_old_model(self):
-        byop_store.add_model(LUNA, ["coder", "judge"], self.state)
-        res = byop_store.add_model(SEARCH, ["judge"], self.state)
-        self.assertEqual(res["moved_from"], [LUNA])
-        self.assertEqual(self.roles_of(), {LUNA: ["coder"], SEARCH: ["judge"]})
+    def test_adding_the_same_role_twice_does_not_duplicate_it(self):
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        self.assertEqual(self.roles_of(), {LUNA: ["coder"]})
 
-    def test_each_role_resolves_to_exactly_one_model(self):
-        byop_store.add_model(LUNA, ["coder", "scan"], self.state)
-        byop_store.add_model(SEARCH, ["scan"], self.state)
-        self.assertEqual(byop_store.model_for_role("scan", self.state), SEARCH)
+    def test_models_for_role_lists_all_in_order_with_primary_first(self):
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        byop_store.add_model(SEARCH, ["coder"], self.state)
+        self.assertEqual(byop_store.models_for_role("coder", self.state), [LUNA, SEARCH])
         self.assertEqual(byop_store.model_for_role("coder", self.state), LUNA)
 
-    def test_set_roles_replaces_the_whole_set_and_steals_conflicts(self):
+    def test_model_for_role_is_none_when_no_model_has_it(self):
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        self.assertIsNone(byop_store.model_for_role("judge", self.state))
+        self.assertEqual(byop_store.models_for_role("judge", self.state), [])
+
+    def test_promote_makes_the_model_primary_for_every_role_it_holds(self):
+        byop_store.add_model(LUNA, ["coder", "scan"], self.state)
+        byop_store.add_model(SEARCH, ["coder"], self.state)
+        byop_store.promote_model(SEARCH, self.state)
+        self.assertEqual(byop_store.model_for_role("coder", self.state), SEARCH)
+        self.assertEqual(byop_store.models_for_role("coder", self.state), [SEARCH, LUNA])
+        self.assertEqual(byop_store.model_for_role("scan", self.state), LUNA)
+
+    def test_promote_unknown_model_is_rejected_and_nothing_changes(self):
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        with self.assertRaises(byop_store.ByopError):
+            byop_store.promote_model(SEARCH, self.state)
+        self.assertEqual(self.roles_of(), {LUNA: ["coder"]})
+
+    def test_set_roles_changes_only_that_model(self):
         byop_store.add_model(LUNA, ["coder"], self.state)
         byop_store.add_model(SEARCH, ["judge"], self.state)
         res = byop_store.set_roles(LUNA, ["coder", "judge"], self.state)
-        self.assertEqual(res["moved_from"], [SEARCH])
-        self.assertEqual(self.roles_of(), {LUNA: ["coder", "judge"]})
+        self.assertEqual(res["roles"], ["coder", "judge"])
+        self.assertEqual(self.roles_of(), {LUNA: ["coder", "judge"], SEARCH: ["judge"]})
 
     def test_set_roles_empty_removes_the_model(self):
         byop_store.add_model(LUNA, ["coder"], self.state)
@@ -125,7 +142,7 @@ class CheckModelTests(_Workspace):
         with self.assertRaises(byop_store.ByopError):
             byop_store.check_model(LUNA, self.env, self.state, probe=lambda t, m: 200)
 
-    def test_chat_probe_strips_provider_prefix_and_sends_one_token(self):
+    def test_chat_probe_strips_provider_prefix_and_allows_reasoning_models(self):
         captured = {}
 
         def fake_urlopen(req, timeout=None):
@@ -138,7 +155,8 @@ class CheckModelTests(_Workspace):
         with mock.patch.object(byop_store.urllib.request, "urlopen", fake_urlopen):
             self.assertEqual(byop_store._chat_probe(SECRET, LUNA), 200)
         self.assertEqual(captured["body"]["model"], "openai/gpt-6-luna")
-        self.assertEqual(captured["body"]["max_tokens"], 1)
+        # 1 โทเคนทำให้โมเดลที่คิดก่อนตอบ (gpt-oss) ได้ 400 จึงต้องมากกว่านั้น
+        self.assertGreaterEqual(captured["body"]["max_tokens"], 64)
         self.assertEqual(captured["url"], byop_store.CHAT_URL)
 
     def test_chat_probe_returns_http_error_code(self):
@@ -168,11 +186,18 @@ class RouteTests(_Workspace):
             gui._api_byop_models_add({"id": LUNA, "roles": ["coder"]}, {})
         self.assertEqual(self.roles_of(), {LUNA: ["coder"]})
 
-    def test_roles_route_returns_moved_from(self):
+    def test_roles_route_does_not_touch_other_models(self):
         byop_store.add_model(LUNA, ["coder"], self.state)
         byop_store.add_model(SEARCH, ["judge"], self.state)
-        res = gui._api_byop_models_roles({"id": LUNA, "roles": ["coder", "judge"]}, {})
-        self.assertEqual(res["model"]["moved_from"], [SEARCH])
+        gui._api_byop_models_roles({"id": LUNA, "roles": ["coder", "judge"]}, {})
+        self.assertEqual(self.roles_of(), {LUNA: ["coder", "judge"], SEARCH: ["judge"]})
+
+    def test_promote_route_moves_model_to_front(self):
+        byop_store.add_model(LUNA, ["coder"], self.state)
+        byop_store.add_model(SEARCH, ["coder"], self.state)
+        res = gui._api_byop_models_promote({"id": SEARCH}, {})
+        self.assertEqual(res["models"][0]["id"], SEARCH)
+        self.assertEqual(byop_store.model_for_role("coder", self.state), SEARCH)
 
     def test_test_route_delegates_to_check_model(self):
         with mock.patch.object(byop_store, "check_model", return_value={"id": LUNA, "ok": True}) as chk:
@@ -185,7 +210,8 @@ class RouteTests(_Workspace):
         self.assertEqual(view["default_model"], gui.byop.DEFAULT_MODEL)
 
     def test_new_post_routes_are_registered(self):
-        for path in ("/api/byop/models/catalog", "/api/byop/models/roles", "/api/byop/models/test"):
+        for path in ("/api/byop/models/catalog", "/api/byop/models/roles",
+                     "/api/byop/models/promote", "/api/byop/models/test"):
             self.assertIn(path, gui.ROUTES)
 
 

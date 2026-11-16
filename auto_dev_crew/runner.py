@@ -631,6 +631,14 @@ def key_engine_name(eng: dict) -> str:
     return eng.get("name", eng.get("command", "default"))
 
 
+def _status_name(eng: dict) -> str:
+    """ชื่อที่ใช้เก็บสถานะ cooldown ของ engine. สำเนาที่ปักโมเดล BYOP ใช้ 'name@model' เพื่อให้แต่ละโมเดลพักแยกกัน
+    (ชื่อสำหรับ key id ยังเป็นชื่อ engine เดิมเสมอ)."""
+    name = key_engine_name(eng)
+    pinned = eng.get("byop_model")
+    return f"{name}@{pinned}" if pinned else name
+
+
 def auth_provider_for(eng: dict) -> str:
     """Provider id used to look up the OpenCode auth store.
 
@@ -853,7 +861,7 @@ def engine_skip_reason(eng: dict, status: dict | None = None, key_status: dict |
     if status is None:
         status = load_engine_status()
     # Engine-level cooldown (timeout rest, all keys exhausted) applies to keyed engines too.
-    cooldown_until = status.get(name, {}).get("cooldown_until", 0)
+    cooldown_until = status.get(_status_name(eng), {}).get("cooldown_until", 0)
     if cooldown_until > time.time():
         return f"กำลังพักถึง {dt.datetime.fromtimestamp(cooldown_until):%H:%M}"
     if configured_keys:
@@ -944,7 +952,8 @@ SCAN_READONLY_OPENCODE_CONFIG = {
 
 def _execute_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | None = None, *,
                            role: str | None = None) -> dict:
-    eng = byop_store.engine_for_role(eng, role)  # engine Pollinations ใช้โมเดลที่ผูกกับบทบาทนี้ (ถ้ามี)
+    if "byop_model" not in eng:  # สำเนาที่ปักโมเดลแล้ว (fallback หลายโมเดล) ไม่ต้องแมปใหม่
+        eng = byop_store.engine_for_role(eng, role)  # engine Pollinations ใช้โมเดลที่ผูกกับบทบาทนี้ (ถ้ามี)
     timeout = eng.get("timeout_minutes", 30) * 60
     try:
         base_cmd = engine_cmd(eng)
@@ -956,8 +965,11 @@ def _execute_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | 
         env = {**scrub_agent_env(os.environ, ROOT / "opencode.json"), "OPENCODE_CONFIG": str(ROOT / "opencode.json"),
                "OPENCODE_CONFIG_DIR": str(ROOT / ".opencode-runner"), "OPENCODE_DISABLE_CLAUDE_CODE": "1",
                "PWD": str(cwd)}
-        if role == "scan":
-            env["OPENCODE_CONFIG_CONTENT"] = json.dumps(SCAN_READONLY_OPENCODE_CONFIG)
+        content = dict(SCAN_READONLY_OPENCODE_CONFIG) if role == "scan" else {}
+        # โมเดล BYOP ที่เพิ่มใหม่ไม่อยู่ใน opencode.json จึงต้องประกาศตอนรัน (ไม่งั้น opencode ตอบ "Model not found")
+        content = {**content, **byop_store.opencode_declaration(eng.get("model"))}
+        if content:
+            env["OPENCODE_CONFIG_CONTENT"] = json.dumps(content)
         if active_key:
             env["OPENAI_API_KEY"] = active_key
             prov = (eng.get("provider") or "").lower()
@@ -1092,16 +1104,18 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
     status = load_engine_status()
     key_status = load_key_status()
     candidates = []
-    for e in engines:
+    # Pollinations ที่บทบาทมีหลายโมเดลจะขยายเป็นหนึ่งรายการต่อโมเดล (ตามลำดับหลัก -> สำรอง)
+    expanded = [c for e in engines for c in byop_store.engines_for_role(e, role)]
+    for e in expanded:
         reason = engine_skip_reason(e, status, key_status, role=role)
         if reason is None and role == "scan" and e.get("command") != "opencode":
             # บทบาท scan ใช้ได้เฉพาะ OpenCode เพราะจำกัดเครื่องมือได้ผ่าน config; CLI อื่นรันด้วย --yolo
-            log(f"⏭️ ข้าม Engine {key_engine_name(e)} [บทบาท: scan] — ไม่รองรับโหมดอ่านอย่างเดียว", slot_id=slot_id)
+            log(f"⏭️ ข้าม Engine {_status_name(e)} [บทบาท: scan] — ไม่รองรับโหมดอ่านอย่างเดียว", slot_id=slot_id)
             continue
         if reason is None:
             candidates.append(e)
         else:
-            log(f"⏭️ ข้าม Engine {key_engine_name(e)} [บทบาท: {role}] — {reason}", slot_id=slot_id)
+            log(f"⏭️ ข้าม Engine {_status_name(e)} [บทบาท: {role}] — {reason}", slot_id=slot_id)
     if not candidates:
         active_cooldowns = [f"{e.get('name')}: พักถึง {dt.datetime.fromtimestamp(status[e.get('name')]['cooldown_until']):%H:%M}"
                             for e in engines if e.get("name") in status and status[e.get("name")].get("cooldown_until", 0) > time.time()]
@@ -1115,7 +1129,7 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
     current_prompt = prompt  # เปลี่ยนเป็น handoff prompt เมื่อสลับจากเอนจินที่โควตาหมดกลางงาน
 
     for eng in candidates:
-        eng_name = key_engine_name(eng)
+        eng_name = _status_name(eng)  # ใช้เก็บ cooldown และ log; สำเนา BYOP จะเป็น name@model
         entries = get_engine_key_entries(eng, role=role)
         if entries:
             while True:

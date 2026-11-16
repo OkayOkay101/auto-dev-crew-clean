@@ -2,6 +2,11 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<script>
+  /* ผู้ใช้ครั้งแรก (ยังไม่เคยเลือกโหมด) = ง่าย · ตั้งก่อนวาดหน้า เพื่อไม่ให้เมนูขั้นสูงวาบขึ้นมาก่อน */
+  try { document.documentElement.setAttribute("data-ui-mode", localStorage.getItem("adc_ui_mode") === "pro" ? "pro" : "simple"); }
+  catch (_) { document.documentElement.setAttribute("data-ui-mode", "simple"); }
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f5f8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)">
@@ -267,6 +272,8 @@ header.topbar { min-height: 58px; }
 .mode-switch .mode-btn:hover { color: var(--text); }
 .mode-switch .mode-btn.active { background: var(--accent); color: var(--on-accent); }
 @media (max-width: 720px) { .mode-switch .mode-btn { padding: 4px 7px; } }
+/* โหมดง่าย: ซ่อนบล็อกขั้นสูงที่มี data-pro-only (โหมดโปรแสดงทั้งหมด) */
+html[data-ui-mode="simple"] [data-pro-only] { display: none !important; }
 
 /* ===== จอเล็ก ===== */
 @media (max-width: 1080px) { .studio-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -584,7 +591,7 @@ header.topbar { min-height: 58px; }
           <div id="studioFileList" class="scroll-list mono" style="max-height:360px; gap:4px"></div>
         </div>
 
-        <details class="card tool-card" id="studioFindTools">
+        <details class="card tool-card" id="studioFindTools" data-pro-only>
           <summary>🔎 หาปัญหาในโค้ด (ใช้ AI)</summary>
           <p class="help" style="margin-top:6px">ทุกปุ่มจะถามยืนยันก่อนเรียกโมเดลหรือสร้าง issue บน GitHub</p>
           <div class="tool-sec">
@@ -710,7 +717,7 @@ header.topbar { min-height: 58px; }
   </section>
 
   <section class="main-panel" id="main-settings" aria-labelledby="pageTitle">
-    <div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+    <div class="card" id="toolsCard" data-pro-only style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
       <div style="flex:1 1 260px; min-width:0"><h2 style="margin:0 0 4px; font-size:15px" data-i18n>🧰 เครื่องมือระบบ</h2><p class="muted" style="margin:0" data-i18n>ตรวจสุขภาพ, สนามทดลอง, MCP Hub, แบบทดสอบความปลอดภัย และแผน Revert</p></div>
       <button type="button" class="btn primary" id="openToolsBtn" data-i18n>เปิดเครื่องมือ</button>
     </div>
@@ -724,7 +731,12 @@ header.topbar { min-height: 58px; }
         <option value="en">English</option>
       </select>
     </div>
-    <div class="card">
+    <div class="card" id="tutorialCard">
+      <div class="card-head"><h2 data-i18n>📖 บทแนะนำการใช้งาน</h2></div>
+      <p class="help" data-i18n>บทแนะนำจะเปิดให้อัตโนมัติครั้งแรกที่ใช้งาน · กดปุ่มด้านล่างเพื่อดูอีกครั้ง</p>
+      <button class="btn" id="openTutorialBtn" type="button" data-i18n>เปิดบทแนะนำ</button>
+    </div>
+    <div class="card" id="mergeCard" data-pro-only>
       <div class="card-head"><h2 data-i18n>การตรวจก่อน merge</h2></div>
       <div class="settings-grid">
         <div class="setting">
@@ -872,7 +884,7 @@ header.topbar { min-height: 58px; }
     <div class="subnav" role="group" aria-label="เมนูย่อย คีย์ AI" data-group="keys">
       <button class="btn btn-sm" type="button" data-sub="apikeys">คีย์และผู้ให้บริการ</button>
       <button class="btn btn-sm" type="button" data-sub="failover">ลำดับสำรอง</button>
-      <button class="btn btn-sm" type="button" data-sub="recent">การใช้งานล่าสุด</button>
+      <button class="btn btn-sm" id="subRecent" type="button" data-sub="recent" data-pro-only>การใช้งานล่าสุด</button>
     </div>
 
     <section class="tab" id="tab-apikeys">
@@ -899,9 +911,10 @@ header.topbar { min-height: 58px; }
         </div>
         <div>
           <strong>โมเดลตามบทบาท (coder / judge / scan)</strong>
-          <p class="help" style="margin:4px 0 0; font-size:12px;">บทบาทหนึ่งมีโมเดลเดียว: ถ้าผูกบทบาทที่มีอยู่แล้วกับโมเดลใหม่ ระบบจะย้ายให้โมเดลใหม่ และแจ้งให้ทราบ · กดชิปเพื่อสลับบทบาท · 🧪 ทดสอบจะใช้โควตา Pollen 1 ครั้ง</p>
+          <p class="help" style="margin:4px 0 0; font-size:12px;">บทบาทหนึ่งมีได้หลายโมเดล โมเดลที่อยู่บนสุดของแต่ละบทบาท (ป้าย "หลัก") คือโมเดลที่ใช้งานจริง · กด ⬆ เป็นหลัก เพื่อย้ายขึ้นบนสุด · กดชิปเพื่อสลับบทบาท · 🧪 ทดสอบจะใช้โควตา Pollen 1 ครั้ง</p>
           <div id="byopModelList" style="display:grid; gap:6px; margin-top:6px;"></div>
           <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center;">
+            <input id="byopModelSearch" type="search" placeholder="🔍 ค้นหาโมเดล…" aria-label="ค้นหาโมเดลในรายการ" style="min-width:200px;">
             <select id="byopModelSelect" aria-label="เลือกโมเดลจาก Pollinations" style="min-width:260px;">
               <option value="">กำลังโหลดรายการโมเดล…</option>
             </select>
@@ -972,7 +985,7 @@ header.topbar { min-height: 58px; }
     </div>
     </section>
     <section class="tab" id="tab-failover">
-    <div class="card">
+    <div class="card" id="failoverCard" data-pro-only>
       <div class="card-head">
         <h2>ลำดับสำรอง (failover)</h2>
         <span class="spacer"></span>
@@ -1351,6 +1364,11 @@ function byopRenderModels(models) {
     list.append(byopMuted("ยังไม่มีโมเดลที่ผูกบทบาท"));
     return;
   }
+  // โมเดลหลักของแต่ละบทบาท = ตัวแรกในลำดับที่ถือบทบาทนั้น (ลำดับมาจากเซิร์ฟเวอร์)
+  const primaryOf = {};
+  for (const m of models) {
+    for (const role of m.roles) if (!(role in primaryOf)) primaryOf[role] = m.id;
+  }
   for (const m of models) {
     const row = document.createElement("div");
     row.style.display = "flex";
@@ -1361,7 +1379,15 @@ function byopRenderModels(models) {
     txt.className = "mono";
     txt.textContent = m.id;
     row.append(txt);
-    // ชิปบทบาท: กดเพื่อสลับ (ระบบย้ายบทบาทจากโมเดลอื่นให้เองเมื่อเปิด)
+    const primaryRoles = m.roles.filter(r => primaryOf[r] === m.id);
+    if (primaryRoles.length) {
+      const badge = document.createElement("span");
+      badge.className = "muted";
+      badge.style.fontSize = "11px";
+      badge.textContent = "หลัก: " + primaryRoles.join(", ");
+      row.append(badge);
+    }
+    // ชิปบทบาท: กดเพื่อสลับ บทบาทหนึ่งมีได้หลายโมเดล
     for (const role of ["coder", "judge", "scan"]) {
       const on = m.roles.includes(role);
       const chip = document.createElement("button");
@@ -1383,12 +1409,19 @@ function byopRenderModels(models) {
     test.textContent = "🧪 ทดสอบ";
     test.title = "ส่งข้อความทดสอบ 1 ครั้งด้วยคีย์ที่เลือกอยู่ (ใช้โควตา Pollen 1 ครั้ง)";
     test.addEventListener("click", () => byopTestModel(m.id));
+    const promote = document.createElement("button");
+    promote.type = "button";
+    promote.className = "btn btn-sm";
+    promote.textContent = "⬆ เป็นหลัก";
+    promote.title = "ทำให้โมเดลนี้เป็นโมเดลหลักของทุกบทบาทที่มันถืออยู่";
+    promote.disabled = !m.roles.some(r => primaryOf[r] !== m.id);
+    promote.addEventListener("click", () => byopPromoteModel(m.id));
     const del = document.createElement("button");
     del.type = "button";
     del.className = "btn btn-sm";
     del.textContent = "ลบ";
     del.addEventListener("click", () => byopRemoveModel(m.id));
-    row.append(test, del);
+    row.append(test, promote, del);
     list.append(row);
   }
 }
@@ -1405,13 +1438,21 @@ async function byopToggleRole(model, role) {
     ? model.roles.filter(r => r !== role)
     : [...model.roles, role];
   try {
-    const res = await post("/api/byop/models/roles", {id: model.id, roles: roles});
-    const moved = (res.model && res.model.moved_from) || [];
-    byopSetMsg(moved.length
-      ? `ย้ายบทบาท ${role} ไปที่ ${model.id} (จาก ${moved.join(", ")})`
-      : `อัปเดตบทบาทของ ${model.id} แล้ว`, true);
+    await post("/api/byop/models/roles", {id: model.id, roles: roles});
+    byopSetMsg(`อัปเดตบทบาทของ ${model.id} แล้ว`, true);
   } catch (e) {
     byopSetMsg("เปลี่ยนบทบาทไม่สำเร็จ: " + e.message, false);
+    return;
+  }
+  byopLoadPool();
+}
+
+async function byopPromoteModel(id) {
+  try {
+    await post("/api/byop/models/promote", {id: id});
+    byopSetMsg(`ตั้ง ${id} เป็นโมเดลหลักแล้ว`, true);
+  } catch (e) {
+    byopSetMsg("ตั้งเป็นหลักไม่สำเร็จ: " + e.message, false);
     return;
   }
   byopLoadPool();
@@ -1429,32 +1470,50 @@ async function byopTestModel(id) {
 }
 
 // โหลดรายการโมเดลจริงจาก Pollinations ลง dropdown; ถ้าดึงไม่ได้ให้ใช้ช่องพิมพ์เอง
-async function byopLoadCatalog() {
+// byopCatalog: รายการจาก Pollinations ที่ดึงมาแล้ว; null = ดึงไม่ได้ (ให้พิมพ์เองได้)
+let byopCatalog = null;
+
+// เติม dropdown ตามรายการที่ดึงมา กรองด้วยช่องค้นหา และคงค่าที่เลือกไว้ถ้ายังอยู่
+function byopFillSelect() {
   const sel = document.getElementById("byopModelSelect");
   const custom = document.getElementById("byopModelCustom");
-  const btn = document.getElementById("byopCatalogBtn");
-  btn.disabled = true;
-  sel.replaceChildren(new Option("กำลังโหลดรายการโมเดล…", ""));
-  try {
-    const res = await post("/api/byop/models/catalog", {});
-    const models = res.models || [];
-    sel.replaceChildren();
-    if (!models.length) {
-      sel.append(new Option("ไม่พบโมเดลในรายการ", ""));
-    } else {
-      sel.append(new Option("— เลือกโมเดล —", ""));
-      for (const m of models) sel.append(new Option(m, m));
-    }
-    sel.append(new Option("พิมพ์เอง…", "__custom__"));
-    custom.style.display = "none";
-  } catch (e) {
+  const prev = sel.value;
+  if (byopCatalog === null) {
     sel.replaceChildren(new Option("ดึงรายการไม่ได้", ""));
     sel.append(new Option("พิมพ์เอง…", "__custom__"));
     sel.value = "__custom__";
     custom.style.display = "";
+    return;
+  }
+  const q = (document.getElementById("byopModelSearch").value || "").trim().toLowerCase();
+  const shown = byopCatalog.filter(m => !q || m.toLowerCase().includes(q));
+  sel.replaceChildren();
+  if (!byopCatalog.length) {
+    sel.append(new Option("ไม่พบโมเดลในรายการ", ""));
+  } else if (!shown.length) {
+    sel.append(new Option("ไม่มีโมเดลที่ตรงกับคำค้น", ""));
+  } else {
+    sel.append(new Option("— เลือกโมเดล —", ""));
+    for (const m of shown) sel.append(new Option(m, m));
+  }
+  sel.append(new Option("พิมพ์เอง…", "__custom__"));
+  if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  custom.style.display = sel.value === "__custom__" ? "" : "none";
+}
+
+async function byopLoadCatalog() {
+  const btn = document.getElementById("byopCatalogBtn");
+  btn.disabled = true;
+  document.getElementById("byopModelSelect").replaceChildren(new Option("กำลังโหลดรายการโมเดล…", ""));
+  try {
+    const res = await post("/api/byop/models/catalog", {});
+    byopCatalog = res.models || [];
+  } catch (e) {
+    byopCatalog = null;
     byopSetMsg("ดึงรายการโมเดลไม่สำเร็จ: " + e.message + " · พิมพ์รหัสโมเดลเองได้", false);
   } finally {
     btn.disabled = false;
+    byopFillSelect();
   }
 }
 
@@ -1516,13 +1575,10 @@ async function byopAddModel() {
   if (!id) { byopSetMsg("เลือกโมเดลจากรายการหรือพิมพ์รหัสก่อน", false); return; }
   if (!roles.length) { byopSetMsg("ติ๊กบทบาทอย่างน้อยหนึ่งอย่างก่อนเพิ่มโมเดล", false); return; }
   try {
-    const res = await post("/api/byop/models/add", {id: id, roles: roles});
-    const moved = (res.model && res.model.moved_from) || [];
+    await post("/api/byop/models/add", {id: id, roles: roles});
     document.getElementById("byopModelCustom").value = "";
     ["coder", "judge", "scan"].forEach(r => { document.getElementById("byopRole-" + r).checked = false; });
-    byopSetMsg(moved.length
-      ? `เพิ่มโมเดลแล้ว · ย้ายบทบาทจาก ${moved.join(", ")} มาที่ ${id}`
-      : "เพิ่มโมเดลแล้ว", true);
+    byopSetMsg(`เพิ่ม ${id} ให้บทบาท ${roles.join(", ")} แล้ว`, true);
   } catch (e) {
     byopSetMsg("เพิ่มโมเดลไม่สำเร็จ: " + e.message, false);
     return;
@@ -1550,6 +1606,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("byopScanBtn").addEventListener("click", byopScan);
   document.getElementById("byopModelAddBtn").addEventListener("click", byopAddModel);
   document.getElementById("byopCatalogBtn").addEventListener("click", byopLoadCatalog);
+  document.getElementById("byopModelSearch").addEventListener("input", byopFillSelect);
   document.getElementById("byopModelSelect").addEventListener("change", (ev) => {
     const custom = document.getElementById("byopModelCustom");
     custom.style.display = ev.target.value === "__custom__" ? "" : "none";
@@ -1567,6 +1624,9 @@ const EN_TEXT = {
   "ภาพรวม": "Overview", "งาน": "Work", "สตูดิโอ": "Studio", "คีย์ AI": "AI keys", "เครื่องมือ": "Tools", "ตั้งค่า": "Settings",
   "หน้าควบคุมเชื่อมต่ออยู่": "Control panel connected",
   "ง่าย": "Simple", "โปร": "Pro", "สั่งงานใหม่": "New task",
+  "📖 บทแนะนำการใช้งาน": "📖 Getting started guide",
+  "บทแนะนำจะเปิดให้อัตโนมัติครั้งแรกที่ใช้งาน · กดปุ่มด้านล่างเพื่อดูอีกครั้ง": "The guide opens automatically on first use. Press the button below to view it again.",
+  "เปิดบทแนะนำ": "Open guide",
   "ภาษาการแสดงผล": "Display language",
   "เลือกภาษาของเมนู หัวหน้า และหน้าตั้งค่า · จำค่าไว้ในเบราว์เซอร์นี้ · ส่วนเนื้อหาข้อมูลยังเป็นภาษาไทย": "Choose the language for the menu, header and settings page. Saved in this browser. Data content stays in Thai.",
   "การตรวจก่อน merge": "Checks before merge",

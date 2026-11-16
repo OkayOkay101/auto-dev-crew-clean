@@ -176,30 +176,9 @@ def _clean_roles(roles) -> set[str]:
     return wanted
 
 
-def _claim_roles(state: dict, mid: str, roles: set[str]) -> list[str]:
-    """ให้ mid ถือบทบาทเหล่านี้ และถอดบทบาทนั้นออกจากโมเดลอื่น (บทบาทหนึ่งมีโมเดลเดียว).
-
-    คืนรายการ id ของโมเดลที่เสียบทบาทไป. โมเดลที่ไม่เหลือบทบาทถูกลบออก.
-    """
-    moved_from: list[str] = []
-    for other in state["models"]:
-        if other["id"] == mid:
-            continue
-        if set(other["roles"]) & roles:
-            other["roles"] = sorted(set(other["roles"]) - roles)
-            moved_from.append(other["id"])
-    state["models"] = [m for m in state["models"] if m["roles"] or m["id"] == mid]
-    target = next((m for m in state["models"] if m["id"] == mid), None)
-    if target is None:
-        state["models"].append({"id": mid, "roles": sorted(roles)})
-    else:
-        target["roles"] = sorted(set(target["roles"]) | roles)
-    return moved_from
-
-
 def add_model(model_id: str, roles: list[str], state_path: Path | None = None,
               known_ids: set[str] | None = None) -> dict:
-    """เพิ่มหรือผูกบทบาทให้โมเดล. ถ้าส่ง known_ids จะปฏิเสธโมเดลที่ไม่อยู่ในแคตตาล็อก."""
+    """เพิ่มหรือผูกบทบาทให้โมเดล (บทบาทหนึ่งมีได้หลายโมเดล). ถ้าส่ง known_ids จะปฏิเสธโมเดลที่ไม่อยู่ในแคตตาล็อก."""
     mid = _clean_model_id(model_id)
     wanted = _clean_roles(roles)
     if not wanted:
@@ -207,26 +186,46 @@ def add_model(model_id: str, roles: list[str], state_path: Path | None = None,
     if known_ids is not None and mid not in known_ids:
         raise ByopError("ไม่พบโมเดลนี้ในรายการของ Pollinations กดดึงรายการใหม่แล้วเลือกจากรายการ")
     state = _load_state(state_path)
-    moved_from = _claim_roles(state, mid, wanted)
+    entry = next((m for m in state["models"] if m["id"] == mid), None)
+    if entry is None:
+        entry = {"id": mid, "roles": []}
+        state["models"].append(entry)
+    entry["roles"] = sorted(set(entry["roles"]) | wanted)
     _save_state(state, state_path)
-    entry = next(m for m in state["models"] if m["id"] == mid)
-    return {"id": mid, "roles": sorted(entry["roles"]), "moved_from": moved_from}
+    return {"id": mid, "roles": entry["roles"]}
 
 
 def set_roles(model_id: str, roles: list[str], state_path: Path | None = None) -> dict:
-    """ตั้งบทบาททั้งชุดของโมเดลหนึ่งตัว (ใช้กับการกดชิปบทบาท). roles ว่าง = ลบโมเดลออก."""
+    """ตั้งบทบาททั้งชุดของโมเดลหนึ่งตัว (ใช้กับการกดชิปบทบาท). roles ว่าง = ลบโมเดลออก.
+
+    แก้เฉพาะโมเดลนี้ โมเดลอื่นที่ถือบทบาทเดียวกันยังอยู่ครบ.
+    """
     mid = _clean_model_id(model_id)
     wanted = _clean_roles(roles)
     state = _load_state(state_path)
     if not wanted:
         state["models"] = [m for m in state["models"] if m["id"] != mid]
         _save_state(state, state_path)
-        return {"id": mid, "roles": [], "moved_from": []}
-    moved_from = _claim_roles(state, mid, wanted)
-    entry = next(m for m in state["models"] if m["id"] == mid)
+        return {"id": mid, "roles": []}
+    entry = next((m for m in state["models"] if m["id"] == mid), None)
+    if entry is None:
+        entry = {"id": mid, "roles": []}
+        state["models"].append(entry)
     entry["roles"] = sorted(wanted)
     _save_state(state, state_path)
-    return {"id": mid, "roles": sorted(wanted), "moved_from": moved_from}
+    return {"id": mid, "roles": entry["roles"]}
+
+
+def promote_model(model_id: str, state_path: Path | None = None) -> list[dict]:
+    """ย้ายโมเดลไปต้นรายการ = เป็นโมเดลหลักของทุกบทบาทที่มันถืออยู่. คืนรายการใหม่."""
+    mid = _clean_model_id(model_id)
+    state = _load_state(state_path)
+    target = next((m for m in state["models"] if m["id"] == mid), None)
+    if target is None:
+        raise ByopError("ไม่พบโมเดลนี้ในรายการที่ผูกบทบาทไว้")
+    state["models"] = [target] + [m for m in state["models"] if m is not target]
+    _save_state(state, state_path)
+    return list_models(state_path)
 
 
 def active_key_value(env_path: Path | None = None, state_path: Path | None = None) -> str | None:
@@ -240,11 +239,15 @@ def active_key_value(env_path: Path | None = None, state_path: Path | None = Non
 
 
 def _chat_probe(token: str, model_id: str) -> int:
-    """ส่งข้อความสั้นมาก 1 โทเคนไปที่ chat completions แล้วคืนรหัส HTTP."""
+    """ส่งข้อความสั้นไปที่ chat completions แล้วคืนรหัส HTTP.
+
+    max_tokens ต้องมากพอสำหรับโมเดลที่คิดก่อนตอบ (เช่น gpt-oss): ที่ 1 โทเคนจะได้ 400
+    "output_token_limit_exceeded" ทั้งที่โมเดลใช้งานได้ จึงใช้ 64.
+    """
     body = json.dumps({
         "model": model_id.split("/", 1)[1],
         "messages": [{"role": "user", "content": "ping"}],
-        "max_tokens": 1,
+        "max_tokens": 64,
     }).encode("utf-8")
     req = urllib.request.Request(
         CHAT_URL, data=body, method="POST",
@@ -289,11 +292,42 @@ def remove_model(model_id: str, state_path: Path | None = None) -> bool:
     return True
 
 
+def models_for_role(role: str, state_path: Path | None = None) -> list[str]:
+    """โมเดลทั้งหมดที่ถือบทบาทนี้ เรียงตามลำดับ (ตัวแรก = โมเดลหลัก)."""
+    return [m["id"] for m in _load_state(state_path)["models"] if role in m["roles"]]
+
+
 def model_for_role(role: str, state_path: Path | None = None) -> str | None:
-    for m in _load_state(state_path)["models"]:
-        if role in m["roles"]:
-            return m["id"]
-    return None
+    """โมเดลหลักของบทบาท (ตัวแรกในลำดับ) หรือ None ถ้าไม่มี."""
+    found = models_for_role(role, state_path)
+    return found[0] if found else None
+
+
+def opencode_declaration(model_id: str | None) -> dict:
+    """ส่วนของ config OpenCode ที่ประกาศโมเดล Pollinations ให้รู้จัก (ส่งผ่าน OPENCODE_CONFIG_CONTENT ตอนรัน).
+
+    opencode รู้จักเฉพาะโมเดลที่ประกาศใน opencode.json; โมเดล BYOP ที่เพิ่มใหม่จึงต้องประกาศตอนรัน
+    มิฉะนั้นจะได้ "Model not found". โมเดลที่ไม่ใช่ pollinations/... คืน dict ว่าง.
+    """
+    mid = (model_id or "").strip()
+    if not mid.startswith(PROVIDER_ID + "/"):
+        return {}
+    short = mid.split("/", 1)[1]
+    return {"provider": {PROVIDER_ID: {"models": {short: {"name": short}}}}}
+
+
+def engines_for_role(eng: dict, role: str | None, state_path: Path | None = None) -> list[dict]:
+    """ลำดับ engine ที่ต้องลองสำหรับบทบาทนี้ (ตามลำดับโมเดลหลัก -> สำรอง).
+
+    Pollinations ที่บทบาทมีหลายโมเดล: คืนหนึ่งสำเนาต่อโมเดล โดยปักโมเดลไว้ที่ key "byop_model"
+    (runner จะใช้สถานะ cooldown แยกต่อโมเดล). กรณีอื่นคืน engine เดิม (จาก engine_for_role).
+    """
+    if not role or eng.get("provider_id") != PROVIDER_ID:
+        return [eng]
+    mids = models_for_role(role, state_path)
+    if len(mids) <= 1:
+        return [engine_for_role(eng, role, state_path)]
+    return [{**eng, "model": m, "byop_model": m} for m in mids]
 
 
 def engine_for_role(eng: dict, role: str | None, state_path: Path | None = None) -> dict:
