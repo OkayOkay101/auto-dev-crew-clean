@@ -5,6 +5,7 @@
 
 ดูข้อกำหนดทั้งหมดใน [REQUIREMENTS.md](REQUIREMENTS.md)
 คำอธิบายการทำงานอย่างละเอียด การใช้ AI และสถานะ GUI ดูที่ [docs/ABOUT.md](docs/ABOUT.md)
+English documentation (About, configuration, API, and more): [docs/en/README.md](docs/en/README.md)
 
 ## ติดตั้ง (ครั้งเดียว)
 1. ติดตั้ง Python 3.12+, Git, GitHub CLI (`gh auth login`) และ Antigravity CLI (ล็อกอินบัญชี AI Pro แล้ว)
