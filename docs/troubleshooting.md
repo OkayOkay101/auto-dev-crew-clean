@@ -75,7 +75,7 @@ python scripts/opencode_db_doctor.py --apply  # สำรองแล้วซ�
 
 | # | เรื่อง | รายละเอียด | สถานะ |
 |---|---|---|---|
-| 1 | `config.yaml` ถูก track ใน git | ไฟล์นี้มีค่าเฉพาะของเจ้าของ README ระบุว่าไม่ควร commit | รอการตัดสินใจ |
+| 1 | `config.yaml` ถูก track ใน git | ไฟล์นี้มีค่าเฉพาะของเจ้าของ README ระบุว่าไม่ควร commit | แก้แล้ว: ไม่ track ใน git แล้ว (`6d9e186`) |
 | 2 | โฟลเดอร์ `deploy/oracle/` | ระบบตัดสินใจเลิก Oracle Cloud แล้ว | ลบแล้ว (2026-11-18) |
 | 3 | `REQUIREMENTS.md` เป็นร่างเก่า | เขียนตอนออกแบบ v0.2 ไม่ตรงกับระบบปัจจุบัน | ใช้เป็นประวัติเท่านั้น |
 | 4 | endpoint `/api/github/*` และ `github_login.py` | UI ไม่ได้ใช้ | ลบแล้ว (B6) |

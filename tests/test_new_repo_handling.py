@@ -25,7 +25,7 @@ class TestNewRepoHandling(unittest.TestCase):
         cfg = {
             "owner": "example-owner",
             "personas": {"enabled": ["bolt", "sentinel", "palette", "quality"]},
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         now_str = dt.datetime.now().strftime("%Y%m%d-%H%M")
         # History has 4 NO_ACTIONs for old-repo

@@ -74,7 +74,7 @@ class TestSentinelTracker(unittest.TestCase):
                 "enabled": ["sentinel", "bolt"],
                 "sentinel": {"debounce_hours": 1.0}
             },
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
 
         # Mock is_sentinel_debounced to return False (not debounced yet)
@@ -138,7 +138,7 @@ def test_pick_task_checks_target_repo_via_gh(fake_gh, tmp_path):
         "labels": {"task": "ai-task", "working": "ai-working", "failed": "ai-failed"},
         "repos": [{"name": "example-owner/target", "base": "main"}],
         "personas": {"enabled": ["sentinel"], "sentinel": {"debounce_hours": 1.0}},
-        "parallel": {"slots": 3, "reserve_for_issues": 1},
+        "parallel": {"slots": 3},
     }
     fake_gh.on(("api",), _iso_ago(600))
     registry = _Reg(state_dir=tmp_path / "reg")

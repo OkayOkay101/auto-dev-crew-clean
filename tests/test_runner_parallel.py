@@ -31,7 +31,7 @@ class TestParallelRunner(unittest.TestCase):
                 "enabled": ["bolt", "sentinel"],
                 "sentinel": {"debounce_hours": 0.0}
             },
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         job = runner.pick_task_for_slot(
             slot_id=1,
@@ -50,7 +50,7 @@ class TestParallelRunner(unittest.TestCase):
                 "enabled": ["bolt", "sentinel"],
                 "sentinel": {"debounce_hours": 0.0}
             },
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         job = runner.pick_task_for_slot(
             slot_id=2,
@@ -71,7 +71,7 @@ class TestParallelRunner(unittest.TestCase):
                 "enabled": ["bolt", "sentinel"],
                 "sentinel": {"debounce_hours": 0.0}
             },
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         self.registry.register_slot(2, "persona", "bolt", "ai/bolt-1", [])
         
@@ -94,7 +94,7 @@ class TestParallelRunner(unittest.TestCase):
             "owner": "example-owner",
             "labels": {"task": "ai-task", "working": "ai-working", "failed": "ai-failed"},
             "personas": {"enabled": ["bolt"]},
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         history = [
             {"repo": "o/r", "kind": "issue", "key": "5", "state": "OPEN", "pr": 7},
@@ -116,7 +116,7 @@ class TestParallelRunner(unittest.TestCase):
             "owner": "example-owner",
             "labels": {"task": "ai-task", "working": "ai-working", "failed": "ai-failed"},
             "personas": {"enabled": ["bolt"]},
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         issues = [
             runner.Job("issue", "10", "Issue 10", "body 10"),
@@ -140,7 +140,7 @@ class TestParallelRunner(unittest.TestCase):
             "owner": "example-owner",
             "labels": {"task": "ai-task", "working": "ai-working", "failed": "ai-failed"},
             "personas": {"enabled": ["bolt", "sentinel", "palette"]},
-            "parallel": {"slots": 3, "reserve_for_issues": 1}
+            "parallel": {"slots": 3}
         }
         claimed_jobs = {}
         barrier = threading.Barrier(2)

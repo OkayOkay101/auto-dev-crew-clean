@@ -18,7 +18,7 @@ class TestPersonaOpenPr(unittest.TestCase):
             "owner": "example-owner",
             "labels": {"task": "ai-task", "working": "ai-working", "failed": "ai-failed"},
             "personas": {"enabled": ["quality", "bolt"]},
-            "parallel": {"slots": 3, "reserve_for_issues": 1},
+            "parallel": {"slots": 3},
         }
 
     def tearDown(self):
