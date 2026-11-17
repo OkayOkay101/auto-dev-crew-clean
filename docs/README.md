@@ -1,0 +1,24 @@
+# คู่มือเอกสาร Auto Dev Crew
+
+ดัชนีเอกสารทั้งหมดของโปรเจกต์ เริ่มอ่านจากหัวข้อที่ตรงกับสิ่งที่ต้องการทำ
+
+| ไฟล์ | อ่านเมื่อ |
+|---|---|
+| [ABOUT.md](ABOUT.md) | อยากเข้าใจภาพรวม การใช้ AI และสถานะ GUI |
+| [installation.md](installation.md) | ติดตั้งครั้งแรก เตรียมเครื่อง และรันครั้งแรก |
+| [configuration.md](configuration.md) | ต้องการรู้ความหมายของทุกคีย์ใน `config.yaml` |
+| [cli.md](cli.md) | รันจาก terminal ด้วยคำสั่ง `python -m auto_dev_crew` |
+| [gui.md](gui.md) | ใช้หน้าเว็บควบคุมในเครื่อง ทีละหน้า |
+| [architecture.md](architecture.md) | อยากรู้ว่างานไหลผ่านโค้ดอย่างไร ตั้งแต่ issue จนถึง merge |
+| [github-workflow.md](github-workflow.md) | ป้าย (label) และวงจรชีวิตของ issue กับ PR |
+| [providers-and-keys.md](providers-and-keys.md) | เพิ่มผู้ให้บริการ AI, ตั้งคีย์, กำหนดบทบาทคีย์ |
+| [api.md](api.md) | endpoint ของ GUI สำหรับนักพัฒนาหรือสคริปต์ |
+| [tools-and-scripts.md](tools-and-scripts.md) | สคริปต์ใน `scripts/`, MCP server, โหมด autonomous, CI และเทสต์ |
+| [troubleshooting.md](troubleshooting.md) | แก้ปัญหาที่พบบ่อย และรายการข้อจำกัดที่ทราบแล้ว |
+
+## เอกสารที่ควรรู้ว่าล้าสมัย
+- [../REQUIREMENTS.md](../REQUIREMENTS.md) เป็น **ร่างข้อกำหนด v0.2 (2026-10-30)** เขียนตอนออกแบบครั้งแรก ตอนนี้ระบบใช้ **Antigravity CLI (`agy`)** เป็นหลัก ไม่ได้รันบน GitHub Actions แบบที่ร่างไว้ และ F6 ทำแล้วบางส่วน อ่านเป็นประวัติการออกแบบได้ แต่ไม่ใช่สเปกปัจจุบัน
+- โฟลเดอร์ `docs/superpowers/` มี spec และ plan ของงานแต่ละชิ้น ใช้อ้างอิงประวัติการตัดสินใจ
+
+## แหล่งความจริงของเอกสารนี้
+ทุกหัวข้ออ้างอิงจากโค้ดในรีโป ณ วันที่ 2026-11-18 ถ้าโค้ดเปลี่ยนแล้วเอกสารไม่ตาม ให้ยึดโค้ดเป็นหลัก แล้วแก้เอกสาร
