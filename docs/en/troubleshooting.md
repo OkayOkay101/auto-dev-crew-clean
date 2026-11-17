@@ -75,7 +75,7 @@ Checked against the code as of 2026-11-18.
 
 | # | Topic | Details | Status |
 |---|---|---|---|
-| 1 | `config.yaml` is tracked in git | The file holds owner-specific values, and the README says it should not be committed. | Decision pending |
+| 1 | `config.yaml` is tracked in git | The file holds owner-specific values, and the README says it should not be committed. | Fixed: no longer tracked in git (`6d9e186`) |
 | 2 | `deploy/oracle/` | The project dropped Oracle Cloud. | Removed 2026-11-18 |
 | 3 | `REQUIREMENTS.md` is an old draft | Written for the v0.2 design; it does not match the current system. | Kept as history only |
 | 4 | `/api/github/*` and `github_login.py` | The UI does not use them. | Removed (B6) |

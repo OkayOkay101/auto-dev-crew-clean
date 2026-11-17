@@ -17,7 +17,7 @@ Index of the English documentation. Start with the page that matches what you wa
 | [troubleshooting.md](troubleshooting.md) | Common problems and the list of known limitations |
 
 ## Notes
-- The Thai documentation in [`../`](../) is the original. This English set is a translation of the same content and is kept in step with it. If the two ever disagree, the code is the source of truth.
+- New documentation is written in English first. The Thai documentation in [`../`](../) is a translation of this set and is updated afterward. If the two ever disagree, the code is the source of truth.
 - [REQUIREMENTS.md](../../REQUIREMENTS.md) is an early draft (v0.2, 2026-10-30). The system now uses the Antigravity CLI (`agy`) as the main engine, not GitHub Actions as described there. Read it as design history, not as the current specification.
 - `docs/superpowers/` contains the specs and plans for individual pieces of work and records past decisions.
 

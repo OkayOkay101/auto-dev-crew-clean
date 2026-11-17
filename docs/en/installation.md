@@ -55,7 +55,7 @@ The file lives in the project root and has defaults that work out of the box, bu
 
 Every key is explained in [configuration.md](configuration.md).
 
-**Caution:** `config.yaml` is currently tracked by git in this repository. Owner-specific values should not be in a public repository. See [troubleshooting.md](troubleshooting.md#2-known-limitations).
+**Caution:** `config.yaml` is no longer tracked by git (removed from the index in `6d9e186`). Use `config.example.yaml` as the template and keep owner-specific values on your machine only. See [troubleshooting.md](troubleshooting.md#2-known-limitations).
 
 ## 5. Set API keys
 

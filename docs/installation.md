@@ -55,7 +55,7 @@ python -m playwright install chromium
 
 รายละเอียดทุกคีย์อยู่ที่ [configuration.md](configuration.md)
 
-**ข้อควรระวัง:** `config.yaml` ปัจจุบันถูก track ใน git แล้ว ค่าเฉพาะของเจ้าของไม่ควรอยู่ในรีโปสาธารณะ ดู [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว)
+**ข้อควรระวัง:** `config.yaml` ไม่ได้ถูก track ใน git แล้ว (ลบออกจากดัชนีใน `6d9e186`) ใช้ `config.example.yaml` เป็นต้นแบบและเก็บค่าเฉพาะของเจ้าของไว้ในเครื่อง ดู [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว)
 
 ## 5. ตั้งคีย์ API
 

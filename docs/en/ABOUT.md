@@ -65,7 +65,7 @@ GitHub issue (ai-task)  or  deep-scan / persona
 
 - The GUI listens only on `127.0.0.1`. Actions that change data (POST) need a token embedded in the page.
 - API keys live in `.env`, which is git-ignored.
-- Autonomous-mode hooks for Claude Code block `git push`, `gh pr merge`, `git reset --hard`, and recursive deletes. They do **not** single out force-push.
+- Autonomous-mode hooks for Claude Code block `git push`, `gh pr merge`, `gh release`, `deploy`, `git reset --hard`, `git clean -f`, recursive deletes (`rm -r…`, `Remove-Item -Recurse`, `del /s`), and deletion of the autonomous flag file. They do **not** single out force-push.
 - Code written by the agent must pass tests, quality gates, and CI before merging. It has **not** undergone a professional security audit.
 
 ---
@@ -104,6 +104,6 @@ If you find a GUI problem that is not in this table, treat it as not yet checked
 ## 5. Before you use it
 
 - **Never commit or share `.env`.** Do not print key values into logs or chat.
-- `config.yaml` holds owner-specific settings and should not be committed to a public repository. It is currently tracked in this private repo.
+- `config.yaml` holds owner-specific settings and should not be committed to a public repository. It is no longer tracked by git (removed in `6d9e186`).
 - Automatic merging (`merge-all`) can put unreviewed code into the main branch. Start with `review-all`.
 - Run `--dry-run` first whenever you change settings or add a new repository.
