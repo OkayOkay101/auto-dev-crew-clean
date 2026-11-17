@@ -4,6 +4,7 @@
 ใช้ **Antigravity CLI (`agy`)** บัญชี Google AI Pro เป็นหลัก และรองรับ **Multi-Engine Failover (F6)** สลับไปยัง OpenCode หรือ NVIDIA Build (ค่าหลัก) และ Pollinations.ai หรือ Mistral (สำรอง) อัตโนมัติเมื่อโควตาหมด งบ 0 บาท
 
 ดูข้อกำหนดทั้งหมดใน [REQUIREMENTS.md](REQUIREMENTS.md)
+คำอธิบายการทำงานอย่างละเอียด การใช้ AI และสถานะ GUI ดูที่ [docs/ABOUT.md](docs/ABOUT.md)
 
 ## ติดตั้ง (ครั้งเดียว)
 1. ติดตั้ง Python 3.12+, Git, GitHub CLI (`gh auth login`) และ Antigravity CLI (ล็อกอินบัญชี AI Pro แล้ว)
