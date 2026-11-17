@@ -20,7 +20,10 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - [ ] B11 เทียบเอกสารไทย/อังกฤษทีละประโยค (ตรวจแล้วแค่ส่วนที่มีความต่างชัดเจนและ token ในโค้ด)
 
 ## In progress
-- ไม่มี งานที่ค้างอยู่ระหว่างทำ
+- Task: จัดหมวด README ตามหมวด Diátaxis (หมวดที่คุณอนุมัติแล้ว) โดยรอรายการลิงก์ที่คุณค้นมา ยังไม่ได้เริ่มแก้โครง README
+- Next step: (1) ให้คุณวางรายการลิงก์อีกครั้ง (ข้อความก่อนหน้าไม่มี URL) (2) เสนอ outline ใหม่ให้อนุมัติตามขั้นตอนสกิล (3) เขียน README.md และ README_TH.md ให้หัวข้อและลิงก์ตรงกัน (4) รัน 4 เช็ก
+- Files: `C:\Users\Smart\Documents\auto-dev-crew-clean\README.md`, `...\README_TH.md`, `...\docs\ABOUT.md`
+- Watch out: `check_bilingual` ยังไม่ผ่านโดยตั้งใจ (ลิงก์ฉบับไทยชี้ `docs/` ฉบับอังกฤษชี้ `docs/en/`) ต้องให้ผู้ใช้ตัดสิน. สกิล `github-docs` อยู่นอก git (`C:\Users\Smart\.claude\skills\github-docs`) การแก้ล่าสุดยังไม่ได้ commit ที่ไหนเลย. About บน GitHub ตั้งค่าแล้ว (ยืนยันจาก gh repo view)
 
 ## Done (verified)
 - Commits: `60f941c` (login + ฐาน i18n), `badfc44` (ADC_INIT, /api/i18n, /api/settings/language, แปล 46 ข้อความ error ฝั่ง backend), `890be71` (แก้ flaky test fake_sleep), `6d9e186` (ลบ Oracle/GitHub login), `e054139`, `eedfc7d` (sync เอกสาร และ gate 3/4 wording), `fed6d2b` (README อังกฤษหลัก), `dab0da5` (handoff)
