@@ -7,7 +7,7 @@ Updated 2026-11-18. Folder: `C:\Users\Smart\Documents\auto-dev-crew-clean` (no g
 Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI (Thai default).
 
 ## Open
-- [ ] B1 ขออนุมัติแปลหน้า login (`static/login.html`), ข้อความ `auth.py`, และฝัง ADC_INIT ในหน้า login — user · P2 · needs-approval
+- [x] B1 ยกเลิก: ลบระบบล็อกอินรหัสผ่านทั้งหมดแล้ว (`auth.py`, `static/login.html`, `--require-login`, `/login`, `/api/login`, `/api/logout`) — ไม่ต้องแปลหน้า login อีก
 - [x] B2 แปลข้อความ UI ใน gui.py (30 จุด, ไม่แตะ log/PR body/print) — เสร็จ 2026-11-18 (tests/test_gui_user_messages_i18n.py)
 - [x] B3 แปลข้อความ "token ไม่ถูกต้อง" ใน `gui_patches.py` — เสร็จ 2026-11-18 (เทสต์ใหม่ใน test_mission_control_and_security.py)
 - [x] B4 เพิกถอน Pollinations key ที่ enter.pollinations.ai — user ทำแล้ว 2026-11-18
@@ -42,4 +42,5 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - AI prompts, logs, PR bodies stay Thai.
 
 ## Summary
-- สองภาษาใช้งานได้; เหลือ B1 (หน้า login), B6, B7 รอผู้ใช้ตัดสิน
+- สองภาษาใช้งานได้; B1 ปิดแล้วเพราะลบหน้า login; เหลือ B6, B7 รอผู้ใช้ตัดสิน
+- ไม่มีระบบล็อกอินรหัสผ่านใน GUI แล้ว หน้า control ผูกกับ 127.0.0.1 และเข้าผ่าน SSH tunnel (deploy/oracle/README.md)
