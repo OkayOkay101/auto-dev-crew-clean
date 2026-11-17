@@ -29,7 +29,6 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 | path | ความหมาย |
 |---|---|
 | `/` | หน้าควบคุมหลัก |
-| `/classic` | หน้าเดิมแบบแท็บบนสุด |
 | `/static/*` | ไฟล์ static (HTML, JS, CSS) |
 
 ### สถานะและการตรวจ
@@ -61,8 +60,6 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 ### GitHub
 | path | ความหมาย |
 |---|---|
-| `/api/github/status` | สถานะการล็อกอิน GitHub ผ่าน `gh` (endpoint นี้ UI ไม่ได้ใช้ รอการตัดสินใจ) |
-| `/api/github/login/state` | สถานะการล็อกอินแบบ device (endpoint นี้ UI ไม่ได้ใช้ รอการตัดสินใจ) |
 
 ### repo และงาน
 | path | ความหมาย |
@@ -169,8 +166,6 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 ### GitHub (endpoint ที่ UI ไม่ได้ใช้ รอการตัดสินใจ)
 | path | ความหมาย |
 |---|---|
-| `/api/github/login/start` | เริ่มล็อกอิน |
-| `/api/github/login/cancel` | ยกเลิกการล็อกอิน |
 
 ### ระบบ
 | path | ความหมาย |

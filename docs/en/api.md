@@ -29,7 +29,6 @@ A missing or wrong token is refused (checked in `gui_patches.verify_request_secu
 | Path | Meaning |
 |---|---|
 | `/` | Main control panel. |
-| `/classic` | The older top-tab page. |
 | `/static/*` | Static files (HTML, JS, CSS). |
 
 ### Status and checks
@@ -61,8 +60,6 @@ A missing or wrong token is refused (checked in `gui_patches.verify_request_secu
 ### GitHub
 | Path | Meaning |
 |---|---|
-| `/api/github/status` | GitHub login status through `gh`. (The UI does not use this endpoint; decision pending.) |
-| `/api/github/login/state` | Device-login state. (The UI does not use this endpoint; decision pending.) |
 
 ### Repositories and jobs
 | Path | Meaning |
@@ -169,8 +166,6 @@ Every POST needs `X-Token`. The table below groups endpoints by purpose. The sys
 ### GitHub (the UI does not use these; decision pending)
 | Path | Meaning |
 |---|---|
-| `/api/github/login/start` | Start login. |
-| `/api/github/login/cancel` | Cancel login. |
 
 ### System
 | Path | Meaning |

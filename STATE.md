@@ -12,8 +12,8 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - [x] B3 แปลข้อความ "token ไม่ถูกต้อง" ใน `gui_patches.py` — เสร็จ 2026-11-18 (เทสต์ใหม่ใน test_mission_control_and_security.py)
 - [x] B4 เพิกถอน Pollinations key ที่ enter.pollinations.ai — user ทำแล้ว 2026-11-18
 - [x] B5 อัปโหลด GitHub แบบ private — สร้าง repo private และ push 2026-11-18 (ตรวจ secret ใน working tree และ history แล้ว: ไม่พบ key จริง)
-- [ ] B6 endpoint `/api/github/*` และ `github_login.py` ที่ UI ไม่ใช้: เก็บหรือลบ — user · P3 · needs-approval
-- [ ] B7 เก็บ `/classic` หรือลบ — user · P3 · needs-approval
+- [x] B6 endpoint `/api/github/*` และ `github_login.py` ที่ UI ไม่ใช้: ลบแล้ว 2026-11-18 (อนุมัติโดยผู้ใช้)
+- [x] B7 ลบ route `/classic` แล้ว 2026-11-18 (อนุมัติโดยผู้ใช้) — ไฟล์ `static/index.html` ยังอยู่เพราะ test_gui_layout และ test_api_crud ยังอ่านไฟล์นี้
 
 ## In progress
 - ไม่มี งานที่ค้างอยู่ระหว่างทำ
@@ -43,4 +43,4 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 
 ## Summary
 - สองภาษาใช้งานได้; B1 ปิดแล้วเพราะลบหน้า login; เหลือ B6, B7 รอผู้ใช้ตัดสิน
-- ไม่มีระบบล็อกอินรหัสผ่านใน GUI แล้ว หน้า control ผูกกับ 127.0.0.1 และเข้าผ่าน SSH tunnel (deploy/oracle/README.md)
+- ไม่มีระบบล็อกอินรหัสผ่านใน GUI แล้ว หน้า control ผูกกับ 127.0.0.1 และเข้าผ่าน SSH tunnel (โฟลเดอร์ deploy/oracle ถูกลบแล้ว 2026-11-18)

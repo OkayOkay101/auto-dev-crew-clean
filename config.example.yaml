@@ -2,7 +2,6 @@ owner: example-owner
 parallel:
   enabled: true
   slots: 3
-  reserve_for_issues: 1
   poll_interval_seconds: 120
   merge_lock_timeout_minutes: 25
   assignments:
@@ -157,7 +156,7 @@ personas:
     - improve-codebase-architecture
     - caveman-persona
 repos:
-- name: OkayOkay101/cyberpunk-pomodoro
+- name: example-owner/example-repo
   base: main
   setup: []
   test: &id001

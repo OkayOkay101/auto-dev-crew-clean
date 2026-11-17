@@ -76,12 +76,12 @@ Checked against the code as of 2026-11-18.
 | # | Topic | Details | Status |
 |---|---|---|---|
 | 1 | `config.yaml` is tracked in git | The file holds owner-specific values, and the README says it should not be committed. | Decision pending |
-| 2 | `deploy/oracle/` still exists | The project dropped Oracle Cloud, but the deployment docs remain. | Decision pending |
+| 2 | `deploy/oracle/` | The project dropped Oracle Cloud. | Removed 2026-11-18 |
 | 3 | `REQUIREMENTS.md` is an old draft | Written for the v0.2 design; it does not match the current system. | Kept as history only |
-| 4 | `/api/github/*` and `github_login.py` | The UI does not use them. | Decision pending (B6) |
-| 5 | The `/classic` page | Still present next to the new page. | Decision pending (B7) |
+| 4 | `/api/github/*` and `github_login.py` | The UI does not use them. | Removed (B6) |
+| 5 | The `/classic` page | Still present next to the new page. | Removed (B7) |
 | 6 | Translation is incomplete | Logs, PR bodies, and printed output are Thai only. | By design |
-| 7 | `reserve_for_issues` has no effect | The key is in the config, but the running code does not read it (only tests do). | Remove it or make it work |
+| 7 | `reserve_for_issues` has no effect | The key is in the config, but the running code does not read it (only tests do). | Removed 2026-11-18 |
 | 8 | Default for `max_fix_attempts` differs from the config | Code uses 2 when unset; the config sets 3. | The config value applies |
 | 9 | The guard hook does not single out force-push | In autonomous mode it blocks all `git push`. | Intentional or not, not yet decided |
 | 10 | Some README wording about branch `self/*` | Agents create branches named `ai/...`. `self/*` is used only in revert plans. | Documentation fixed in the Thai README; English docs follow the code |

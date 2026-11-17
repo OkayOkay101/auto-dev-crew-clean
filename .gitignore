@@ -16,3 +16,6 @@ scratch/
 *.yaml.lock
 *.json.lock
 .env.lock
+
+# owner-specific config (untracked, see docs)
+config.yaml

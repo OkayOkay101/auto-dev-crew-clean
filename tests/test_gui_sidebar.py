@@ -14,10 +14,6 @@ class TestGuiSidebarVariant(unittest.TestCase):
         self.assertIn('STATIC / "index_sidebar.html"', GUI_PY)
         self.assertIn("{{TOKEN}}", SIDEBAR)
 
-    def test_classic_route_keeps_old_ui(self):
-        self.assertIn('url.path == "/classic"', GUI_PY)
-        self.assertIn('STATIC / "index.html"', GUI_PY)
-
     def test_nav_tabs_match_main_panels(self):
         nav = re.search(r'<nav class="side"[^>]*>(.*?)</nav>', SIDEBAR, re.S).group(1)
         values = sorted(re.findall(r'data-main="([^"]+)"', nav))

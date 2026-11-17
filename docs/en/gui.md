@@ -4,7 +4,6 @@ The GUI is a local web server built with Python's `http.server`. It uses no exte
 
 - Address: `http://127.0.0.1:8765/` (change the port with `--port`).
 - It is bound to `127.0.0.1` only, so other machines on the network cannot reach it directly.
-- The `/classic` page is the older top-tab layout. It is kept while a decision is pending on whether to keep or remove it.
 
 ## 1. GUI security
 
