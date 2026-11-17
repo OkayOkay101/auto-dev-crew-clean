@@ -1,16 +1,23 @@
 # Auto Dev Crew 🤖
 
-A background coding agent that takes work from GitHub issues and opens pull requests. When its queue is empty, it lets its personas (⚡🛡️🎨🧪) look for improvements on their own.
-It uses the **Antigravity CLI (`agy`)** with a Google AI Pro account as the main engine, and supports **Multi-Engine Failover (F6)**: when a quota runs out, it switches automatically to OpenCode or NVIDIA Build (primary) and Pollinations.ai or Mistral (backup). Budget: 0 THB.
+## English
 
-Full requirements: [REQUIREMENTS.md](REQUIREMENTS.md) (early draft, kept as design history; see the note below).
-Detailed description, AI usage, and GUI status: [docs/en/ABOUT.md](docs/en/ABOUT.md)
-Thai version of this README: [README.th.md](README.th.md) · Thai docs: [docs/README.md](docs/README.md)
+**Auto Dev Crew is a local AI coding agent.** It takes work from GitHub issues and opens pull requests for that work. When its queue is empty, four personas (⚡🛡️🎨🧪) scan the code on their own and look for improvements.
+
+**Languages:** English (this section) · [ภาษาไทย](#ภาษาไทย) · Thai-only file: [README.th.md](README.th.md)
+
+It uses the **Antigravity CLI (`agy`)** with a Google AI Pro account as its main engine, and supports **Multi-Engine Failover (F6)**: when a quota runs out, it switches automatically to OpenCode or NVIDIA Build (primary) and Pollinations.ai or Mistral (backup). Budget target: 0 THB.
+
+> **Status:** experimental project, private repository.
+
+- Full requirements: [REQUIREMENTS.md](REQUIREMENTS.md) (early draft, kept as design history; see the note at the end).
+- Detailed description, AI usage, and GUI status: [docs/en/ABOUT.md](docs/en/ABOUT.md)
+- Thai docs: [docs/README.md](docs/README.md)
 
 ## Install (once)
 1. Install Python 3.12+, Git, the GitHub CLI (`gh auth login`), and the Antigravity CLI (signed in with the AI Pro account).
 2. `pip install -r requirements.txt`
-3. Edit `config.yaml` (repo, merge mode, personas).
+3. Edit `config.yaml` (repo, merge mode, personas). Start from `config.example.yaml`, which is the tracked template.
 
 ## How to give work
 - Open an issue in the target repo and add the label **`ai-task`** (only the `owner` account set in the config counts).
@@ -78,7 +85,7 @@ This is the global default for the whole system. The mode in use is shown in the
 The judge is an AI that scores the diff. It passes when the score reaches the threshold and it meets the safety and task-match conditions. It needs a key with the `judge` role (the system chooses keys by role). You can turn it off on the Settings page.
 
 ## Harness settings
-These are set under `context` in `config.yaml`. You do not need to edit the file; the defaults are in the code.
+These are set under `context`, `loop`, and `routing` in `config.yaml`. You do not need to edit the file; the defaults are in the code.
 - `context.repo_map` (default `true`): attaches the structure of Python code (function and class names and signatures) to the prompt. Set to `false` to turn it off.
 - `context.repo_map_chars` (default `6000`): maximum characters for the repo map.
 - `loop.require_test_for_bugfix` (default `true`): a bug fix (an issue containing "bug" or "fix") that does not touch any test file gets one more round in which the agent adds a regression test, before the result is evaluated. Set to `false` to turn it off.
@@ -109,3 +116,114 @@ If the repo contains `AGENTS.md`, `CLAUDE.md`, or `.github/copilot-instructions.
 4. e2e test (the GUI must be open and a slot free): `python scripts/gui_e2e.py --repo OWNER/NAME` presses the run button in a real dry run. Run it only when a slot is free, because if a slot is busy it may collide with a running task.
 
 > **Note:** [REQUIREMENTS.md](REQUIREMENTS.md) is an early v0.2 draft. The system now uses the Antigravity CLI (`agy`) as the main engine and does not run on GitHub Actions as that draft describes. Read it as design history, not as the current specification.
+
+---
+
+## ภาษาไทย
+เอเจนต์เขียนโค้ดเบื้องหลังแทน Jules — รับงานจาก GitHub issue แล้วเปิด PR, และเมื่อคิวว่างให้ตัวละคร ⚡🛡️🎨🧪 หาจุดปรับปรุงเอง
+ใช้ **Antigravity CLI (`agy`)** บัญชี Google AI Pro เป็นหลัก และรองรับ **Multi-Engine Failover (F6)** สลับไปยัง OpenCode หรือ NVIDIA Build (ค่าหลัก) และ Pollinations.ai หรือ Mistral (สำรอง) อัตโนมัติเมื่อโควตาหมด งบ 0 บาท
+
+ดูข้อกำหนดทั้งหมดใน [REQUIREMENTS.md](REQUIREMENTS.md)
+คำอธิบายการทำงานอย่างละเอียด การใช้ AI และสถานะ GUI ดูที่ [docs/ABOUT.md](docs/ABOUT.md)
+English: [English section](#english) · English docs (About, configuration, API, and more): [docs/en/README.md](docs/en/README.md)
+
+## ติดตั้ง (ครั้งเดียว)
+1. ติดตั้ง Python 3.12+, Git, GitHub CLI (`gh auth login`) และ Antigravity CLI (ล็อกอินบัญชี AI Pro แล้ว)
+2. `pip install -r requirements.txt`
+3. แก้ `config.yaml` (repo, โหมด merge, ตัวละคร)
+
+## วิธีสั่งงาน
+- เปิด issue ใน repo เป้าหมาย แล้วติดป้าย **`ai-task`** (ต้องเป็นบัญชี `owner` ใน config เท่านั้น)
+- หยุดเอเจนต์ฉุกเฉิน: เปิด issue ใดก็ได้แล้วติดป้าย **`ai-pause`** (ปิด issue เพื่อให้ทำต่อ)
+
+## GUI (เว็บในเครื่อง)
+```bash
+python -m auto_dev_crew.gui          # เปิด http://127.0.0.1:8765 ให้อัตโนมัติ
+python -m auto_dev_crew.gui --auto   # เหมือนข้างบน + เริ่มเอเจนต์ --loop ทันที
+# (ปุ่ม Desktop / start-auto-dev-crew.bat จะเปิด GUI แบบรอเรากดเริ่มเอง)
+```
+หน้าหลักคือ `http://127.0.0.1:8765/` เมนูซ้ายมี 5 หน้า:
+- **ภาพรวม**: กด **▶ ทำ 1 งาน** (ทำหนึ่งชิ้นแล้วหยุดเอง) หรือ **⟳ ทำต่อเนื่อง** (ทำไปเรื่อย ๆ จนกดหยุด) · **■ หยุด** ยกเลิกงานที่กำลังทำ (ถามยืนยันก่อน) · **🔄 รีสตาร์ท** อยู่ในหัวข้อ "เพิ่มเติม" · ดูช่องทำงาน 3 ช่อง และการ์ดคลังโค้ดแต่ละ repo
+- **งาน**: บันทึกสด (log) และประวัติงาน (ดู diff)
+- **สตูดิโอ**: สั่ง AI แก้โค้ดใน repo ที่เลือก, ดู diff, หา `[AI-TODO]`, สแกนลึก, แผนฟีเจอร์ (`ai-plan`)
+- **คีย์ AI**: คีย์และผู้ให้บริการ, ลำดับสำรอง (failover), การใช้งานล่าสุด
+- **ตั้งค่า**: โหมด merge, การตรวจ CI, การตรวจคุณภาพ (judge), คำศัพท์ทั้งหมด, ปิดเซิร์ฟเวอร์
+
+GUI เปิดให้เฉพาะเครื่องนี้ (127.0.0.1) และคำสั่งที่เปลี่ยนแปลงข้อมูล (POST) ต้องมี token ที่ฝังในหน้าเว็บ
+
+**ต้องรีสตาร์ทเอเจนต์เมื่อ**: แก้ `config.yaml` โดยตรง หรือเปลี่ยนบทบาทของคีย์ (Coder/Judge/Scan) — กดรีสตาร์ทในหน้าภาพรวม (ผลคือยกเลิกงานที่กำลังทำ แล้วเริ่มรอบใหม่ด้วยค่าเดิม; PR ที่เปิดแล้วไม่ถูกปิด)
+- หลังเปลี่ยนบทบาทคีย์ ให้**รีโหลดหน้า** ก่อน เพราะรายการ engine ใน dropdown อ่านค่าตอนโหลดหน้า แล้วจึงรีสตาร์ท
+- ก่อนรีสตาร์ทหรือหยุด ให้ดูว่าช่องทำงานว่างหรือไม่ในหน้าภาพรวม ถ้ามีงานกำลังทำ งานนั้นจะถูกยกเลิก
+- ถ้ารัน `python -m auto_dev_crew --loop` นอก GUI เอง GUI จะเห็น runner นั้นและหยุดได้จากปุ่มหยุด
+
+**คำศัพท์หลัก** (อธิบายครบในหน้า ตั้งค่า › คำศัพท์):
+- **ช่อง (slot)**: ตัวทำงาน 1 ตัว รันได้พร้อมกัน 3 ช่อง · ช่อง 1 ทำ issue ที่คุณสั่ง · ช่อง 2–3 หาจุดปรับปรุงเองตามบทบาท
+- **judge**: AI ที่ให้คะแนนโค้ดที่แก้ก่อนเปิด PR ต้องใช้คีย์บทบาท Judge
+- **ด่านตรวจ 1–4**: ด่าน 1 judge ยืนยันบั๊กก่อนแก้ · ด่าน 2 judge เห็นไฟล์เต็มหลังแก้ · ด่าน 3 รอบซ่อมต้องแตะไฟล์ที่ issue ระบุ · ด่าน 4 deep-scan ตรวจซ้ำก่อนสร้าง issue
+- **key role**: Coder = เขียนโค้ดหลัก (ค่าเริ่มต้นของคีย์ทุกตัว) · Judge = ให้คะแนน · Scan = สแกนหาปัญหา · ชื่อตัวแปรที่มี `_JUDGE` / `_SCAN` ได้บทบาทนั้นอัตโนมัติถ้าไม่ได้ตั้งเอง
+- **F6 failover (ลำดับสำรอง)**: สลับไปผู้ให้บริการตัวถัดไปเมื่อโควตาหมด ตัวบนสุดก่อน
+- **ai-task**: issue ที่เอเจนต์หยิบไปทำ (คุณสั่งเอง หรือระบบสร้างจาก deep-scan / แผนที่อนุมัติ)
+- **ai-plan**: issue เสนอฟีเจอร์ที่รอการอนุมัติ เมื่ออนุมัติแล้วระบบสร้าง `ai-task` ให้
+- **deep-scan (สแกนลึก)**: ให้ AI อ่านโค้ดทีละส่วนแล้วรายงานปัญหา ผลที่ผ่านด่าน 4 สร้างเป็น `ai-task` ได้
+- **check_convergence** (`auto_dev_crew/evaluator.py`): ตรวจว่าคะแนนค้างแล้วหรือยัง ถูกเรียกในลูปซ่อมหลังประเมิน (`runner.py`) เมื่อ `evaluation.plateau_stop` เป็น true (ค่าเริ่มต้น) ถ้าคะแนนไม่ดีขึ้นจะหยุดรอบซ่อมและไม่ใช้โควตาซ้ำ
+
+## วิธีรันแบบคำสั่ง
+```bash
+python -m auto_dev_crew --dry-run                 # ทดลองในเครื่อง ไม่แตะ GitHub
+python -m auto_dev_crew --dry-run --persona bolt  # ทดลองตัวละครตัวเดียว
+python -m auto_dev_crew                           # ทำ 1 งาน แล้วเปิด PR
+python -m auto_dev_crew --loop                    # ทำต่อเนื่องจนหมดงาน/โควตาหมด/มี PR ค้าง
+```
+
+ตัวละคร: `bolt` (performance) · `sentinel` (security) · `palette` (UX/UI) · `quality` (เทสต์/คุณภาพ)
+
+## โหมด merge (`merge_mode` ใน config.yaml หรือหน้า ตั้งค่า)
+ค่านี้เป็นค่ากลางของทั้งระบบ ค่าที่ใช้อยู่ตอนนี้ดูได้ที่ป้าย `merge:` มุมขวาบนของ GUI และตัวเลือกในหน้า ตั้งค่า · โค้ดอ่านค่านี้จาก config.yaml โดยตรง จึงต้องมีค่าในไฟล์เสมอ
+
+| โหมด | ผล |
+|---|---|
+| `review-all` | เปิด PR อย่างเดียว ระบบไม่ merge เอง คนเป็นผู้ merge |
+| `small-only` | merge เองเฉพาะ PR เล็ก (ไม่เกิน `small_pr.max_lines` บรรทัด ค่าใน config.yaml = 50) และไม่แตะ `small_pr.protected_paths` เช่น `.github/`, `requirements*` ที่เหลือรอคนตรวจ |
+| `merge-all` | merge เองทุก PR เมื่อ CI ผ่าน (GUI จะถามยืนยันก่อนเปลี่ยนมาเป็นโหมดนี้) |
+
+- **ระดับ merge รายคลังโค้ด** (ตั้งในแผนฟีเจอร์ใหม่ใน GUI หรือ `merge_level` ต่อ repo): ถ้า repo มีระดับของตัวเอง จะใช้ระดับนั้นแทนค่ากลาง
+- **ค่าใหม่มีผลกับการตัดสิน merge ครั้งถัดไป** (ระบบอ่าน config ใหม่ระหว่างทำงาน) แต่ถ้าแก้ไฟล์เองให้รีสตาร์ทเพื่อความแน่นอน
+
+## ตรวจ CI ก่อน merge (`ci.allow_no_ci` ค่ากลาง, ตั้งรายคลังโค้ดได้)
+- **ยืดหยุ่น** (`allow_no_ci: true`): repo ที่ไม่มี CI บน GitHub → merge ได้หลังเทสต์ในเครื่องผ่าน
+- **บังคับ** (`allow_no_ci: false`): repo ที่ไม่มี CI → ไม่ merge เลย ต้องมี CI และผ่านบน GitHub
+- ทั้งสองแบบ: ถ้ามี CI แล้วล้มเหลว จะไม่ merge; ถ้ามี workflow แต่ยังไม่มี check รันบน PR ระบบจะรอรอบถัดไป
+
+## judge (ตรวจคุณภาพก่อนเปิด PR)
+judge คือ AI ที่ให้คะแนน diff ผ่านเมื่อคะแนนถึงเกณฑ์และผ่านเงื่อนไขความปลอดภัย/ความตรงกับงาน ต้องมีคีย์ที่มีบทบาท `judge` (ระบบจะเลือกคีย์ตามบทบาท) ปิดได้ที่หน้า ตั้งค่า
+
+## Harness settings
+ตั้งค่าเพิ่มเติมใต้ `context` ใน `config.yaml` (ไม่ต้องแก้ไฟล์ — ค่าเริ่มต้นอยู่ในโค้ด)
+- `context.repo_map` (ค่าเริ่มต้น `true`) — แนบโครงสร้างโค้ด Python (ชื่อฟังก์ชัน/คลาสและ signature) ลงใน prompt; ตั้งเป็น `false` เพื่อปิด
+- `context.repo_map_chars` (ค่าเริ่มต้น `6000`) — จำนวนตัวอักษรสูงสุดของ repo map
+- `loop.require_test_for_bugfix` (ค่าเริ่มต้น `true`) — งานแก้บั๊ก (issue ที่มีคำว่า bug/fix) ที่ไม่ได้แก้ไฟล์เทสต์เลย จะได้เอเจนต์เพิ่มเทสต์ regression อีก 1 รอบก่อนประเมินผล; ตั้งเป็น `false` เพื่อปิด
+- `routing.enabled` (ค่าเริ่มต้น `true`) — จัดลำดับเอ็นจินตามผล merge ในประวัติงาน (`state/history.json`) แยกตาม triage path; เอ็นจินที่มีผลสรุปอย่างน้อย `routing.min_samples` ครั้งจะถูกย้ายขึ้นก่อน (เรียงตาม merge rate มาก→น้อย) ที่เหลือคงลำดับใน `config.yaml`; ตั้งเป็น `false` เพื่อใช้ลำดับใน config เสมอ
+- `routing.min_samples` (ค่าเริ่มต้น `5`) — จำนวนผลสรุปขั้นต่ำต่อเอ็นจินก่อนจะใช้ข้อมูลในการจัดลำดับ
+- `routing.demote_below` (ค่าเริ่มต้น `0.2`) — เอ็นจินที่มี merge rate ต่ำกว่าค่านี้ (และมีข้อมูลครบ `min_samples`) จะถูกย้ายไปท้ายสุด หลังเอ็นจินที่ยังไม่มีข้อมูล; ไม่มีการตัดเอ็นจินออก
+
+ไฟล์ `AGENTS.md` หรือ `CLAUDE.md` (หรือ `.github/copilot-instructions.md`) ในรีโพจะถูกแนบเป็น "Repository Notes" อัตโนมัติ (สูงสุด 4000 ตัวอักษร)
+
+## ไฟล์
+- `auto_dev_crew/runner.py` — คิวงาน, clone, เรียกเอเจนต์, เทสต์, PR, merge, รายงาน
+- `prompts/` — prompt งาน issue, การแก้เทสต์, และตัวละครทั้ง 4 (`_rules.md` = กฎร่วม)
+- `state/history.json` — ความจำว่าเคยเสนออะไรไปแล้ว (ไม่ commit)
+- งานชั่วคราว: `~/.auto-dev-crew/work`, venv ของแต่ละ repo: `~/.auto-dev-crew/venvs`
+
+## ข้อห้ามสำคัญ
+- ห้าม force-push และห้าม push เข้า `main` ตรง ๆ ต้อง merge ผ่าน PR เท่านั้น
+- ห้าม commit `config.yaml` (ค่าเฉพาะของเจ้าของ)
+- ห้ามพิมพ์หรือคัดลอกค่าใน `.env` ตรวจได้แค่ชื่อตัวแปรหรือความยาว
+- ห้ามลบหรือข้ามเทสต์ ถ้าเทสต์ดูผิดจริงให้หยุดแล้วถามเจ้าของ
+- ปุ่มสแกนและสร้าง issue ใน GUI มี `confirm()` ก่อนทำงาน ห้ามข้ามด้วย JavaScript
+- เอเจนต์สร้าง branch ที่ขึ้นต้นด้วย `ai/` และเปิด PR ได้ (ชื่อ `self/*` ใช้เฉพาะแผน revert)
+
+## ตรวจว่าระบบยังใช้งานได้
+1. เทสต์ชุดเต็ม: `python -m pytest -q -p no:cacheprovider` (ต้องไม่มี failed)
+2. เปิด GUI: `python -m auto_dev_crew.gui --no-browser` แล้วทดสอบ `curl http://127.0.0.1:8765/api/status` ต้องได้ JSON
+3. smoke test (GUI ต้องเปิดอยู่และ slot ว่าง): `python scripts/gui_smoke.py` ต้องขึ้น `PASS` ขั้นนี้อ่านอย่างเดียว ไม่กดปุ่มรันงาน
+4. e2e test (GUI ต้องเปิดอยู่และ slot ว่าง): `python scripts/gui_e2e.py --repo OWNER/NAME` กดปุ่มทำงานแบบ dry-run จริง รันเมื่อ slot ว่างเท่านั้น เพราะถ้า slot ไม่ว่างอาจชนกับงานที่รันอยู่
