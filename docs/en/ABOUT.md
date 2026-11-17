@@ -91,8 +91,8 @@ The GUI works overall, but it is **not complete**. Known gaps:
 |---|---|
 | Language (Thai/English) | Main GUI text and backend error messages are translated. **Logs, PR bodies, and print output stay in Thai** by design. |
 | Login | The password login was removed. The GUI relies on binding to `127.0.0.1`. |
-| `/classic` page | Still present. Waiting for a decision: keep or remove. |
-| `/api/github/*` and `github_login.py` | Still present, but the UI does not use them. Waiting for a decision. |
+| `/classic` page | Removed 2026-11-18. |
+| `/api/github/*` and `github_login.py` | Removed 2026-11-18 (the UI did not use them). |
 | Convergence check | `check_convergence` runs in the repair loop when `evaluation.plateau_stop` is enabled (default). |
 | Simple mode | Removed by decision. |
 | Browser coverage | Tested in a local browser; not tested across all browsers and screen sizes. |

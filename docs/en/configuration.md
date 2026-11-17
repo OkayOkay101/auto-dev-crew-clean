@@ -26,7 +26,6 @@
 |---|---|---|---|
 | `enabled` | `true` | (n/a) | Enables parallel slots. |
 | `slots` | `3` | (n/a) | Number of slots that run at the same time. |
-| `reserve_for_issues` | `1` | (n/a) | Intended to reserve a slot for owner issues. **The running code does not read this key** (it appears only in tests). Priority in the queue is what actually favors issues. |
 | `poll_interval_seconds` | `120` | `120` | How often the queue is checked for new work (seconds). |
 | `merge_lock_timeout_minutes` | `25` | `25` | Maximum time to wait for the central merge lock. The system uses the larger of this value and `ci.timeout_minutes + 5`. A slot that cannot get the lock within that time does not merge in that round. |
 | `assignments` | `slot_2`, `slot_3` with empty persona and repo | (n/a) | Assigns a persona or repository to a slot. The GUI writes this when you assign on the **Overview** page. |
