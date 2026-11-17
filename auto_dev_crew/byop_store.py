@@ -6,6 +6,7 @@
 - ค่าคีย์ไม่ถูกส่งกลับไปที่ UI (มีเฉพาะค่าที่ mask แล้ว)
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import json
 import re
@@ -68,7 +69,7 @@ def add_key(token: str, env_path: Path | None = None) -> str:
     """เพิ่มคีย์ผู้ใช้ใหม่เป็นหมายเลขถัดไป คืนชื่อตัวแปรที่ใช้เก็บ."""
     token = (token or "").strip()
     if not token.startswith("sk_"):
-        raise ByopError("คีย์ผู้ใช้ต้องขึ้นต้นด้วย sk_ (ไม่ใช่ App Key pk_)")
+        raise ByopError(_i18n.t("คีย์ผู้ใช้ต้องขึ้นต้นด้วย sk_ (ไม่ใช่ App Key pk_)"))
     used = [int(m.group(1)) for name in keys.load_env_file(env_path)
             if (m := KEY_VAR_RE.match(name))]
     var = f"{KEY_PREFIX}{max(used, default=0) + 1}"
@@ -98,7 +99,7 @@ def set_selected(names: list[str], env_path: Path | None = None, state_path: Pat
     pool = pool_vars(env_path)
     unknown = [n for n in names if n not in pool]
     if unknown:
-        raise ByopError("ไม่พบคีย์ใน .env: " + ", ".join(unknown))
+        raise ByopError(_i18n.t("ไม่พบคีย์ใน .env: ") + ", ".join(unknown))
     wanted = set(names)
     state = _load_state(state_path)
     state["selected"] = [v for v in pool if v in wanted]
@@ -108,7 +109,7 @@ def set_selected(names: list[str], env_path: Path | None = None, state_path: Pat
 
 def remove_key(var: str, env_path: Path | None = None, state_path: Path | None = None) -> bool:
     if var not in pool_vars(env_path):
-        raise ByopError(f"ไม่พบคีย์ {var} ใน .env")
+        raise ByopError(_i18n.t("ไม่พบคีย์ {p0} ใน .env", p0=var))
     keys.delete_dotenv_key(var, path=env_path)
     state = _load_state(state_path)
     if state["selected"] is not None:
@@ -142,15 +143,15 @@ def scan_keys(env_path: Path | None = None, state_path: Path | None = None, fetc
             status = do_fetch(env[var])
         except (OSError, ValueError):
             results.append({"var": var, "ok": False, "status": None,
-                            "message": "เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง"})
+                            "message": _i18n.t("เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง")})
             continue
         ok = status == 200
         if ok:
-            message = "ใช้งานได้"
+            message = _i18n.t("ใช้งานได้")
         elif status in (401, 403):
-            message = f"คีย์ถูกปฏิเสธ ({status})"
+            message = _i18n.t("คีย์ถูกปฏิเสธ ({p0})", p0=status)
         else:
-            message = f"ตรวจไม่สำเร็จ ({status})"
+            message = _i18n.t("ตรวจไม่สำเร็จ ({p0})", p0=status)
         results.append({"var": var, "ok": ok, "status": status, "message": message})
     return results
 
@@ -164,7 +165,7 @@ def list_models(state_path: Path | None = None) -> list[dict]:
 def _clean_model_id(model_id: str) -> str:
     mid = (model_id or "").strip()
     if not MODEL_ID_RE.match(mid):
-        raise ByopError("รหัสโมเดลต้องขึ้นต้นด้วย pollinations/ และมีแต่ตัวอักษรที่ใช้ได้")
+        raise ByopError(_i18n.t("รหัสโมเดลต้องขึ้นต้นด้วย pollinations/ และมีแต่ตัวอักษรที่ใช้ได้"))
     return mid
 
 
@@ -172,7 +173,7 @@ def _clean_roles(roles) -> set[str]:
     wanted = set(roles or [])
     bad = sorted(r for r in wanted if r not in keys.VALID_ROLES)
     if bad:
-        raise ByopError("บทบาทไม่ถูกต้อง: " + ", ".join(bad))
+        raise ByopError(_i18n.t("บทบาทไม่ถูกต้อง: ") + ", ".join(bad))
     return wanted
 
 
@@ -182,9 +183,9 @@ def add_model(model_id: str, roles: list[str], state_path: Path | None = None,
     mid = _clean_model_id(model_id)
     wanted = _clean_roles(roles)
     if not wanted:
-        raise ByopError("ต้องเลือกบทบาทอย่างน้อยหนึ่งอย่าง")
+        raise ByopError(_i18n.t("ต้องเลือกบทบาทอย่างน้อยหนึ่งอย่าง"))
     if known_ids is not None and mid not in known_ids:
-        raise ByopError("ไม่พบโมเดลนี้ในรายการของ Pollinations กดดึงรายการใหม่แล้วเลือกจากรายการ")
+        raise ByopError(_i18n.t("ไม่พบโมเดลนี้ในรายการของ Pollinations กดดึงรายการใหม่แล้วเลือกจากรายการ"))
     state = _load_state(state_path)
     entry = next((m for m in state["models"] if m["id"] == mid), None)
     if entry is None:
@@ -222,7 +223,7 @@ def promote_model(model_id: str, state_path: Path | None = None) -> list[dict]:
     state = _load_state(state_path)
     target = next((m for m in state["models"] if m["id"] == mid), None)
     if target is None:
-        raise ByopError("ไม่พบโมเดลนี้ในรายการที่ผูกบทบาทไว้")
+        raise ByopError(_i18n.t("ไม่พบโมเดลนี้ในรายการที่ผูกบทบาทไว้"))
     state["models"] = [target] + [m for m in state["models"] if m is not target]
     _save_state(state, state_path)
     return list_models(state_path)
@@ -266,20 +267,20 @@ def check_model(model_id: str, env_path: Path | None = None, state_path: Path | 
     mid = _clean_model_id(model_id)
     token = active_key_value(env_path, state_path)
     if not token:
-        raise ByopError("ยังไม่มีคีย์ที่เลือกใช้ ให้เชื่อมต่อหรือเลือกคีย์ก่อน")
+        raise ByopError(_i18n.t("ยังไม่มีคีย์ที่เลือกใช้ ให้เชื่อมต่อหรือเลือกคีย์ก่อน"))
     do_probe = probe or _chat_probe
     try:
         status = do_probe(token, mid)
     except (OSError, ValueError):
         return {"id": mid, "ok": False, "status": None,
-                "message": "เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง"}
+                "message": _i18n.t("เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง")}
     if status == 200:
-        return {"id": mid, "ok": True, "status": status, "message": "โมเดลใช้งานได้"}
+        return {"id": mid, "ok": True, "status": status, "message": _i18n.t("โมเดลใช้งานได้")}
     if status in (401, 403):
-        return {"id": mid, "ok": False, "status": status, "message": f"คีย์ไม่มีสิทธิ์ใช้โมเดลนี้ ({status})"}
+        return {"id": mid, "ok": False, "status": status, "message": _i18n.t("คีย์ไม่มีสิทธิ์ใช้โมเดลนี้ ({p0})", p0=status)}
     if status == 404:
-        return {"id": mid, "ok": False, "status": status, "message": "ไม่พบโมเดลนี้บน Pollinations (404)"}
-    return {"id": mid, "ok": False, "status": status, "message": f"ทดสอบไม่สำเร็จ ({status})"}
+        return {"id": mid, "ok": False, "status": status, "message": _i18n.t("ไม่พบโมเดลนี้บน Pollinations (404)")}
+    return {"id": mid, "ok": False, "status": status, "message": _i18n.t("ทดสอบไม่สำเร็จ ({p0})", p0=status)}
 
 
 def remove_model(model_id: str, state_path: Path | None = None) -> bool:

@@ -7,6 +7,7 @@
 """
 
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import hashlib
@@ -108,7 +109,7 @@ PROVIDERS_CATALOG: dict[str, dict] = {
 def _open_https(req: urllib.request.Request, timeout: float):
     """เปิด URL เฉพาะ https เท่านั้น — กัน scheme แปลก (file:, ftp:) ถ้า URL ถูกแก้โดยไม่ตั้งใจ"""
     if urllib.parse.urlsplit(req.full_url).scheme != "https":
-        raise ValueError("อนุญาตเฉพาะการเชื่อมต่อ https")
+        raise ValueError(_i18n.t("อนุญาตเฉพาะการเชื่อมต่อ https"))
     return urllib.request.urlopen(req, timeout=timeout)  # nosec B310 - scheme ถูกตรวจด้านบนแล้ว
 
 def mask_key(val: str) -> str:
@@ -174,7 +175,7 @@ def validate_dotenv_key_name(name: str) -> str:
     """
     name = name.strip()
     if _is_denied_env_name(name):
-        raise ValueError(f"ไม่อนุญาตให้ตั้งค่าตัวแปร {name!r} ผ่าน GUI")
+        raise ValueError(_i18n.t("ไม่อนุญาตให้ตั้งค่าตัวแปร {p0} ผ่าน GUI", p0=repr(name)))
     if name in _catalog_env_names():
         return name
     if _DOTENV_KEY_RE.match(name):
@@ -182,14 +183,14 @@ def validate_dotenv_key_name(name: str) -> str:
     base = _DOTENV_ROLE_SUFFIX_RE.sub("", name)
     if base != name and _DOTENV_KEY_RE.match(base):
         return name
-    raise ValueError(f"ชื่อ key {name!r} ไม่ถูกต้อง (ต้องลงท้ายด้วย _API_KEY, _KEY, _TOKEN หรือ _ACCOUNT_ID)")
+    raise ValueError(_i18n.t("ชื่อ key {p0} ไม่ถูกต้อง (ต้องลงท้ายด้วย _API_KEY, _KEY, _TOKEN หรือ _ACCOUNT_ID)", p0=repr(name)))
 
 
 def _validate_dotenv_delete_name(name: str) -> str:
     """Deleting only removes a line, so the shape check is looser; reserved names are still refused."""
     name = name.strip()
     if not _DOTENV_SHAPE_RE.match(name) or _is_denied_env_name(name):
-        raise ValueError(f"ไม่อนุญาตให้ลบตัวแปร {name!r}")
+        raise ValueError(_i18n.t("ไม่อนุญาตให้ลบตัวแปร {p0}", p0=repr(name)))
     return name
 
 
@@ -208,7 +209,7 @@ def save_dotenv(updates: dict[str, str], path: Path | None = None) -> list[str]:
             continue
         validate_dotenv_key_name(str(raw_name))
         if "\r" in str(raw_value) or "\n" in str(raw_value):
-            raise ValueError(f"ค่าของ {str(raw_name).strip()} ต้องไม่มีการขึ้นบรรทัดใหม่")
+            raise ValueError(_i18n.t("ค่าของ {p0} ต้องไม่มีการขึ้นบรรทัดใหม่", p0=str(raw_name).strip()))
 
     with cfg_file_lock(path):
         existing_content = ""
@@ -615,7 +616,7 @@ def _check_engine_command(command: str, path: str | None) -> None:
     path is given, its file name must be the same command (with .exe/.cmd optional).
     """
     if command not in ALLOWED_ENGINE_COMMANDS:
-        raise ValueError(f"command ไม่ได้รับอนุญาต: {command!r} (ใช้ได้: {', '.join(ALLOWED_ENGINE_COMMANDS)})")
+        raise ValueError(_i18n.t("command ไม่ได้รับอนุญาต: {p0} (ใช้ได้: {p1})", p0=repr(command), p1=', '.join(ALLOWED_ENGINE_COMMANDS)))
     if path:
         base = re.split(r"[\\/]", path.strip())[-1].lower()
         for suffix in (".exe", ".cmd"):
@@ -623,7 +624,7 @@ def _check_engine_command(command: str, path: str | None) -> None:
                 base = base[: -len(suffix)]
                 break
         if base != command:
-            raise ValueError(f"path {path!r} ไม่ตรงกับ command {command!r}")
+            raise ValueError(_i18n.t("path {p0} ไม่ตรงกับ command {p1}", p0=repr(path), p1=repr(command)))
 
 
 def _check_engine_model(command: str, model: str) -> None:
@@ -633,7 +634,7 @@ def _check_engine_model(command: str, model: str) -> None:
     """
     model = (model or "").strip()
     if command == "opencode" and "/" not in model:
-        raise ValueError(f"model {model!r} ของ opencode ต้องอยู่ในรูป provider/model เช่น opencode/{model}")
+        raise ValueError(_i18n.t("model {p0} ของ opencode ต้องอยู่ในรูป provider/model เช่น opencode/{p1}", p0=repr(model), p1=model))
 
 
 def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
@@ -647,7 +648,7 @@ def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
         command = str(engine_data.get("command", "")).strip()
         model = str(engine_data.get("model", "")).strip()
         if not name or not command or not model:
-            raise ValueError("ข้อมูลไม่ครบถ้วน: ต้องระบุ name, command, และ model")
+            raise ValueError(_i18n.t("ข้อมูลไม่ครบถ้วน: ต้องระบุ name, command, และ model"))
         _check_engine_command(command, str(engine_data.get("path") or "").strip())
         _check_engine_model(command, model)
 
@@ -659,7 +660,7 @@ def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
             raw["engines"] = engines
 
         if any(e.get("name") == name for e in engines):
-            raise ValueError(f"มี Engine ชื่อ '{name}' อยู่ในระบบแล้ว")
+            raise ValueError(_i18n.t("มี Engine ชื่อ '{p0}' อยู่ในระบบแล้ว", p0=name))
 
         new_engine = {
             "name": name,
@@ -744,7 +745,7 @@ def update_engine(engine_name: str, updates: dict, cfg_path: Path | None = None)
         if new_name and new_name != engine_name:
             new_name_clean = str(new_name).strip()
             if any(e.get("name") == new_name_clean for e in engines):
-                raise ValueError(f"มี Engine ชื่อ '{new_name_clean}' อยู่ในระบบแล้ว")
+                raise ValueError(_i18n.t("มี Engine ชื่อ '{p0}' อยู่ในระบบแล้ว", p0=new_name_clean))
             target["name"] = new_name_clean
 
         for field in ("provider", "command", "model", "path"):
@@ -902,7 +903,7 @@ def fetch_provider_models(provider_name: str, api_key: str | None = None) -> lis
             key = auth_map.get(prov_clean, "")
 
     if not key and req_type != "pollinations":
-        raise ValueError(f"ไม่พบ API Key สำหรับ {provider_name} กรุณาระบุหรือบันทึกคีย์ก่อน")
+        raise ValueError(_i18n.t("ไม่พบ API Key สำหรับ {p0} กรุณาระบุหรือบันทึกคีย์ก่อน", p0=provider_name))
 
     headers = {
         "User-Agent": "auto-dev-crew/1.0",
@@ -921,10 +922,10 @@ def fetch_provider_models(provider_name: str, api_key: str | None = None) -> lis
             data = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as err:
         if err.code in (401, 403):
-            raise ValueError(f"API Key ไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึง ({err.code} Unauthorized)")
-        raise ValueError(f"เรียก API ไม่สำเร็จ ({err.code}): {err.reason}")
+            raise ValueError(_i18n.t("API Key ไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึง ({p0} Unauthorized)", p0=err.code))
+        raise ValueError(_i18n.t("เรียก API ไม่สำเร็จ ({p0}): {p1}", p0=err.code, p1=err.reason))
     except Exception as exc:
-        raise ValueError(f"เกิดข้อผิดพลาดในการเชื่อมต่อ: {exc}")
+        raise ValueError(_i18n.t("เกิดข้อผิดพลาดในการเชื่อมต่อ: {p0}", p0=exc))
 
     models = []
     if req_type == "pollinations":

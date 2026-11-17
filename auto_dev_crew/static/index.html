@@ -178,49 +178,49 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
 <header>
   <span class="dot" id="dot"></span>
   <h1>Auto Dev Crew</h1>
-  <span class="muted" id="agentText">กำลังโหลด…</span>
+  <span class="muted" id="agentText" data-i18n>กำลังโหลด…</span>
   <span class="spacer"></span>
   <span class="pill info" id="mergeMode"></span>
-  <button class="btn primary" id="newTaskBtn" type="button">+ สั่งงานใหม่</button>
-  <button class="btn" id="themeBtn" title="สลับธีม">◐</button>
+  <button class="btn primary" id="newTaskBtn" type="button" data-i18n>+ สั่งงานใหม่</button>
+  <button class="btn" id="themeBtn" title="สลับธีม" data-i18n-attr="title">◐</button>
 </header>
-<nav aria-label="เมนูหลัก">
-  <button data-main="overview" class="active" aria-current="page">ภาพรวม</button>
-  <button data-main="studio">🛠️ สตูดิโอเขียนโค้ด</button>
-  <button data-main="work">งาน</button>
-  <button data-main="keys">คีย์ &amp; โควตา</button>
-  <button data-main="settings">⚙️ ตั้งค่า</button>
+<nav aria-label="เมนูหลัก" data-i18n-attr="aria-label">
+  <button data-main="overview" class="active" aria-current="page" data-i18n>ภาพรวม</button>
+  <button data-main="studio" data-i18n>🛠️ สตูดิโอเขียนโค้ด</button>
+  <button data-main="work" data-i18n>งาน</button>
+  <button data-main="keys" data-i18n>คีย์ &amp; โควตา</button>
+  <button data-main="settings" data-i18n>⚙️ ตั้งค่า</button>
 </nav>
 <main>
   <!-- ภาพรวม -->
   <section class="main-panel active" id="main-overview">
     <div class="ov-hero" style="margin-top:4px">
       <div class="card" style="margin:0">
-        <h2 style="margin:0 0 4px">เริ่มงาน</h2>
-        <p class="muted" style="margin:0 0 12px">สั่งเอเจนต์ให้ทำงานหนึ่งรอบ หรือทำต่อเนื่องจนกว่าจะหยุด</p>
+        <h2 style="margin:0 0 4px" data-i18n>เริ่มงาน</h2>
+        <p class="muted" style="margin:0 0 12px" data-i18n>สั่งเอเจนต์ให้ทำงานหนึ่งรอบ หรือทำต่อเนื่องจนกว่าจะหยุด</p>
         <div class="ov-actions">
-          <button class="btn primary" id="runOnce">▶ ทำ 1 งาน</button>
-          <button class="btn" id="runLoop">⟳ ทำต่อเนื่อง</button>
-          <select id="agentRepoSelect" title="เลือก Repo ที่ต้องการให้เอเจนต์ทำงาน">
-            <option value="">🌐 ทุก Repo ที่เปิดใช้งาน</option>
+          <button class="btn primary" id="runOnce" data-i18n>▶ ทำ 1 งาน</button>
+          <button class="btn" id="runLoop" data-i18n>⟳ ทำต่อเนื่อง</button>
+          <select id="agentRepoSelect" title="เลือก Repo ที่ต้องการให้เอเจนต์ทำงาน" data-i18n-attr="title">
+            <option value="" data-i18n>🌐 ทุก Repo ที่เปิดใช้งาน</option>
           </select>
-          <select id="persona" title="เลือกบทบาทของเอเจนต์">
-            <option value="">ตามคิว (issue ก่อน)</option>
+          <select id="persona" title="เลือกบทบาทของเอเจนต์" data-i18n-attr="title">
+            <option value="" data-i18n>ตามคิว (issue ก่อน)</option>
           </select>
-          <label class="check"><input type="checkbox" id="dryRun"> dry-run (ไม่แตะ GitHub)</label>
+          <label class="check"><input type="checkbox" id="dryRun"> <span data-i18n>dry-run (ไม่แตะ GitHub)</span></label>
         </div>
         <details class="adv">
-          <summary>ขั้นสูง: หยุด · รีสตาร์ท · ปิดเซิร์ฟเวอร์</summary>
+          <summary data-i18n>ขั้นสูง: หยุด · รีสตาร์ท · ปิดเซิร์ฟเวอร์</summary>
           <div class="ov-actions">
-            <button class="btn" id="stopBtn">■ หยุด</button>
-            <button class="btn warning" id="restartBtn" title="หยุดกระบวนการเดิมและเริ่มรอบใหม่ทันที">🔄 รีสตาร์ท</button>
-            <button class="btn danger" id="serverToggleBtn" type="button" title="ปิด GUI server ทั้งหมด">⏻ ปิดเซิร์ฟเวอร์</button>
+            <button class="btn" id="stopBtn" data-i18n>■ หยุด</button>
+            <button class="btn warning" id="restartBtn" title="หยุดกระบวนการเดิมและเริ่มรอบใหม่ทันที" data-i18n data-i18n-attr="title">🔄 รีสตาร์ท</button>
+            <button class="btn danger" id="serverToggleBtn" type="button" title="ปิด GUI server ทั้งหมด" data-i18n data-i18n-attr="title">⏻ ปิดเซิร์ฟเวอร์</button>
           </div>
         </details>
       </div>
       <div class="card" style="margin:0">
         <div class="row" style="margin-bottom:6px">
-          <h2 style="margin:0">กำลังรอคุณ</h2>
+          <h2 style="margin:0" data-i18n>กำลังรอคุณ</h2>
           <span class="spacer"></span>
           <span class="pill" id="needsCount">0</span>
         </div>
@@ -231,21 +231,21 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
     <div id="activityStatusBanner"></div>
     <div class="card" style="margin-top:16px">
       <div class="row" style="margin-bottom:8px">
-        <h2 style="margin:0">สถานะ 3 ช่องทำงานขนาน (Parallel 3 Slots)</h2>
+        <h2 style="margin:0" data-i18n>สถานะ 3 ช่องทำงานขนาน (Parallel 3 Slots)</h2>
         <span class="spacer"></span>
-        <span class="pill info">Slot 1: สำรอง Issue ผู้ใช้ · Slot 2-3: หมุนเวียน Persona</span>
+        <span class="pill info" data-i18n>Slot 1: สำรอง Issue ผู้ใช้ · Slot 2-3: หมุนเวียน Persona</span>
       </div>
       <div class="grid" id="slotCards" style="margin-top:6px"></div>
       <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
-        <strong style="font-size:13px">โหมดการรัน:</strong>
-        <div id="activeSlotPicker" class="row" style="gap:6px; flex-wrap:wrap" role="group" aria-label="เลือกโหมดการรันช่อง"></div>
+        <strong style="font-size:13px" data-i18n>โหมดการรัน:</strong>
+        <div id="activeSlotPicker" class="row" style="gap:6px; flex-wrap:wrap" role="group" aria-label="เลือกโหมดการรันช่อง" data-i18n-attr="aria-label"></div>
         <span class="muted" style="font-size:12px" id="activeSlotHint"></span>
       </div>
       <div id="slotAssignmentBox" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border)">
         <div class="row" style="margin-bottom:8px; align-items:center;">
-          <strong style="font-size:13px">🎯 มอบหมายงานเจาะจงรายช่อง (Slot Assignments & Conflict Guard)</strong>
+          <strong style="font-size:13px" data-i18n>🎯 มอบหมายงานเจาะจงรายช่อง (Slot Assignments & Conflict Guard)</strong>
           <span class="spacer"></span>
-          <span id="activeLocksBadge" class="pill" style="font-size:11px">🔒 0 ไฟล์ล็อก</span>
+          <span id="activeLocksBadge" class="pill" style="font-size:11px" data-i18n>🔒 0 ไฟล์ล็อก</span>
         </div>
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">
           <!-- Slot 2 assignment -->
@@ -253,16 +253,16 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
             <div style="font-weight:600; font-size:12px; margin-bottom:6px">Slot 2 Assignment</div>
             <div style="display:flex; gap:6px; flex-wrap:wrap">
               <select id="slot2Persona" style="flex:1; font-size:12px">
-                <option value="auto">Persona: ตามคิวหมุนเวียน</option>
+                <option value="auto" data-i18n>Persona: ตามคิวหมุนเวียน</option>
                 <option value="bolt">⚡ Bolt</option>
                 <option value="sentinel">🛡️ Sentinel</option>
                 <option value="palette">🎨 Palette</option>
                 <option value="quality">🧪 Quality</option>
               </select>
               <select id="slot2Repo" style="flex:1; font-size:12px">
-                <option value="auto">Repo: ทุกคลังโค้ด</option>
+                <option value="auto" data-i18n>Repo: ทุกคลังโค้ด</option>
               </select>
-              <button class="btn btn-sm" id="saveSlot2Btn" type="button">บันทึก</button>
+              <button class="btn btn-sm" id="saveSlot2Btn" type="button" data-i18n>บันทึก</button>
             </div>
           </div>
           <!-- Slot 3 assignment -->
@@ -270,26 +270,26 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
             <div style="font-weight:600; font-size:12px; margin-bottom:6px">Slot 3 Assignment</div>
             <div style="display:flex; gap:6px; flex-wrap:wrap">
               <select id="slot3Persona" style="flex:1; font-size:12px">
-                <option value="auto">Persona: ตามคิวหมุนเวียน</option>
+                <option value="auto" data-i18n>Persona: ตามคิวหมุนเวียน</option>
                 <option value="bolt">⚡ Bolt</option>
                 <option value="sentinel">🛡️ Sentinel</option>
                 <option value="palette">🎨 Palette</option>
                 <option value="quality">🧪 Quality</option>
               </select>
               <select id="slot3Repo" style="flex:1; font-size:12px">
-                <option value="auto">Repo: ทุกคลังโค้ด</option>
+                <option value="auto" data-i18n>Repo: ทุกคลังโค้ด</option>
               </select>
-              <button class="btn btn-sm" id="saveSlot3Btn" type="button">บันทึก</button>
+              <button class="btn btn-sm" id="saveSlot3Btn" type="button" data-i18n>บันทึก</button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="row" style="margin-top:20px; margin-bottom:8px; align-items:center; flex-wrap:wrap; gap:8px;">
-      <h2 style="margin:0">📦 คลังโค้ดที่ระบบดูแล (Managed Repositories)</h2>
+      <h2 style="margin:0" data-i18n>📦 คลังโค้ดที่ระบบดูแล (Managed Repositories)</h2>
       <span class="spacer"></span>
-      <button class="btn primary" id="scanReposBtn" type="button">🔍 สแกนหา Repo ทั้งหมด</button>
-      <button class="btn" id="addRepoBtnTop" type="button">+ เพิ่ม Repo เอง</button>
+      <button class="btn primary" id="scanReposBtn" type="button" data-i18n>🔍 สแกนหา Repo ทั้งหมด</button>
+      <button class="btn" id="addRepoBtnTop" type="button" data-i18n>+ เพิ่ม Repo เอง</button>
     </div>
     <div id="repos"></div>
   </section>
@@ -300,8 +300,8 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
         <label for="studioRepoSelect" style="font-weight: 600; font-size: 14px;">📦 Repository:</label>
         <select id="studioRepoSelect" style="min-width: 250px; font-weight: 600;"></select>
-        <button class="btn" id="studioSyncBtn" title="ดึงอัปเดตล่าสุดจาก GitHub">🔄 ซิงค์ Repo</button>
-        <button class="btn" id="studioAddRepoBtn" title="เพิ่ม Repository ใหม่">+ เพิ่ม Repo</button>
+        <button class="btn" id="studioSyncBtn" title="ดึงอัปเดตล่าสุดจาก GitHub" data-i18n data-i18n-attr="title">🔄 ซิงค์ Repo</button>
+        <button class="btn" id="studioAddRepoBtn" title="เพิ่ม Repository ใหม่" data-i18n data-i18n-attr="title">+ เพิ่ม Repo</button>
       </div>
       <span class="spacer"></span>
       <div id="studioStackBadges" class="row" style="gap: 6px;"></div>
@@ -313,50 +313,50 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
         <!-- Click-to-Solve Issue Drawer -->
         <div class="card studio-card">
           <div class="row" style="margin-bottom: 8px;">
-            <h2 style="margin: 0; font-size: 15px;">🎯 GitHub Issues (คลิกเพื่อแก้)</h2>
+            <h2 style="margin: 0; font-size: 15px;" data-i18n>🎯 GitHub Issues (คลิกเพื่อแก้)</h2>
             <span class="spacer"></span>
             <span class="pill info" id="studioIssueCount">0</span>
           </div>
           <div id="studioIssueList" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
           <div class="row" style="margin-top: 8px; gap: 6px;">
-            <button class="btn btn-sm" id="studioTodoScanBtn" title="สแกนแท็ก [AI-TODO] ในโค้ดของ repo นี้">🔎 สแกน AI-TODO</button>
-            <button class="btn btn-sm" id="studioTodoCreateBtn" style="display: none;" title="สร้าง issue (ai-task) จากผลสแกน">➕ สร้าง Issue</button>
+            <button class="btn btn-sm" id="studioTodoScanBtn" title="สแกนแท็ก [AI-TODO] ในโค้ดของ repo นี้" data-i18n data-i18n-attr="title">🔎 สแกน AI-TODO</button>
+            <button class="btn btn-sm" id="studioTodoCreateBtn" style="display: none;" title="สร้าง issue (ai-task) จากผลสแกน" data-i18n data-i18n-attr="title">➕ สร้าง Issue</button>
           </div>
           <div id="studioTodoList" style="max-height: 180px; overflow-y: auto; margin-top: 6px; font-family: var(--mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px;"></div>
           <div class="row" style="margin-top: 8px; gap: 6px;">
-            <select id="studioDeepScanEngine" aria-label="engine สำหรับสแกนลึก" title="engine ที่ใช้สแกนลึก (role scan)"></select>
-            <button class="btn btn-sm" id="studioDeepScanBtn" title="ให้โมเดลอ่านโค้ดของ repo นี้เป็นส่วน ๆ แล้วหาปัญหา (ใช้โควตาโมเดลจริง)">🧠 สแกนลึก</button>
+            <select id="studioDeepScanEngine" aria-label="engine สำหรับสแกนลึก" title="engine ที่ใช้สแกนลึก (role scan)" data-i18n-attr="aria-label title"></select>
+            <button class="btn btn-sm" id="studioDeepScanBtn" title="ให้โมเดลอ่านโค้ดของ repo นี้เป็นส่วน ๆ แล้วหาปัญหา (ใช้โควตาโมเดลจริง)" data-i18n data-i18n-attr="title">🧠 สแกนลึก</button>
           </div>
           <div class="row" style="margin-top: 6px; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <label style="display: flex; align-items: center; gap: 4px; font-size: 12px;" title="เปิดแล้วระบบจะสร้าง issue (ป้าย ai-task) ให้ finding ที่พบทันทีหลังสแกนลึก เอเจนต์จะหยิบไปทำต่อ">
-              <input type="checkbox" id="studioAutoIssue"> สร้าง issue อัตโนมัติหลังสแกน
+            <label style="display: flex; align-items: center; gap: 4px; font-size: 12px;" title="เปิดแล้วระบบจะสร้าง issue (ป้าย ai-task) ให้ finding ที่พบทันทีหลังสแกนลึก เอเจนต์จะหยิบไปทำต่อ" data-i18n-attr="title">
+              <input type="checkbox" id="studioAutoIssue"> <span data-i18n>สร้าง issue อัตโนมัติหลังสแกน</span>
             </label>
-            <select id="studioAutoIssueSev" aria-label="ความรุนแรงขั้นต่ำที่สร้าง issue" title="สร้าง issue เฉพาะรายการที่มีความรุนแรงตั้งแต่ระดับนี้ขึ้นไป">
-              <option value="low">ทุกระดับ</option>
-              <option value="medium">medium ขึ้นไป</option>
-              <option value="high">high เท่านั้น</option>
+            <select id="studioAutoIssueSev" aria-label="ความรุนแรงขั้นต่ำที่สร้าง issue" title="สร้าง issue เฉพาะรายการที่มีความรุนแรงตั้งแต่ระดับนี้ขึ้นไป" data-i18n-attr="aria-label title">
+              <option value="low" data-i18n>ทุกระดับ</option>
+              <option value="medium" data-i18n>medium ขึ้นไป</option>
+              <option value="high" data-i18n>high เท่านั้น</option>
             </select>
           </div>
           <div id="studioDeepScanList" style="max-height: 260px; overflow-y: auto; margin-top: 6px; font-size: 12px; display: flex; flex-direction: column; gap: 6px;"></div>
           <div id="fgPanel" style="margin-top: 10px; border-top: 1px solid var(--line, #333); padding-top: 8px;">
             <div class="row" style="gap: 8px; align-items: center; flex-wrap: wrap;">
-              <strong style="font-size: 13px;">🧩 แผนฟีเจอร์ (ai-plan)</strong>
-              <label class="muted" style="font-size: 12px;" title="เปิดแล้ว หลังสแกนลึกระบบจะเสนอฟีเจอร์ใหม่และตั้ง issue รออนุมัติ ปิดได้ตลอด"><input type="checkbox" id="fgEnabled"> เปิดใช้งาน</label>
-              <label class="muted" style="font-size: 12px;" title="ให้เอเจนต์อ่าน repo ทั้งหมดก่อนเสนอ"><input type="checkbox" id="fgWhole"> อ่าน repo ทั้งหมด</label>
-              <label class="muted" style="font-size: 12px;" title="ใช้ไฟล์ roadmap ใน repo (FEATURES.md / ROADMAP.md)"><input type="checkbox" id="fgRoadmap"> ไฟล์ roadmap</label>
-              <label class="muted" style="font-size: 12px;" title="ใช้ผลสแกนลึกล่าสุด (gap) เป็นแหล่งไอเดีย"><input type="checkbox" id="fgGaps"> ผลสแกน (gap)</label>
+              <strong style="font-size: 13px;" data-i18n>🧩 แผนฟีเจอร์ (ai-plan)</strong>
+              <label class="muted" style="font-size: 12px;" title="เปิดแล้ว หลังสแกนลึกระบบจะเสนอฟีเจอร์ใหม่และตั้ง issue รออนุมัติ ปิดได้ตลอด" data-i18n-attr="title"><input type="checkbox" id="fgEnabled"> <span data-i18n>เปิดใช้งาน</span></label>
+              <label class="muted" style="font-size: 12px;" title="ให้เอเจนต์อ่าน repo ทั้งหมดก่อนเสนอ" data-i18n-attr="title"><input type="checkbox" id="fgWhole"> <span data-i18n>อ่าน repo ทั้งหมด</span></label>
+              <label class="muted" style="font-size: 12px;" title="ใช้ไฟล์ roadmap ใน repo (FEATURES.md / ROADMAP.md)" data-i18n-attr="title"><input type="checkbox" id="fgRoadmap"> <span data-i18n>ไฟล์ roadmap</span></label>
+              <label class="muted" style="font-size: 12px;" title="ใช้ผลสแกนลึกล่าสุด (gap) เป็นแหล่งไอเดีย" data-i18n-attr="title"><input type="checkbox" id="fgGaps"> <span data-i18n>ผลสแกน (gap)</span></label>
             </div>
             <div class="row" style="gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px;">
-              <label style="font-size: 12px;" title="ระดับ merge ของ repo นี้ (ไม่ตั้ง = ใช้ merge_mode กลาง)">merge:
+              <label style="font-size: 12px;" title="ระดับ merge ของ repo นี้ (ไม่ตั้ง = ใช้ merge_mode กลาง)" data-i18n-attr="title">merge:
                 <select id="fgMergeLevel">
-                  <option value="">ตามค่ากลาง</option>
-                  <option value="1">ระดับ 1: คน merge ทุก PR</option>
-                  <option value="2">ระดับ 2: auto-merge เฉพาะไม่มีไฟล์เสี่ยง</option>
-                  <option value="3">ระดับ 3: merge เมื่อ CI ผ่าน</option>
+                  <option value="" data-i18n>ตามค่ากลาง</option>
+                  <option value="1" data-i18n>ระดับ 1: คน merge ทุก PR</option>
+                  <option value="2" data-i18n>ระดับ 2: auto-merge เฉพาะไม่มีไฟล์เสี่ยง</option>
+                  <option value="3" data-i18n>ระดับ 3: merge เมื่อ CI ผ่าน</option>
                 </select>
               </label>
-              <button class="btn btn-sm" id="fgProposeBtn" title="ให้เอเจนต์เสนอฟีเจอร์ใหม่ทันที (ใช้โควตาโมเดลจริง)">💡 เสนอฟีเจอร์</button>
-              <button class="btn btn-sm" id="fgRefreshBtn" title="โหลดแผนจาก GitHub ใหม่">↻ รีเฟรช</button>
+              <button class="btn btn-sm" id="fgProposeBtn" title="ให้เอเจนต์เสนอฟีเจอร์ใหม่ทันที (ใช้โควตาโมเดลจริง)" data-i18n data-i18n-attr="title">💡 เสนอฟีเจอร์</button>
+              <button class="btn btn-sm" id="fgRefreshBtn" title="โหลดแผนจาก GitHub ใหม่" data-i18n data-i18n-attr="title">↻ รีเฟรช</button>
             </div>
             <div id="fgList" style="max-height: 220px; overflow-y: auto; margin-top: 6px; font-size: 12px; display: flex; flex-direction: column; gap: 6px;"></div>
           </div>
@@ -365,11 +365,11 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
         <!-- File Tree Explorer -->
         <div class="card studio-card studio-grow">
           <div class="row" style="margin-bottom: 8px;">
-            <h2 style="margin: 0; font-size: 15px;">📂 โครงสร้างไฟล์</h2>
+            <h2 style="margin: 0; font-size: 15px;" data-i18n>📂 โครงสร้างไฟล์</h2>
             <span class="spacer"></span>
-            <span class="pill" id="studioFileCount">0 ไฟล์</span>
+            <span class="pill" id="studioFileCount" data-i18n>0 ไฟล์</span>
           </div>
-          <input type="text" id="studioFileFilter" placeholder="ค้นหาไฟล์..." style="margin-bottom: 8px; width: 100%; font-size: 12px;">
+          <input type="text" id="studioFileFilter" placeholder="ค้นหาไฟล์..." style="margin-bottom: 8px; width: 100%; font-size: 12px;" data-i18n-attr="placeholder">
           <div id="studioFileList" style="max-height: 380px; overflow-y: auto; font-family: var(--mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px;"></div>
         </div>
       </div>
@@ -379,7 +379,7 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
         <!-- AI Coding Dispatcher Card -->
         <div class="card studio-card">
           <div class="row" style="margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
-            <h2 style="margin: 0; font-size: 16px;">⚡ สั่ง AI ทำงานเขียนโค้ด</h2>
+            <h2 style="margin: 0; font-size: 16px;" data-i18n>⚡ สั่ง AI ทำงานเขียนโค้ด</h2>
             <span class="spacer"></span>
             <div class="row" style="gap: 6px; flex-wrap: wrap;">
               <select id="studioPersona" style="font-size: 12px;">
@@ -397,18 +397,18 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
             </div>
           </div>
 
-          <textarea id="studioPrompt" rows="3" placeholder="ระบุสิ่งที่ต้องการให้ AI เขียนโค้ดหรือแก้ไขใน repo นี้... (หรือคลิกเลือกจาก Issue ด้านซ้าย)" style="width: 100%; font-size: 13px; line-height: 1.4; resize: vertical;"></textarea>
+          <textarea id="studioPrompt" rows="3" placeholder="ระบุสิ่งที่ต้องการให้ AI เขียนโค้ดหรือแก้ไขใน repo นี้... (หรือคลิกเลือกจาก Issue ด้านซ้าย)" style="width: 100%; font-size: 13px; line-height: 1.4; resize: vertical;" data-i18n-attr="placeholder"></textarea>
 
           <div class="row" style="margin-top: 10px; gap: 8px; flex-wrap: wrap;">
-            <label class="check" title="ทดสอบสร้าง Diff ใน Sandbox โดยไม่เปิด PR จริง" style="margin-right: 6px;">
-              <input type="checkbox" id="studioSandboxCheck" checked> 🧪 โหมดทดลองใน Sandbox
+            <label class="check" title="ทดสอบสร้าง Diff ใน Sandbox โดยไม่เปิด PR จริง" style="margin-right: 6px;" data-i18n-attr="title">
+              <input type="checkbox" id="studioSandboxCheck" checked> <span data-i18n>🧪 โหมดทดลองใน Sandbox</span>
             </label>
-            <button class="btn primary" id="studioDispatchBtn">🚀 สั่ง AI เขียนโค้ด</button>
+            <button class="btn primary" id="studioDispatchBtn" data-i18n>🚀 สั่ง AI เขียนโค้ด</button>
             <span class="spacer"></span>
             <div class="row" style="gap: 6px;">
-              <button class="btn" id="studioBtnTest" title="รันชุดเทสต์ของ repo">🧪 รันเทสต์</button>
-              <button class="btn" id="studioBtnSyntax" title="ตรวจเช็ค syntax ไฟล์ไพธอน">🔍 ตรวจ Syntax</button>
-              <button class="btn" id="studioBtnSecurity" title="สแกนช่องโหว่ความปลอดภัย">🛡️ ตรวจความปลอดภัย</button>
+              <button class="btn" id="studioBtnTest" title="รันชุดเทสต์ของ repo" data-i18n data-i18n-attr="title">🧪 รันเทสต์</button>
+              <button class="btn" id="studioBtnSyntax" title="ตรวจเช็ค syntax ไฟล์ไพธอน" data-i18n data-i18n-attr="title">🔍 ตรวจ Syntax</button>
+              <button class="btn" id="studioBtnSecurity" title="สแกนช่องโหว่ความปลอดภัย" data-i18n data-i18n-attr="title">🛡️ ตรวจความปลอดภัย</button>
             </div>
           </div>
         </div>
@@ -417,20 +417,20 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
         <div class="card studio-card studio-grow">
           <div class="row studio-tabs" style="margin-bottom: 10px; border-bottom: 1px solid var(--line); padding-bottom: 8px; gap: 8px; flex-wrap: wrap;">
             <button class="btn btn-sm active" id="studioTabDiff">📝 Git Diff</button>
-            <button class="btn btn-sm" id="studioTabCode">📄 ดูโค้ด / AST</button>
-            <button class="btn btn-sm" id="studioTabConsole">🖥️ คอนโซลผลลัพธ์</button>
+            <button class="btn btn-sm" id="studioTabCode" data-i18n>📄 ดูโค้ด / AST</button>
+            <button class="btn btn-sm" id="studioTabConsole" data-i18n>🖥️ คอนโซลผลลัพธ์</button>
             <span class="spacer"></span>
             <div id="studioCodeControls" style="display: none; gap: 6px; align-items: center;">
               <span id="studioCurrentFile" class="mono muted" style="font-size: 12px;"></span>
-              <button class="btn btn-sm" id="studioToggleAst">สลับเป็น AST Skeleton</button>
+              <button class="btn btn-sm" id="studioToggleAst" data-i18n>สลับเป็น AST Skeleton</button>
             </div>
-            <button class="btn btn-sm primary" id="studioCreatePrBtn" style="display: none;" title="ไม่ได้เปิด PR ทันที — สร้าง issue ให้เอเจนต์ทำงานตามคิวแล้วค่อยเปิด PR เอง">📨 ส่งเข้าคิวให้เอเจนต์</button>
+            <button class="btn btn-sm primary" id="studioCreatePrBtn" style="display: none;" title="ไม่ได้เปิด PR ทันที — สร้าง issue ให้เอเจนต์ทำงานตามคิวแล้วค่อยเปิด PR เอง" data-i18n data-i18n-attr="title">📨 ส่งเข้าคิวให้เอเจนต์</button>
           </div>
 
           <!-- Diff View Panel -->
           <div id="studioDiffPanel">
             <div class="row" style="margin-bottom: 6px;">
-              <span class="muted" style="font-size: 12px;" id="studioDiffSummary">ยังไม่มี Diff ล่าสุด — สั่ง AI เขียนโค้ด หรือคลิกไฟล์เพื่อดูโค้ด</span>
+              <span class="muted" style="font-size: 12px;" id="studioDiffSummary" data-i18n>ยังไม่มี Diff ล่าสุด — สั่ง AI เขียนโค้ด หรือคลิกไฟล์เพื่อดูโค้ด</span>
             </div>
             <pre id="studioDiffOutput" class="mono" style="background: var(--bg); padding: 10px; border-radius: 6px; max-height: 400px; overflow: auto; font-size: 12px; white-space: pre-wrap; color: var(--text);"></pre>
           </div>
@@ -443,7 +443,7 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
           <!-- Console View Panel -->
           <div id="studioConsolePanel" style="display: none;">
             <div class="row" style="margin-bottom: 6px;">
-              <span id="studioConsoleStatus" class="pill">พร้อมรัน</span>
+              <span id="studioConsoleStatus" class="pill" data-i18n>พร้อมรัน</span>
               <span id="studioConsoleCmd" class="mono muted" style="font-size: 11px; margin-left: 8px;"></span>
             </div>
             <pre id="studioConsoleOutput" class="mono" style="background: #0d1117; color: #58a6ff; padding: 10px; border-radius: 6px; max-height: 400px; overflow: auto; font-size: 12px; white-space: pre-wrap;"></pre>
@@ -457,72 +457,72 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
   <section class="main-panel" id="main-settings">
     <div class="card">
       <div class="card-head" style="margin-bottom:14px">
-        <h2 style="margin:0">ตั้งค่าเอเจนต์</h2>
+        <h2 style="margin:0" data-i18n>ตั้งค่าเอเจนต์</h2>
         <span class="spacer"></span>
-        <span class="muted">มีผลกับรอบถัดไป</span>
+        <span class="muted" data-i18n>มีผลกับรอบถัดไป</span>
       </div>
       <div class="settings-grid">
         <div class="setting">
-          <h3>ตรวจ CI ก่อน merge</h3>
+          <h3 data-i18n>ตรวจ CI ก่อน merge</h3>
           <ul style="margin:0 0 6px; padding-left:18px; font-size:13px">
-            <li><strong>ยืดหยุ่น</strong>: repo ที่ไม่มี CI → merge ได้หลังเทสต์ในเครื่องผ่าน</li>
-            <li><strong>บังคับ</strong>: repo ที่ไม่มี CI → ไม่ merge เลย ต้องมี CI และผ่านบน GitHub</li>
-            <li>ทั้งสองแบบ: ถ้ามี CI แล้วล้มเหลว จะไม่ merge · ตั้งรายคลังโค้ดแยกได้ที่การ์ดของแต่ละ repo</li>
+            <li><strong data-i18n>ยืดหยุ่น</strong><span data-i18n>: repo ที่ไม่มี CI → merge ได้หลังเทสต์ในเครื่องผ่าน</span></li>
+            <li><strong data-i18n>บังคับ</strong><span data-i18n>: repo ที่ไม่มี CI → ไม่ merge เลย ต้องมี CI และผ่านบน GitHub</span></li>
+            <li data-i18n>ทั้งสองแบบ: ถ้ามี CI แล้วล้มเหลว จะไม่ merge · ตั้งรายคลังโค้ดแยกได้ที่การ์ดของแต่ละ repo</li>
           </ul>
           <button class="btn btn-sm" id="ciToggleBtn" type="button" style="cursor:pointer;"></button>
         </div>
         <div class="setting">
-          <h3>ระบบประเมินผล (Eval)</h3>
-          <p><strong>judge</strong> = AI อีกตัวที่ให้คะแนน diff ก่อนเปิด PR · ไม่ผ่านเกณฑ์จะไม่เปิด PR · ต้องมีคีย์บทบาท Judge</p>
+          <h3 data-i18n>ระบบประเมินผล (Eval)</h3>
+          <p><strong>judge</strong> <span data-i18n>= AI อีกตัวที่ให้คะแนน diff ก่อนเปิด PR · ไม่ผ่านเกณฑ์จะไม่เปิด PR · ต้องมีคีย์บทบาท Judge</span></p>
           <button class="btn btn-sm" id="evalToggleBtn" type="button" style="cursor:pointer;"></button>
         </div>
         <div class="setting">
-          <h3>โหมด merge PR</h3>
-          <p>กำหนดว่า PR ของเอเจนต์จะให้คนรีวิวหรือ merge เองอัตโนมัติ · บันทึกเป็น <code>merge_mode</code> ใน config.yaml</p>
-          <select id="mergeModeSel" title="โหมดการ merge PR ของเอเจนต์">
-            <option value="review-all">review-all: ให้คนรีวิวทุก PR</option>
-            <option value="small-only">small-only: merge เองเฉพาะ PR เล็ก (≤ 50 บรรทัด ไม่แตะไฟล์สำคัญ)</option>
-            <option value="merge-all">merge-all: merge เองทุก PR เมื่อ CI ผ่าน</option>
+          <h3 data-i18n>โหมด merge PR</h3>
+          <p><span data-i18n>กำหนดว่า PR ของเอเจนต์จะให้คนรีวิวหรือ merge เองอัตโนมัติ · บันทึกเป็น</span> <code>merge_mode</code> <span data-i18n>ใน config.yaml</span></p>
+          <select id="mergeModeSel" title="โหมดการ merge PR ของเอเจนต์" data-i18n-attr="title">
+            <option value="review-all" data-i18n>review-all: ให้คนรีวิวทุก PR</option>
+            <option value="small-only" data-i18n>small-only: merge เองเฉพาะ PR เล็ก (≤ 50 บรรทัด ไม่แตะไฟล์สำคัญ)</option>
+            <option value="merge-all" data-i18n>merge-all: merge เองทุก PR เมื่อ CI ผ่าน</option>
           </select>
-          <p style="font-size:12.5px">ตั้งระดับ merge รายคลังโค้ดได้ที่แผนฟีเจอร์ใหม่ (ai-plan) · repo ที่ตั้งเองใช้ค่านั้นแทนค่ากลาง</p>
+          <p style="font-size:12.5px" data-i18n>ตั้งระดับ merge รายคลังโค้ดได้ที่แผนฟีเจอร์ใหม่ (ai-plan) · repo ที่ตั้งเองใช้ค่านั้นแทนค่ากลาง</p>
         </div>
       </div>
     </div>
     <div class="card" style="margin-top:12px">
-      <h2 style="margin:0 0 8px">📖 คำศัพท์ในหน้านี้</h2>
+      <h2 style="margin:0 0 8px" data-i18n>📖 คำศัพท์ในหน้านี้</h2>
       <dl style="display:grid; grid-template-columns:minmax(140px,220px) 1fr; gap:6px 14px; margin:0; font-size:13px">
-        <dt style="font-weight:600">ช่อง (slot)</dt><dd style="margin:0">ตัวทำงาน 1 ตัว รันได้พร้อมกัน 3 ช่อง · ช่อง 1 = issue ที่คุณสั่ง · ช่อง 2–3 = หาจุดปรับปรุงเองตามบทบาท</dd>
-        <dt style="font-weight:600">judge</dt><dd style="margin:0">AI ที่ให้คะแนนโค้ดที่แก้ ต้องใช้คีย์บทบาท Judge</dd>
-        <dt style="font-weight:600">ด่านตรวจ (gate 1–4)</dt><dd style="margin:0">ด่าน 1: judge ยืนยันบั๊กก่อนแก้ · ด่าน 2: judge เห็นไฟล์เต็มหลังแก้ · ด่าน 3: รอบซ่อมต้องแตะไฟล์ที่ issue ระบุ · ด่าน 4: deep-scan ตรวจซ้ำก่อนสร้าง issue</dd>
-        <dt style="font-weight:600">key role</dt><dd style="margin:0">💻 Coder = เขียนโค้ดหลัก (ค่าเริ่มต้น) · ⚖️ Judge = ให้คะแนน · 🔍 Scan = สแกนหาปัญหา</dd>
-        <dt style="font-weight:600">F6 failover</dt><dd style="margin:0">ลำดับผู้ให้บริการที่สลับใช้เมื่อโควตาหมด ตัวบนสุดก่อน (ดูแท็บลำดับ failover)</dd>
-        <dt style="font-weight:600">ai-task</dt><dd style="margin:0">issue ที่เอเจนต์หยิบไปทำ คุณสั่งเองหรือระบบสร้างให้</dd>
-        <dt style="font-weight:600">ai-plan</dt><dd style="margin:0">issue เสนอฟีเจอร์ รออนุมัติ เมื่ออนุมัติแล้วระบบสร้าง ai-task ให้</dd>
-        <dt style="font-weight:600">deep-scan</dt><dd style="margin:0">ให้ AI อ่านโค้ดหาปัญหา ผลที่ผ่านด่าน 4 สร้างเป็น issue ai-task ได้</dd>
+        <dt style="font-weight:600" data-i18n>ช่อง (slot)</dt><dd style="margin:0" data-i18n>ตัวทำงาน 1 ตัว รันได้พร้อมกัน 3 ช่อง · ช่อง 1 = issue ที่คุณสั่ง · ช่อง 2–3 = หาจุดปรับปรุงเองตามบทบาท</dd>
+        <dt style="font-weight:600">judge</dt><dd style="margin:0" data-i18n>AI ที่ให้คะแนนโค้ดที่แก้ ต้องใช้คีย์บทบาท Judge</dd>
+        <dt style="font-weight:600" data-i18n>ด่านตรวจ (gate 1–4)</dt><dd style="margin:0" data-i18n>ด่าน 1: judge ยืนยันบั๊กก่อนแก้ · ด่าน 2: judge เห็นไฟล์เต็มหลังแก้ · ด่าน 3: รอบซ่อมต้องแตะไฟล์ที่ issue ระบุ · ด่าน 4: deep-scan ตรวจซ้ำก่อนสร้าง issue</dd>
+        <dt style="font-weight:600">key role</dt><dd style="margin:0" data-i18n>💻 Coder = เขียนโค้ดหลัก (ค่าเริ่มต้น) · ⚖️ Judge = ให้คะแนน · 🔍 Scan = สแกนหาปัญหา</dd>
+        <dt style="font-weight:600">F6 failover</dt><dd style="margin:0" data-i18n>ลำดับผู้ให้บริการที่สลับใช้เมื่อโควตาหมด ตัวบนสุดก่อน (ดูแท็บลำดับ failover)</dd>
+        <dt style="font-weight:600">ai-task</dt><dd style="margin:0" data-i18n>issue ที่เอเจนต์หยิบไปทำ คุณสั่งเองหรือระบบสร้างให้</dd>
+        <dt style="font-weight:600">ai-plan</dt><dd style="margin:0" data-i18n>issue เสนอฟีเจอร์ รออนุมัติ เมื่ออนุมัติแล้วระบบสร้าง ai-task ให้</dd>
+        <dt style="font-weight:600">deep-scan</dt><dd style="margin:0" data-i18n>ให้ AI อ่านโค้ดหาปัญหา ผลที่ผ่านด่าน 4 สร้างเป็น issue ai-task ได้</dd>
       </dl>
     </div>
   </section>
 
   <section class="main-panel" id="main-work">
-    <div class="subnav" role="group" aria-label="เมนูย่อย งาน" data-group="work">
-      <button class="btn btn-sm" data-sub="log">Log สด</button>
-      <button class="btn btn-sm" data-sub="history">ประวัติ</button>
+    <div class="subnav" role="group" aria-label="เมนูย่อย งาน" data-group="work" data-i18n-attr="aria-label">
+      <button class="btn btn-sm" data-sub="log" data-i18n>Log สด</button>
+      <button class="btn btn-sm" data-sub="history" data-i18n>ประวัติ</button>
     </div>
   <!-- Log -->
   <section class="tab" id="tab-log">
     <div class="card">
       <div class="row" style="margin-bottom:10px">
-        <h2 style="margin:0">Log สด</h2>
+        <h2 style="margin:0" data-i18n>Log สด</h2>
         <div class="row" id="slotLogFilters" style="margin-left:14px">
-          <button class="btn primary" data-slot="all">ทุกช่อง</button>
+          <button class="btn primary" data-slot="all" data-i18n>ทุกช่อง</button>
           <button class="btn" data-slot="1">Slot 1 (Issue)</button>
           <button class="btn" data-slot="2">Slot 2 (Persona)</button>
           <button class="btn" data-slot="3">Slot 3 (Persona)</button>
         </div>
         <span class="spacer"></span>
-        <label class="check"><input type="checkbox" id="autoScroll" checked> เลื่อนตามอัตโนมัติ</label>
-        <button class="btn" id="clearLog">ล้างหน้าจอ</button>
-        <button class="btn warning" id="logRestartBtn" title="รีสตาร์ทเอเจนต์">🔄 รีสตาร์ท</button>
+        <label class="check"><input type="checkbox" id="autoScroll" checked> <span data-i18n>เลื่อนตามอัตโนมัติ</span></label>
+        <button class="btn" id="clearLog" data-i18n>ล้างหน้าจอ</button>
+        <button class="btn warning" id="logRestartBtn" title="รีสตาร์ทเอเจนต์" data-i18n data-i18n-attr="title">🔄 รีสตาร์ท</button>
       </div>
       <pre id="log" class="mono"></pre>
     </div>
@@ -531,9 +531,9 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
   <!-- ประวัติ -->
   <section class="tab" id="tab-history">
     <div class="card">
-      <h2>ประวัติงานของเอเจนต์</h2>
+      <h2 data-i18n>ประวัติงานของเอเจนต์</h2>
       <div class="table-wrap"><table>
-        <thead><tr><th>เวลา</th><th>ประเภท</th><th>ชื่องาน</th><th class="hide-sm">บรรทัด</th><th>สถานะ</th><th></th></tr></thead>
+        <thead><tr><th data-i18n>เวลา</th><th data-i18n>ประเภท</th><th data-i18n>ชื่องาน</th><th class="hide-sm" data-i18n>บรรทัด</th><th data-i18n>สถานะ</th><th></th></tr></thead>
         <tbody id="historyRows"></tbody>
       </table></div>
     </div>
@@ -544,10 +544,10 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
   <!-- คีย์ -->
   <section class="main-panel" id="main-keys">
     <div class="grid" id="usageStats"></div>
-    <div class="subnav" role="group" aria-label="เมนูย่อย คีย์และโควตา" data-group="keys">
-      <button class="btn btn-sm" data-sub="apikeys">คีย์ API</button>
-      <button class="btn btn-sm" data-sub="failover">ลำดับ Failover</button>
-      <button class="btn btn-sm" data-sub="recent">การเรียกล่าสุด</button>
+    <div class="subnav" role="group" aria-label="เมนูย่อย คีย์และโควตา" data-group="keys" data-i18n-attr="aria-label">
+      <button class="btn btn-sm" data-sub="apikeys" data-i18n>คีย์ API</button>
+      <button class="btn btn-sm" data-sub="failover" data-i18n>ลำดับ Failover</button>
+      <button class="btn btn-sm" data-sub="recent" data-i18n>การเรียกล่าสุด</button>
     </div>
 
     <!-- ศูนย์จัดการ API Keys & ผู้ให้บริการฟรี 30 ค่าย -->
@@ -556,32 +556,32 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
       <div class="card-head">
         <div style="min-width:0">
           <h2 style="margin:0 0 2px">Pollinations (BYOP: Bring Your Own Pollen)</h2>
-          <span class="muted">ใช้ Pollen ของผู้ใช้เอง ผ่านหน้าอนุมัติของ Pollinations โดยไม่ต้องคัดลอกคีย์มาวาง</span>
+          <span class="muted" data-i18n>ใช้ Pollen ของผู้ใช้เอง ผ่านหน้าอนุมัติของ Pollinations โดยไม่ต้องคัดลอกคีย์มาวาง</span>
         </div>
         <span class="spacer"></span>
-        <button class="btn btn-sm" id="byopConnectBtn" type="button">เชื่อมต่อ Pollinations</button>
-        <button class="btn btn-sm" id="byopDisconnectBtn" type="button" disabled>ยกเลิกการเชื่อมต่อ</button>
+        <button class="btn btn-sm" id="byopConnectBtn" type="button" data-i18n>เชื่อมต่อ Pollinations</button>
+        <button class="btn btn-sm" id="byopDisconnectBtn" type="button" disabled data-i18n>ยกเลิกการเชื่อมต่อ</button>
       </div>
-      <div id="byopStatus" role="status" class="muted">กำลังตรวจสอบ…</div>
+      <div id="byopStatus" role="status" class="muted" data-i18n>กำลังตรวจสอบ…</div>
       <div id="byopPool" style="margin-top:12px; display:grid; gap:12px;">
         <div>
-          <strong>คีย์ BYOP (เลือกใช้ได้หลายคีย์)</strong>
+          <strong data-i18n>คีย์ BYOP (เลือกใช้ได้หลายคีย์)</strong>
           <div id="byopPoolKeys" style="display:grid; gap:6px; margin-top:6px;"></div>
           <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-            <button class="btn btn-sm" id="byopSaveSelBtn" type="button">บันทึกคีย์ที่เลือก</button>
-            <button class="btn btn-sm" id="byopScanBtn" type="button">🔎 สแกนคีย์ทั้งหมด</button>
+            <button class="btn btn-sm" id="byopSaveSelBtn" type="button" data-i18n>บันทึกคีย์ที่เลือก</button>
+            <button class="btn btn-sm" id="byopScanBtn" type="button" data-i18n>🔎 สแกนคีย์ทั้งหมด</button>
           </div>
           <div id="byopScanOut" class="muted" style="margin-top:6px; font-size:12px; display:grid; gap:2px;"></div>
         </div>
         <div>
-          <strong>โมเดลตามบทบาท (coder / judge / scan)</strong>
+          <strong data-i18n>โมเดลตามบทบาท (coder / judge / scan)</strong>
           <div id="byopModelList" style="display:grid; gap:6px; margin-top:6px;"></div>
           <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center;">
             <input id="byopModelId" class="mono" type="text" placeholder="pollinations/openai/gpt-6-luna" style="min-width:260px;">
             <label><input type="checkbox" id="byopRole-coder"> coder</label>
             <label><input type="checkbox" id="byopRole-judge"> judge</label>
             <label><input type="checkbox" id="byopRole-scan"> scan</label>
-            <button class="btn btn-sm" id="byopModelAddBtn" type="button">+ เพิ่มโมเดล</button>
+            <button class="btn btn-sm" id="byopModelAddBtn" type="button" data-i18n>+ เพิ่มโมเดล</button>
           </div>
         </div>
         <div id="byopPoolMsg" role="status" class="muted"></div>
@@ -591,11 +591,11 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
       <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
           <h2 style="margin:0 0 4px 0">API & Engines Manager</h2>
-          <span class="muted">จัดการ API Keys, ปรับแต่ง Engine, และเลือกลำดับ Failover</span>
+          <span class="muted" data-i18n>จัดการ API Keys, ปรับแต่ง Engine, และเลือกลำดับ Failover</span>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn primary btn-sm" id="openNewEngineFromApiBtn" type="button">➕ เพิ่ม API / Engine</button>
-          <button class="btn btn-sm" id="openNewKeyBtn" type="button">+ เพิ่มคีย์ใหม่</button>
+          <button class="btn primary btn-sm" id="openNewEngineFromApiBtn" type="button" data-i18n>➕ เพิ่ม API / Engine</button>
+          <button class="btn btn-sm" id="openNewKeyBtn" type="button" data-i18n>+ เพิ่มคีย์ใหม่</button>
         </div>
       </div>
 
@@ -605,64 +605,64 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
       <!-- Quick Search & Filter Controls -->
       <div style="background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:10px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <input type="text" id="providerSearch" aria-label="ค้นหาค่ายหรือโมเดล" placeholder="🔍 ค้นหาค่าย AI, โมเดล, หรือชื่อตัวแปร..." style="max-width:340px; margin:0;">
+          <input type="text" id="providerSearch" aria-label="ค้นหาค่ายหรือโมเดล" placeholder="🔍 ค้นหาค่าย AI, โมเดล, หรือชื่อตัวแปร..." style="max-width:340px; margin:0;" data-i18n-attr="aria-label placeholder">
           <button class="btn btn-sm" id="favoriteFilterBtn" type="button" style="display:inline-flex; align-items:center; gap:5px;">
-            <span>⭐</span> รายการโปรด (<span id="countFavorite">0</span>)
+            <span>⭐</span> <span data-i18n>รายการโปรด (</span><span id="countFavorite">0</span>)
           </button>
           <span class="spacer"></span>
-          <span class="muted" style="font-size:13px;" id="filterResultCount">กำลังโหลด...</span>
+          <span class="muted" style="font-size:13px;" id="filterResultCount" data-i18n>กำลังโหลด...</span>
         </div>
         <div id="providerFilters" class="row" style="gap:6px;">
-          <button class="btn btn-sm filter-btn active" data-filter="all">ทั้งหมด (<span id="countAll">0</span>)</button>
-          <button class="btn btn-sm filter-btn" data-filter="configured">🟢 มีคีย์แล้ว (<span id="countConfigured">0</span>)</button>
-          <button class="btn btn-sm filter-btn" data-filter="cooldown">🟡 ติด Cooldown (<span id="countCooldown">0</span>)</button>
+          <button class="btn btn-sm filter-btn active" data-filter="all"><span data-i18n>ทั้งหมด (</span><span id="countAll">0</span>)</button>
+          <button class="btn btn-sm filter-btn" data-filter="configured"><span data-i18n>🟢 มีคีย์แล้ว (</span><span id="countConfigured">0</span>)</button>
+          <button class="btn btn-sm filter-btn" data-filter="cooldown"><span data-i18n>🟡 ติด Cooldown (</span><span id="countCooldown">0</span>)</button>
           <button class="btn btn-sm filter-btn" data-filter="judge">⚖️ Judge (<span id="countJudge">0</span>)</button>
           <button class="btn btn-sm filter-btn" data-filter="scan">🔍 Scan (<span id="countScan">0</span>)</button>
         </div>
-        <p class="muted" style="margin:0; font-size:12.5px"><strong>บทบาทของคีย์:</strong> 💻 Coder = เขียนโค้ดหลัก (ค่าเริ่มต้น) · ⚖️ Judge = ให้คะแนนโค้ด · 🔍 Scan = สแกนหาปัญหา · ชื่อที่มี <code>_JUDGE</code> / <code>_SCAN</code> ได้บทบาทนั้นอัตโนมัติ · หลังเปลี่ยนบทบาทให้รีโหลดหน้า และรีสตาร์ทเอเจนต์ให้มีผล</p>
+        <p class="muted" style="margin:0; font-size:12.5px"><strong data-i18n>บทบาทของคีย์:</strong> <span data-i18n>💻 Coder = เขียนโค้ดหลัก (ค่าเริ่มต้น) · ⚖️ Judge = ให้คะแนนโค้ด · 🔍 Scan = สแกนหาปัญหา · ชื่อที่มี</span> <code>_JUDGE</code> / <code>_SCAN</code> <span data-i18n>ได้บทบาทนั้นอัตโนมัติ · หลังเปลี่ยนบทบาทให้รีโหลดหน้า และรีสตาร์ทเอเจนต์ให้มีผล</span></p>
       </div>
 
       <!-- Provider Grid Container -->
-      <div id="providerGrid" class="provider-grid"><div class="empty" style="grid-column:1 / -1">กำลังโหลด…</div></div>
+      <div id="providerGrid" class="provider-grid"><div class="empty" style="grid-column:1 / -1" data-i18n>กำลังโหลด…</div></div>
 
       <div class="action-bar">
-        <span class="muted">ค่าถูกเก็บใน <code>config.yaml</code> และ <code>.env</code> ในเครื่อง</span>
+        <span class="muted"><span data-i18n>ค่าถูกเก็บใน</span> <code>config.yaml</code> <span data-i18n>และ</span> <code>.env</code> <span data-i18n>ในเครื่อง</span></span>
         <span class="spacer"></span>
-        <button class="btn" id="openNewEngineFromApiBtn2" type="button">➕ เพิ่ม API / Engine</button>
-        <button class="btn" id="openNewKeyBtn2" type="button">+ เพิ่มคีย์ใหม่</button>
-        <button class="btn" id="reloadKeysBtn">🔄 รีเฟรชสถานะ</button>
-        <button class="btn primary" id="saveKeysBtn">💾 บันทึก API Keys</button>
+        <button class="btn" id="openNewEngineFromApiBtn2" type="button" data-i18n>➕ เพิ่ม API / Engine</button>
+        <button class="btn" id="openNewKeyBtn2" type="button" data-i18n>+ เพิ่มคีย์ใหม่</button>
+        <button class="btn" id="reloadKeysBtn" data-i18n>🔄 รีเฟรชสถานะ</button>
+        <button class="btn primary" id="saveKeysBtn" data-i18n>💾 บันทึก API Keys</button>
       </div>
     </div>
     </section>
     <section class="tab" id="tab-failover">
     <div class="card" style="margin-top:16px">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-        <h2 style="margin:0">ลำดับคีย์ / บัญชี (Multi-Engine Failover)</h2>
+        <h2 style="margin:0" data-i18n>ลำดับคีย์ / บัญชี (Multi-Engine Failover)</h2>
         <div style="display:flex; gap:8px;">
-          <button class="btn primary btn-sm" id="openNewEngineBtn" type="button">+ เพิ่ม API / Engine</button>
-          <button class="btn btn-sm" id="reloadEnginesBtn" type="button">🔄 รีเฟรช</button>
+          <button class="btn primary btn-sm" id="openNewEngineBtn" type="button" data-i18n>+ เพิ่ม API / Engine</button>
+          <button class="btn btn-sm" id="reloadEnginesBtn" type="button" data-i18n>🔄 รีเฟรช</button>
         </div>
       </div>
       <div class="table-wrap"><table>
-        <thead><tr><th>ลำดับ</th><th>ค่าย / ผู้ให้บริการ</th><th>คำสั่ง</th><th>โมเดล</th><th>นโยบายข้อมูล</th><th>สถานะ</th><th>เปิด/ปิด</th><th>จัดการ</th></tr></thead>
+        <thead><tr><th data-i18n>ลำดับ</th><th data-i18n>ค่าย / ผู้ให้บริการ</th><th data-i18n>คำสั่ง</th><th data-i18n>โมเดล</th><th data-i18n>นโยบายข้อมูล</th><th data-i18n>สถานะ</th><th data-i18n>เปิด/ปิด</th><th data-i18n>จัดการ</th></tr></thead>
         <tbody id="engineRows"></tbody>
       </table></div>
-      <p class="muted">⚡ รองรับระบบ Multi-Engine Failover (F6) — สามารถเพิ่ม แก้ไข ลบ และใช้ปุ่ม ▲ / ▼ เพื่อสลับลำดับความสำคัญของ API / Engine ได้ทันที</p>
+      <p class="muted" data-i18n>⚡ รองรับระบบ Multi-Engine Failover (F6) — สามารถเพิ่ม แก้ไข ลบ และใช้ปุ่ม ▲ / ▼ เพื่อสลับลำดับความสำคัญของ API / Engine ได้ทันที</p>
     </div>
     </section>
     <section class="tab" id="tab-recent">
     <div class="card">
-      <h2>การเรียกเอเจนต์ล่าสุด</h2>
+      <h2 data-i18n>การเรียกเอเจนต์ล่าสุด</h2>
       <div class="table-wrap"><table>
-        <thead><tr><th>เวลา</th><th>โมเดล</th><th>ผล</th><th>tokens</th><th>เวลา (วินาที)</th></tr></thead>
+        <thead><tr><th data-i18n>เวลา</th><th data-i18n>โมเดล</th><th data-i18n>ผล</th><th>tokens</th><th data-i18n>เวลา (วินาที)</th></tr></thead>
         <tbody id="usageRows"></tbody>
       </table></div>
     </div>
     <div class="card">
-      <h2>ผลการทำงานแยกตาม API Key</h2>
+      <h2 data-i18n>ผลการทำงานแยกตาม API Key</h2>
       <div class="table-wrap"><table>
-        <thead><tr><th>Key</th><th>เสร็จ (สำเร็จ)</th><th>ไม่เสร็จ</th><th>โควตาหมด</th><th>วันนี้ (เสร็จ / ไม่เสร็จ)</th></tr></thead>
+        <thead><tr><th>Key</th><th data-i18n>เสร็จ (สำเร็จ)</th><th data-i18n>ไม่เสร็จ</th><th data-i18n>โควตาหมด</th><th data-i18n>วันนี้ (เสร็จ / ไม่เสร็จ)</th></tr></thead>
         <tbody id="keyOutcomeRows"></tbody>
       </table></div>
     </div>
@@ -671,200 +671,200 @@ main .card { border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.05); }
 </main>
 
 <dialog id="shutdownDlg" aria-labelledby="shutdownTitle" style="width:min(460px,94vw)">
-  <h2 id="shutdownTitle">ยืนยันการปิดเซิร์ฟเวอร์</h2>
-  <p>ปิด GUI server ทั้งหมด? หยุดเอเจนต์และการรีสตาร์ทอัตโนมัติด้วย งานที่ทำค้างจะไม่ถูกส่ง<br>เปิดกลับต้องรัน <code>python -m auto_dev_crew.gui</code> ในเทอร์มินัล</p>
+  <h2 id="shutdownTitle" data-i18n>ยืนยันการปิดเซิร์ฟเวอร์</h2>
+  <p><span data-i18n>ปิด GUI server ทั้งหมด? หยุดเอเจนต์และการรีสตาร์ทอัตโนมัติด้วย งานที่ทำค้างจะไม่ถูกส่ง</span><br><span data-i18n>เปิดกลับต้องรัน</span> <code>python -m auto_dev_crew.gui</code> <span data-i18n>ในเทอร์มินัล</span></p>
   <div class="row" style="justify-content:flex-end">
-    <button class="btn" id="shutdownCancelBtn" type="button">ยกเลิก</button>
-    <button class="btn danger" id="shutdownConfirmBtn" type="button">ยืนยันปิดเซิร์ฟเวอร์</button>
+    <button class="btn" id="shutdownCancelBtn" type="button" data-i18n>ยกเลิก</button>
+    <button class="btn danger" id="shutdownConfirmBtn" type="button" data-i18n>ยืนยันปิดเซิร์ฟเวอร์</button>
   </div>
 </dialog>
 <dialog id="diffDlg">
-  <header><h1 id="diffTitle">Diff</h1><span class="spacer"></span><button class="btn" id="closeDiff">ปิด</button></header>
+  <header><h1 id="diffTitle">Diff</h1><span class="spacer"></span><button class="btn" id="closeDiff" data-i18n>ปิด</button></header>
   <div id="diffSummary" style="padding:0 16px"></div>
   <pre id="diff" class="mono"></pre>
 </dialog>
 <dialog id="newTaskDlg" aria-labelledby="newTaskTitle" style="width:min(640px,94vw)">
-  <header><h1 id="newTaskTitle">สั่งงานใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewTask" type="button">ปิด</button></header>
+  <header><h1 id="newTaskTitle" data-i18n>สั่งงานใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewTask" type="button" data-i18n>ปิด</button></header>
   <div style="padding:16px">
-    <p class="muted">ระบบจะสร้าง issue ติดป้าย <code>ai-task</code> ให้ แล้วเอเจนต์จะหยิบไปทำตามลำดับคิว</p>
+    <p class="muted"><span data-i18n>ระบบจะสร้าง issue ติดป้าย</span> <code>ai-task</code> <span data-i18n>ให้ แล้วเอเจนต์จะหยิบไปทำตามลำดับคิว</span></p>
     <label for="taskRepo">Repo</label>
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
       <select id="taskRepo" style="flex:1"></select>
-      <button class="btn" id="addRepoBtn" type="button" style="white-space:nowrap">+ เพิ่ม Repo</button>
+      <button class="btn" id="addRepoBtn" type="button" style="white-space:nowrap" data-i18n>+ เพิ่ม Repo</button>
     </div>
-    <label for="taskTitle">ชื่องาน</label>
-    <input id="taskTitle" autofocus placeholder="เช่น เพิ่มปุ่มดาวน์โหลดผลวิเคราะห์เป็น Excel">
-    <label for="taskBody">รายละเอียด (ยิ่งชัดยิ่งดี: ต้องทำอะไร, เสร็จแล้วหน้าตาเป็นยังไง, ห้ามแตะอะไร)</label>
-    <textarea id="taskBody" placeholder="## ต้องการ&#10;...&#10;&#10;## เกณฑ์ว่าเสร็จ&#10;- ...&#10;&#10;## ห้าม&#10;- ..."></textarea>
+    <label for="taskTitle" data-i18n>ชื่องาน</label>
+    <input id="taskTitle" autofocus placeholder="เช่น เพิ่มปุ่มดาวน์โหลดผลวิเคราะห์เป็น Excel" data-i18n-attr="placeholder">
+    <label for="taskBody" data-i18n>รายละเอียด (ยิ่งชัดยิ่งดี: ต้องทำอะไร, เสร็จแล้วหน้าตาเป็นยังไง, ห้ามแตะอะไร)</label>
+    <textarea id="taskBody" placeholder="## ต้องการ&#10;...&#10;&#10;## เกณฑ์ว่าเสร็จ&#10;- ...&#10;&#10;## ห้าม&#10;- ..." data-i18n-attr="placeholder"></textarea>
     <div class="row" style="margin-top:12px">
-      <button class="btn primary" id="createTask" type="button">สร้างงาน</button>
+      <button class="btn primary" id="createTask" type="button" data-i18n>สร้างงาน</button>
       <span class="muted" id="taskMsg" role="status"></span>
     </div>
   </div>
 </dialog>
 <dialog id="newKeyDlg" aria-labelledby="newKeyTitle" style="width:min(500px,94vw)">
-  <header><h1 id="newKeyTitle">เพิ่ม API Key ใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewKey" type="button">ปิด</button></header>
+  <header><h1 id="newKeyTitle" data-i18n>เพิ่ม API Key ใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewKey" type="button" data-i18n>ปิด</button></header>
   <div style="padding:16px">
-    <p class="muted">ระบุชื่อตัวแปรและค่าคีย์เพื่อบันทึกลงในไฟล์ <code>.env</code></p>
-    <label for="newKeyName">ชื่อตัวแปร (เช่น OPENAI_API_KEY, CUSTOM_API_KEY)</label>
-    <input id="newKeyName" list="knownKeySuggestions" placeholder="เช่น OPENAI_API_KEY" required autocomplete="off">
+    <p class="muted"><span data-i18n>ระบุชื่อตัวแปรและค่าคีย์เพื่อบันทึกลงในไฟล์</span> <code>.env</code></p>
+    <label for="newKeyName" data-i18n>ชื่อตัวแปร (เช่น OPENAI_API_KEY, CUSTOM_API_KEY)</label>
+    <input id="newKeyName" list="knownKeySuggestions" placeholder="เช่น OPENAI_API_KEY" required autocomplete="off" data-i18n-attr="placeholder">
     <datalist id="knownKeySuggestions"></datalist>
-    <label for="newKeyValue">ค่า API Key</label>
-    <input id="newKeyValue" type="password" placeholder="วาง API Key...">
-    <label for="newKeyRole">บทบาทของคีย์ (Role)</label>
+    <label for="newKeyValue" data-i18n>ค่า API Key</label>
+    <input id="newKeyValue" type="password" placeholder="วาง API Key..." data-i18n-attr="placeholder">
+    <label for="newKeyRole" data-i18n>บทบาทของคีย์ (Role)</label>
     <select id="newKeyRole">
-      <option value="coder">💻 Coder (งานเขียนโค้ดหลัก)</option>
-      <option value="judge">⚖️ Judge (งานประเมินผล Rubric Gate)</option>
-      <option value="scan">🔍 Scan (งานสแกนโค้ด / Security Audit)</option>
-      <option value="all">🌐 ทุกบทบาท (Coder + Judge + Scan)</option>
+      <option value="coder" data-i18n>💻 Coder (งานเขียนโค้ดหลัก)</option>
+      <option value="judge" data-i18n>⚖️ Judge (งานประเมินผล Rubric Gate)</option>
+      <option value="scan" data-i18n>🔍 Scan (งานสแกนโค้ด / Security Audit)</option>
+      <option value="all" data-i18n>🌐 ทุกบทบาท (Coder + Judge + Scan)</option>
     </select>
     <div class="row" style="margin-top:14px">
-      <button class="btn primary" id="saveNewKeySubmit" type="button">บันทึกคีย์</button>
-      <button class="btn" id="cancelNewKeyBtn" type="button">ยกเลิก</button>
+      <button class="btn primary" id="saveNewKeySubmit" type="button" data-i18n>บันทึกคีย์</button>
+      <button class="btn" id="cancelNewKeyBtn" type="button" data-i18n>ยกเลิก</button>
       <span class="muted" id="newKeyMsg" role="status"></span>
     </div>
   </div>
 </dialog>
 <dialog id="newEngineDlg" aria-labelledby="newEngineTitle" style="width:min(580px,94vw)">
-  <header><h1 id="newEngineTitle">เพิ่ม API / Engine ใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewEngine" type="button">ปิด</button></header>
+  <header><h1 id="newEngineTitle" data-i18n>เพิ่ม API / Engine ใหม่</h1><span class="spacer"></span><button class="btn" id="closeNewEngine" type="button" data-i18n>ปิด</button></header>
   <div style="padding:16px">
-    <p class="muted">เพิ่มรายการ AI Engine เข้าสู่ <code>config.yaml</code> เพื่อใช้เป็นตัวหลักหรือสลับ Failover</p>
-    <label for="newEnginePreset">เลือกเทมเพลตจากผู้ให้บริการ (Preset)</label>
+    <p class="muted"><span data-i18n>เพิ่มรายการ AI Engine เข้าสู่</span> <code>config.yaml</code> <span data-i18n>เพื่อใช้เป็นตัวหลักหรือสลับ Failover</span></p>
+    <label for="newEnginePreset" data-i18n>เลือกเทมเพลตจากผู้ให้บริการ (Preset)</label>
     <select id="newEnginePreset">
-      <option value="">-- กำหนดเอง (Custom Engine) --</option>
+      <option value="" data-i18n>-- กำหนดเอง (Custom Engine) --</option>
     </select>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
       <div>
-        <label for="newEngineName">ชื่อ Engine (Unique Name)</label>
-        <input id="newEngineName" placeholder="เช่น opencode-deepseek" required>
+        <label for="newEngineName" data-i18n>ชื่อ Engine (Unique Name)</label>
+        <input id="newEngineName" placeholder="เช่น opencode-deepseek" required data-i18n-attr="placeholder">
       </div>
       <div>
-        <label for="newEngineProvider">ชื่อค่าย / ผู้ให้บริการ</label>
-        <input id="newEngineProvider" placeholder="เช่น DeepSeek AI" required>
-      </div>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
-      <div>
-        <label for="newEngineCommand">คำสั่ง (CLI Command)</label>
-        <input id="newEngineCommand" value="opencode" placeholder="opencode หรือ agy" required>
-      </div>
-      <div>
-        <label for="newEngineModel">รุ่นโมเดล (Model ID)</label>
-        <input id="newEngineModel" placeholder="เช่น deepseek/deepseek-chat" required>
+        <label for="newEngineProvider" data-i18n>ชื่อค่าย / ผู้ให้บริการ</label>
+        <input id="newEngineProvider" placeholder="เช่น DeepSeek AI" required data-i18n-attr="placeholder">
       </div>
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
       <div>
-        <label for="newEngineTimeout">Timeout (นาที)</label>
+        <label for="newEngineCommand" data-i18n>คำสั่ง (CLI Command)</label>
+        <input id="newEngineCommand" value="opencode" placeholder="opencode หรือ agy" required data-i18n-attr="placeholder">
+      </div>
+      <div>
+        <label for="newEngineModel" data-i18n>รุ่นโมเดล (Model ID)</label>
+        <input id="newEngineModel" placeholder="เช่น deepseek/deepseek-chat" required data-i18n-attr="placeholder">
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
+      <div>
+        <label for="newEngineTimeout" data-i18n>Timeout (นาที)</label>
         <input id="newEngineTimeout" type="number" value="30" min="1" max="180">
       </div>
       <div>
-        <label for="newEngineKeys">หรือ ตัวแปร API Key ที่มีอยู่แล้ว (คั่นด้วยจุลภาค)</label>
+        <label for="newEngineKeys" data-i18n>หรือ ตัวแปร API Key ที่มีอยู่แล้ว (คั่นด้วยจุลภาค)</label>
         <input id="newEngineKeys" placeholder="${MY_API_KEY_1}, ${MY_API_KEY_2}">
       </div>
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
       <div>
-        <label for="newEngineBaseUrl">URL ของ API (https://…) — กรอกเพื่อเพิ่มผู้ให้บริการใหม่</label>
+        <label for="newEngineBaseUrl" data-i18n>URL ของ API (https://…) — กรอกเพื่อเพิ่มผู้ให้บริการใหม่</label>
         <input id="newEngineBaseUrl" placeholder="https://api.example.com/v1" autocomplete="off">
       </div>
       <div>
-        <label for="newEngineApiKey">API Key (ค่าจริง ระบบเก็บใน .env)</label>
+        <label for="newEngineApiKey" data-i18n>API Key (ค่าจริง ระบบเก็บใน .env)</label>
         <input id="newEngineApiKey" type="password" autocomplete="new-password">
       </div>
     </div>
-    <p class="muted" style="margin:6px 0 0">ถ้ากรอก URL ระบบจะตั้งชื่อตัวแปรคีย์ให้เอง เช่น <code>DEEPSEEK_API_KEY_1</code> และซิงก์ URL ไปยัง opencode.json ให้ทันที</p>
+    <p class="muted" style="margin:6px 0 0"><span data-i18n>ถ้ากรอก URL ระบบจะตั้งชื่อตัวแปรคีย์ให้เอง เช่น</span> <code>DEEPSEEK_API_KEY_1</code> <span data-i18n>และซิงก์ URL ไปยัง opencode.json ให้ทันที</span></p>
     <div style="margin-top:8px;">
-      <label for="newEnginePath">Path คำสั่ง (เว้นว่างได้)</label>
-      <input id="newEnginePath" placeholder="เช่น ~/.gemini/bin/agy.exe (เว้นว่างถ้ามีใน PATH)">
+      <label for="newEnginePath" data-i18n>Path คำสั่ง (เว้นว่างได้)</label>
+      <input id="newEnginePath" placeholder="เช่น ~/.gemini/bin/agy.exe (เว้นว่างถ้ามีใน PATH)" data-i18n-attr="placeholder">
     </div>
     <div style="margin-top:12px; display:flex; gap:16px;">
-      <label class="check"><input type="checkbox" id="newEngineEnabled" checked> เปิดใช้งานทันที</label>
-      <label class="check"><input type="checkbox" id="newEngineTrains"> ⚠️ นำข้อมูลไปฝึก (ติ๊กหากค่ายเก็บข้อมูล)</label>
+      <label class="check"><input type="checkbox" id="newEngineEnabled" checked> <span data-i18n>เปิดใช้งานทันที</span></label>
+      <label class="check"><input type="checkbox" id="newEngineTrains"> <span data-i18n>⚠️ นำข้อมูลไปฝึก (ติ๊กหากค่ายเก็บข้อมูล)</span></label>
     </div>
     <div class="row" style="margin-top:16px;">
-      <button class="btn primary" id="saveNewEngineBtn" type="button">บันทึกและเพิ่ม Engine</button>
-      <button class="btn" id="cancelNewEngineBtn" type="button">ยกเลิก</button>
+      <button class="btn primary" id="saveNewEngineBtn" type="button" data-i18n>บันทึกและเพิ่ม Engine</button>
+      <button class="btn" id="cancelNewEngineBtn" type="button" data-i18n>ยกเลิก</button>
       <span class="muted" id="newEngineMsg" role="status"></span>
     </div>
   </div>
 </dialog>
 
 <dialog id="editEngineDlg" aria-labelledby="editEngineTitle" style="width:min(580px,94vw)">
-  <header><h1 id="editEngineTitle">แก้ไข API / Engine</h1><span class="spacer"></span><button class="btn" id="closeEditEngine" type="button">ปิด</button></header>
+  <header><h1 id="editEngineTitle" data-i18n>แก้ไข API / Engine</h1><span class="spacer"></span><button class="btn" id="closeEditEngine" type="button" data-i18n>ปิด</button></header>
   <div style="padding:16px">
     <input type="hidden" id="editEngineOrigName">
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div>
-        <label for="editEngineName">ชื่อ Engine (Unique Name)</label>
+        <label for="editEngineName" data-i18n>ชื่อ Engine (Unique Name)</label>
         <input id="editEngineName" required>
       </div>
       <div>
-        <label for="editEngineProvider">ชื่อค่าย / ผู้ให้บริการ</label>
+        <label for="editEngineProvider" data-i18n>ชื่อค่าย / ผู้ให้บริการ</label>
         <input id="editEngineProvider" required>
       </div>
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
       <div>
-        <label for="editEngineCommand">คำสั่ง (CLI Command)</label>
+        <label for="editEngineCommand" data-i18n>คำสั่ง (CLI Command)</label>
         <input id="editEngineCommand" required>
       </div>
       <div>
-        <label for="editEngineModel">รุ่นโมเดล (Model ID)</label>
+        <label for="editEngineModel" data-i18n>รุ่นโมเดล (Model ID)</label>
         <input id="editEngineModel" required>
       </div>
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
       <div>
-        <label for="editEngineTimeout">Timeout (นาที)</label>
+        <label for="editEngineTimeout" data-i18n>Timeout (นาที)</label>
         <input id="editEngineTimeout" type="number" min="1" max="180">
       </div>
       <div>
-        <label for="editEngineKeys">ตัวแปร API Key (คั่นด้วยจุลภาค)</label>
+        <label for="editEngineKeys" data-i18n>ตัวแปร API Key (คั่นด้วยจุลภาค)</label>
         <input id="editEngineKeys">
       </div>
     </div>
     <div style="margin-top:8px;">
-      <label for="editEnginePath">Path คำสั่ง (เว้นว่างได้)</label>
+      <label for="editEnginePath" data-i18n>Path คำสั่ง (เว้นว่างได้)</label>
       <input id="editEnginePath">
     </div>
     <div style="margin-top:12px; display:flex; gap:16px;">
-      <label class="check"><input type="checkbox" id="editEngineEnabled"> เปิดใช้งาน</label>
-      <label class="check"><input type="checkbox" id="editEngineTrains"> ⚠️ นำข้อมูลไปฝึก (ติ๊กหากค่ายเก็บข้อมูล)</label>
+      <label class="check"><input type="checkbox" id="editEngineEnabled"> <span data-i18n>เปิดใช้งาน</span></label>
+      <label class="check"><input type="checkbox" id="editEngineTrains"> <span data-i18n>⚠️ นำข้อมูลไปฝึก (ติ๊กหากค่ายเก็บข้อมูล)</span></label>
     </div>
     <div class="row" style="margin-top:16px;">
-      <button class="btn primary" id="saveEditEngineBtn" type="button">บันทึกการแก้ไข</button>
-      <button class="btn" id="cancelEditEngineBtn" type="button">ยกเลิก</button>
+      <button class="btn primary" id="saveEditEngineBtn" type="button" data-i18n>บันทึกการแก้ไข</button>
+      <button class="btn" id="cancelEditEngineBtn" type="button" data-i18n>ยกเลิก</button>
       <span class="muted" id="editEngineMsg" role="status"></span>
     </div>
   </div>
 </dialog>
 <dialog id="scanRepoModal" aria-labelledby="scanRepoTitle" style="width:min(920px,96vw)">
   <header>
-    <h1 id="scanRepoTitle">🔍 สแกนหา Repository ทั้งหมดที่สามารถทำงานอัตโนมัติได้</h1>
+    <h1 id="scanRepoTitle" data-i18n>🔍 สแกนหา Repository ทั้งหมดที่สามารถทำงานอัตโนมัติได้</h1>
     <span class="spacer"></span>
-    <button class="btn" id="closeScanRepo" type="button">ปิด</button>
+    <button class="btn" id="closeScanRepo" type="button" data-i18n>ปิด</button>
   </header>
   <div style="padding:16px">
     <div class="row" style="margin-bottom:12px; gap:10px; align-items:center; flex-wrap:wrap;">
-      <input type="search" id="scanRepoSearch" placeholder="🔍 ค้นหาตามชื่อ repo หรือคำอธิบาย..." style="flex:1; min-width:220px;">
-      <button class="btn" id="reScanBtn" type="button">🔄 สแกนใหม่</button>
-      <button class="btn primary" id="addAllAutoCapableBtn" type="button">⚡ เพิ่มทั้งหมดที่พร้อมทำงานอัตโนมัติ</button>
+      <input type="search" id="scanRepoSearch" placeholder="🔍 ค้นหาตามชื่อ repo หรือคำอธิบาย..." style="flex:1; min-width:220px;" data-i18n-attr="placeholder">
+      <button class="btn" id="reScanBtn" type="button" data-i18n>🔄 สแกนใหม่</button>
+      <button class="btn primary" id="addAllAutoCapableBtn" type="button" data-i18n>⚡ เพิ่มทั้งหมดที่พร้อมทำงานอัตโนมัติ</button>
     </div>
-    <div id="scanSummaryMsg" class="muted" style="margin-bottom:10px; font-size:13px;">กำลังเตรียมการสแกน...</div>
+    <div id="scanSummaryMsg" class="muted" style="margin-bottom:10px; font-size:13px;" data-i18n>กำลังเตรียมการสแกน...</div>
     <div class="table-wrap" style="max-height:55vh; overflow:auto;">
       <table>
         <thead>
           <tr>
             <th>Repository</th>
-            <th style="width:90px">ประเภท</th>
-            <th style="width:110px">สาขา / Stack</th>
-            <th style="width:140px">สถานะอัตโนมัติ</th>
-            <th style="width:160px; text-align:right">จัดการ</th>
+            <th style="width:90px" data-i18n>ประเภท</th>
+            <th style="width:110px" data-i18n>สาขา / Stack</th>
+            <th style="width:140px" data-i18n>สถานะอัตโนมัติ</th>
+            <th style="width:160px; text-align:right" data-i18n>จัดการ</th>
           </tr>
         </thead>
         <tbody id="scanRepoRows">
-          <tr><td colspan="5" class="empty">กำลังสแกนหา Repositories...</td></tr>
+          <tr><td colspan="5" class="empty" data-i18n>กำลังสแกนหา Repositories...</td></tr>
         </tbody>
       </table>
     </div>
@@ -883,9 +883,9 @@ let ciPlanQueue = Promise.resolve();
 // Repos with a pause/resume request in flight: a second click must not send another request.
 const pauseBusy = new Set();
 const esc =(s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const PERSONAS = {bolt: "⚡ Bolt (Performance)", sentinel: "🛡️ Sentinel (Security)", palette: "🎨 Palette (UX/UI)", quality: "🧪 Quality (เทสต์)"};
-const ISSUE_STATE = {queued: ["รอคิว", "info"], working: ["กำลังทำ", "warn"], failed: ["ล้มเหลว", "bad"], closed: ["เสร็จ", "ok"], ignored: ["ไม่รับ (คนอื่นเปิด)", ""]};
-const RUN_STATE = {OPEN: ["PR เปิด", "info"], MERGED: ["merge แล้ว", "ok"], CLOSED: ["ปิดทิ้ง", "bad"], DRY_RUN: ["dry-run", ""], NO_ACTION: ["ไม่มีอะไรแก้", ""], FAILED: ["เทสต์ไม่ผ่าน", "bad"], PUSHED: ["push แล้ว รอเปิด PR", "info"], ERROR: ["ผิดพลาด", "bad"]};
+const PERSONAS = {bolt: "⚡ Bolt (Performance)", sentinel: "🛡️ Sentinel (Security)", palette: "🎨 Palette (UX/UI)", quality: i18n("🧪 Quality (เทสต์)")};
+const ISSUE_STATE = {queued: [i18n("รอคิว"), "info"], working: [i18n("กำลังทำ"), "warn"], failed: [i18n("ล้มเหลว"), "bad"], closed: [i18n("เสร็จ"), "ok"], ignored: [i18n("ไม่รับ (คนอื่นเปิด)"), ""]};
+const RUN_STATE = {OPEN: [i18n("PR เปิด"), "info"], MERGED: [i18n("merge แล้ว"), "ok"], CLOSED: [i18n("ปิดทิ้ง"), "bad"], DRY_RUN: ["dry-run", ""], NO_ACTION: [i18n("ไม่มีอะไรแก้"), ""], FAILED: [i18n("เทสต์ไม่ผ่าน"), "bad"], PUSHED: [i18n("push แล้ว รอเปิด PR"), "info"], ERROR: [i18n("ผิดพลาด"), "bad"]};
 let state = null;
 
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2600); }
@@ -953,13 +953,13 @@ try { const th = localStorage.getItem("theme"); if (th) document.documentElement
 
 // ---------- provider metadata & key manager
 const PROVIDERS_CATALOG_JS = {
-  "opencode": { display_name: "OpenCode", tier: "core", quota_label: "ตามผู้ให้บริการ", rate_limit: "ตามผู้ให้บริการ", description: "OpenCode CLI - ต้องกรอก API Key", portal_url: "https://opencode.ai", keyless: false, keys: ["OPENCODE_API_KEY_1"] },
-  "opencode-nvidia": { display_name: "NVIDIA Build", tier: "core", quota_label: "1,000 เครดิตฟรี/บัญชี", rate_limit: "40 RPM", description: "NVIDIA NIM Inference - โมเดล DeepSeek V4.1 Flash ความเร็วสูง 1,000 เครดิตฟรี/บัญชี", portal_url: "https://build.nvidia.com", keyless: false, keys: ["NVIDIA_API_KEY_1", "NVIDIA_API_KEY_2"] },
-  "opencode-groq": { display_name: "GroqCloud", tier: "core", quota_label: "สูงสุด 14,400 RPD ฟรี", rate_limit: "30 RPM", description: "LPU Inference เร็วที่สุดในโลก 300+ tokens/sec เหมาะกับงานเขียนโค้ดและทดสอบด่วน", portal_url: "https://console.groq.com/keys", keyless: false, keys: ["GROQ_API_KEY_1", "GROQ_API_KEY_2"] },
-  "opencode-cerebras": { display_name: "Cerebras Cloud", tier: "core", quota_label: "1,000,000 tokens/วัน ฟรีตลอดไป", rate_limit: "30 RPM", description: "ชิป Wafer-Scale Engine ความเร็วสูงมาก โควตาฟรี 1,000,000 โทเคนต่อวัน", portal_url: "https://cloud.cerebras.ai", keyless: false, keys: ["CEREBRAS_API_KEY_1"] },
-  "opencode-cloudflare": { display_name: "Cloudflare Workers AI", tier: "core", quota_label: "10,000 Neurons/วัน ฟรีตลอดไป", rate_limit: "100 req/min", description: "Serverless AI บนเครือข่าย Edge ทั่วโลก โควตาฟรี 10,000 Neurons ทุกวันตลอดชีพ", portal_url: "https://dash.cloudflare.com", keyless: false, keys: ["CLOUDFLARE_API_KEY_1", "CLOUDFLARE_ACCOUNT_ID"] },
-  "opencode-pollinations": { display_name: "Pollinations.ai", tier: "standby", quota_label: "ฟรี Fair Use / Pollen", rate_limit: "30 RPM", description: "OpenAI-compatible Endpoint รองรับ DeepSeek V4.1 และ GPT-6 Luna", portal_url: "https://enter.pollinations.ai", keyless: false, keys: ["POLLINATIONS_API_KEY_1"] },
-  "agy-ai-pro": { display_name: "Google AI Pro (CLI)", tier: "standby", quota_label: "บัญชี CLI ประจำเครื่อง", rate_limit: "CLI Managed", description: "Google Antigravity CLI Account หลักในเครื่อง", portal_url: "https://antigravity.google", keyless: true, keys: [] }
+  "opencode": { display_name: "OpenCode", tier: "core", quota_label: i18n("ตามผู้ให้บริการ"), rate_limit: i18n("ตามผู้ให้บริการ"), description: i18n("OpenCode CLI - ต้องกรอก API Key"), portal_url: "https://opencode.ai", keyless: false, keys: ["OPENCODE_API_KEY_1"] },
+  "opencode-nvidia": { display_name: "NVIDIA Build", tier: "core", quota_label: i18n("1,000 เครดิตฟรี/บัญชี"), rate_limit: "40 RPM", description: i18n("NVIDIA NIM Inference - โมเดล DeepSeek V4.1 Flash ความเร็วสูง 1,000 เครดิตฟรี/บัญชี"), portal_url: "https://build.nvidia.com", keyless: false, keys: ["NVIDIA_API_KEY_1", "NVIDIA_API_KEY_2"] },
+  "opencode-groq": { display_name: "GroqCloud", tier: "core", quota_label: i18n("สูงสุด 14,400 RPD ฟรี"), rate_limit: "30 RPM", description: i18n("LPU Inference เร็วที่สุดในโลก 300+ tokens/sec เหมาะกับงานเขียนโค้ดและทดสอบด่วน"), portal_url: "https://console.groq.com/keys", keyless: false, keys: ["GROQ_API_KEY_1", "GROQ_API_KEY_2"] },
+  "opencode-cerebras": { display_name: "Cerebras Cloud", tier: "core", quota_label: i18n("1,000,000 tokens/วัน ฟรีตลอดไป"), rate_limit: "30 RPM", description: i18n("ชิป Wafer-Scale Engine ความเร็วสูงมาก โควตาฟรี 1,000,000 โทเคนต่อวัน"), portal_url: "https://cloud.cerebras.ai", keyless: false, keys: ["CEREBRAS_API_KEY_1"] },
+  "opencode-cloudflare": { display_name: "Cloudflare Workers AI", tier: "core", quota_label: i18n("10,000 Neurons/วัน ฟรีตลอดไป"), rate_limit: "100 req/min", description: i18n("Serverless AI บนเครือข่าย Edge ทั่วโลก โควตาฟรี 10,000 Neurons ทุกวันตลอดชีพ"), portal_url: "https://dash.cloudflare.com", keyless: false, keys: ["CLOUDFLARE_API_KEY_1", "CLOUDFLARE_ACCOUNT_ID"] },
+  "opencode-pollinations": { display_name: "Pollinations.ai", tier: "standby", quota_label: i18n("ฟรี Fair Use / Pollen"), rate_limit: "30 RPM", description: i18n("OpenAI-compatible Endpoint รองรับ DeepSeek V4.1 และ GPT-6 Luna"), portal_url: "https://enter.pollinations.ai", keyless: false, keys: ["POLLINATIONS_API_KEY_1"] },
+  "agy-ai-pro": { display_name: "Google AI Pro (CLI)", tier: "standby", quota_label: i18n("บัญชี CLI ประจำเครื่อง"), rate_limit: "CLI Managed", description: i18n("Google Antigravity CLI Account หลักในเครื่อง"), portal_url: "https://antigravity.google", keyless: true, keys: [] }
 };
 
 function getCatalog(s) {
@@ -984,7 +984,7 @@ function getCatalog(s) {
       tier: tier,
       description: meta.description || "",
       portal_url: meta.portal_url || "",
-      quota_label: meta.quota_label || "ฟรี 0 บาท",
+      quota_label: meta.quota_label || i18n("ฟรี 0 บาท"),
       rate_limit: meta.rate_limit || "Fair Use",
       trains_on_data: e.trains_on_data,
       command: e.engine || e.command,
@@ -1047,18 +1047,18 @@ function renderModelBoxContent(provName, currentModel, provModels, filterQ = "")
   return `
     <div style="display:flex; flex-direction:column; gap:6px;">
       <div style="font-size:11px; font-weight:600; display:flex; justify-content:space-between; align-items:center;">
-        <span>เลือกรุ่นโมเดล (พบ ${matched.length} จาก ${provModels.length} รุ่น):</span>
-        <span style="color:var(--ok); font-size:10px;">✓ ข้อมูลจาก API</span>
+        <span>${i18n("เลือกรุ่นโมเดล (พบ")} ${matched.length} ${i18n("จาก")} ${provModels.length} ${i18n("รุ่น):")}</span>
+        <span style="color:var(--ok); font-size:10px;">${i18n("✓ ข้อมูลจาก API")}</span>
       </div>
-      <input type="text" class="model-filter-input" data-filter-provider="${esc(provName)}" placeholder="🔎 พิมพ์ค้นหาโมเดล (เช่น llama, qwen, deepseek, flash)..." value="${esc(filterQ)}" style="width:100%; font-size:12px; padding:4px 7px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
+      <input type="text" class="model-filter-input" data-filter-provider="${esc(provName)}" placeholder="${i18n("🔎 พิมพ์ค้นหาโมเดล (เช่น llama, qwen, deepseek, flash)...")}" value="${esc(filterQ)}" style="width:100%; font-size:12px; padding:4px 7px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
       <select id="model-select-${esc(provName)}" class="model-select-elem" data-provider="${esc(provName)}" style="width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);">
         ${matched.map(m => `<option value="${esc(m)}" ${m === currentModel ? 'selected' : ''}>${esc(m)}</option>`).join("")}
-        <option value="__custom__">✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)...</option>
+        <option value="__custom__">${i18n("✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)...")}</option>
       </select>
-      <input type="text" id="model-custom-input-${esc(provName)}" placeholder="พิมพ์ชื่อ Model ID เช่น groq/..." style="display:none; width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
+      <input type="text" id="model-custom-input-${esc(provName)}" placeholder="${i18n("พิมพ์ชื่อ Model ID เช่น groq/...")}" style="display:none; width:100%; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid var(--line); background:var(--bg); color:var(--text);" autocomplete="off">
       <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
-        <button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">ปิด</button>
-        <button class="btn btn-sm primary" type="button" data-save-model="${esc(provName)}">💾 ใช้โมเดลนี้</button>
+        <button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">${i18n("ปิด")}</button>
+        <button class="btn btn-sm primary" type="button" data-save-model="${esc(provName)}">${i18n("💾 ใช้โมเดลนี้")}</button>
       </div>
     </div>
   `;
@@ -1116,31 +1116,31 @@ function renderKeysCatalog(cat) {
     return true;
   });
 
-  $("#filterResultCount").textContent = `แสดง ${filtered.length} / ${cat.providers.length} รายการ`;
+  $("#filterResultCount").textContent = `${i18n("แสดง")} ${filtered.length} / ${cat.providers.length} ${i18n("รายการ")}`;
 
   if (!filtered.length) {
-    $("#providerGrid").innerHTML = `<div class="empty" style="grid-column: 1 / -1; background:var(--panel); border:1px solid var(--line); border-radius:10px;">ไม่พบผู้ให้บริการที่ตรงกับเงื่อนไขการค้นหา</div>`;
+    $("#providerGrid").innerHTML = `<div class="empty" style="grid-column: 1 / -1; background:var(--panel); border:1px solid var(--line); border-radius:10px;">${i18n("ไม่พบผู้ให้บริการที่ตรงกับเงื่อนไขการค้นหา")}</div>`;
     return;
   }
 
   const cardHtml = (p) => {
     const isCool = p.is_cooldown;
-    const tierBadge = p.tier === "core" ? pill(["⭐ ค่ายหลัก", "ok"]) : (p.name === "opencode-pollinations" ? "" : pill(["📦 สำรอง", "info"]));
-    const privBadge = p.trains_on_data ? pill(["⚠️ นำข้อมูลไปเทรน", "warn"]) : pill(["🔒 ไม่เทรนข้อมูล", "ok"]);
-    const statBadge = p.keyless ? pill(["⚪ ไม่ต้องใช้คีย์", "info"]) :
-                      isCool ? pill(["🟡 ติด Cooldown", "bad"]) :
-                      p.has_configured_key ? pill(["🟢 พร้อมใช้งาน", "ok"]) :
-                      pill(["⚪ ยังไม่มีคีย์", ""]);
+    const tierBadge = p.tier === "core" ? pill([i18n("⭐ ค่ายหลัก"), "ok"]) : (p.name === "opencode-pollinations" ? "" : pill([i18n("📦 สำรอง"), "info"]));
+    const privBadge = p.trains_on_data ? pill([i18n("⚠️ นำข้อมูลไปเทรน"), "warn"]) : pill([i18n("🔒 ไม่เทรนข้อมูล"), "ok"]);
+    const statBadge = p.keyless ? pill([i18n("⚪ ไม่ต้องใช้คีย์"), "info"]) :
+                      isCool ? pill([i18n("🟡 ติด Cooldown"), "bad"]) :
+                      p.has_configured_key ? pill([i18n("🟢 พร้อมใช้งาน"), "ok"]) :
+                      pill([i18n("⚪ ยังไม่มีคีย์"), ""]);
 
     const keysHtml = p.keyless ?
-      `<div class="muted" style="font-size:12px; padding:6px 0;">ไม่ต้องกรอก API Key (ระบบมีโมเดลฟรีหรือต่อเชื่อมให้ในตัว)</div>` :
+      `<div class="muted" style="font-size:12px; padding:6px 0;">${i18n("ไม่ต้องกรอก API Key (ระบบมีโมเดลฟรีหรือต่อเชื่อมให้ในตัว)")}</div>` :
       p.keys.map(k => {
         const val = dirtyKeys[k.env_var] !== undefined ? dirtyKeys[k.env_var] : (k.configured ? k.masked : "");
-        const coolBadge = k.status === "cooldown" ? `<span class="pill bad" style="font-size:11px">พักอีก ~${Math.ceil(k.cooldown_remaining_sec / 60)} นาที</span>` :
-                          k.configured ? `<span class="pill ok" style="font-size:11px">มีคีย์แล้ว</span>` : `<span class="pill" style="font-size:11px">ยังไม่ได้ใส่</span>`;
-        const resetBtn = k.status === "cooldown" ? `<button class="btn btn-sm danger" type="button" data-reset-cooldown="${esc(k.key_id)}" data-engine="${esc(p.name)}" title="ล้างคูลดาวน์ทันที">⚡ ล้างคูลดาวน์</button>` : "";
-        const deleteBtn = k.configured ? `<button class="btn btn-sm btn-icon danger" type="button" data-delete-key="${esc(k.env_var)}" aria-label="ลบคีย์ ${esc(k.env_var)}" title="ลบคีย์นี้ออกจาก .env">🗑️</button>` : "";
-        const pingKeyBtn = k.configured ? `<button class="btn btn-sm" type="button" data-ping-key="${esc(k.key_id)}" data-ping-engine="${esc(p.name)}" data-ping-label="${esc(k.env_var)}" title="ส่งข้อความทดสอบ 1 ครั้งเพื่อดูว่าคีย์นี้ใช้งานได้หรือไม่" style="font-size:11px; padding:2px 7px;">📡 ปิงคีย์</button>` : "";
+        const coolBadge = k.status === "cooldown" ? `<span class="pill bad" style="font-size:11px">${i18n("พักอีก ~")}${Math.ceil(k.cooldown_remaining_sec / 60)} ${i18n("นาที")}</span>` :
+                          k.configured ? `<span class="pill ok" style="font-size:11px">${i18n("มีคีย์แล้ว")}</span>` : `<span class="pill" style="font-size:11px">${i18n("ยังไม่ได้ใส่")}</span>`;
+        const resetBtn = k.status === "cooldown" ? `<button class="btn btn-sm danger" type="button" data-reset-cooldown="${esc(k.key_id)}" data-engine="${esc(p.name)}" title="${i18n("ล้างคูลดาวน์ทันที")}">${i18n("⚡ ล้างคูลดาวน์")}</button>` : "";
+        const deleteBtn = k.configured ? `<button class="btn btn-sm btn-icon danger" type="button" data-delete-key="${esc(k.env_var)}" aria-label="${i18n("ลบคีย์")} ${esc(k.env_var)}" title="${i18n("ลบคีย์นี้ออกจาก .env")}">🗑️</button>` : "";
+        const pingKeyBtn = k.configured ? `<button class="btn btn-sm" type="button" data-ping-key="${esc(k.key_id)}" data-ping-engine="${esc(p.name)}" data-ping-label="${esc(k.env_var)}" title="${i18n("ส่งข้อความทดสอบ 1 ครั้งเพื่อดูว่าคีย์นี้ใช้งานได้หรือไม่")}" style="font-size:11px; padding:2px 7px;">${i18n("📡 ปิงคีย์")}</button>` : "";
         const roles = k.roles || ["coder"];
         const rolePills = ["coder", "judge", "scan"].map(r => {
           const active = roles.includes(r);
@@ -1148,7 +1148,7 @@ function renderKeysCatalog(cat) {
                         r === "scan" ? (active ? "background:#06b6d4;color:#fff;" : "opacity:0.4;border:1px dashed var(--line);") :
                         (active ? "background:#10b981;color:#fff;" : "opacity:0.4;border:1px dashed var(--line);");
           const label = r === "judge" ? "⚖️ Judge" : r === "scan" ? "🔍 Scan" : "💻 Coder";
-          return `<button type="button" class="btn btn-sm" data-key-role="${r}" data-key-var="${esc(k.env_var)}" title="สลับบทบาท ${r} สำหรับคีย์นี้" style="padding:1px 5px; font-size:10px; border-radius:10px; margin-left:3px; cursor:pointer; ${color}">${label}</button>`;
+          return `<button type="button" class="btn btn-sm" data-key-role="${r}" data-key-var="${esc(k.env_var)}" title="${i18n("สลับบทบาท")} ${r} ${i18n("สำหรับคีย์นี้")}" style="padding:1px 5px; font-size:10px; border-radius:10px; margin-left:3px; cursor:pointer; ${color}">${label}</button>`;
         }).join("");
         return `
           <div style="margin-top:6px;">
@@ -1160,8 +1160,8 @@ function renderKeysCatalog(cat) {
               ${coolBadge}
             </div>
             <div class="key-row">
-              <input type="password" data-env-key="${esc(k.env_var)}" aria-label="API Key ${esc(k.env_var)}" placeholder="${k.configured ? esc(k.masked) : 'วาง API Key ที่นี่...'}" value="${esc(val)}" autocomplete="off">
-              <button class="btn btn-sm btn-icon" type="button" data-toggle-mask="${esc(k.env_var)}" aria-label="แสดงหรือซ่อนคีย์ ${esc(k.env_var)}" aria-pressed="false" title="แสดง/ซ่อนคีย์">👁️</button>
+              <input type="password" data-env-key="${esc(k.env_var)}" aria-label="API Key ${esc(k.env_var)}" placeholder="${k.configured ? esc(k.masked) : i18n("วาง API Key ที่นี่...")}" value="${esc(val)}" autocomplete="off">
+              <button class="btn btn-sm btn-icon" type="button" data-toggle-mask="${esc(k.env_var)}" aria-label="${i18n("แสดงหรือซ่อนคีย์")} ${esc(k.env_var)}" aria-pressed="false" title="${i18n("แสดง/ซ่อนคีย์")}">👁️</button>
               ${pingKeyBtn}
               ${deleteBtn}
               ${resetBtn}
@@ -1175,8 +1175,8 @@ function renderKeysCatalog(cat) {
     const filterQ = modelSearchQuery[p.name] || "";
     const boxContent = isBoxOpen ? renderModelBoxContent(p.name, p.model, provModels, filterQ) : "";
 
-    const favStar = `<button class="fav-star-btn" data-toggle-fav="${esc(p.name)}" title="${p.is_favorite ? 'ยกเลิกรายการโปรด' : 'เพิ่มในรายการโปรด'}" style="background:none; border:none; cursor:pointer; font-size:18px; line-height:1; padding:0 2px;" aria-label="รายการโปรด">${p.is_favorite ? '⭐' : '☆'}</button>`;
-    const favBadge = p.is_favorite ? '<span class="pill" style="background:#ffd70033; color:#f59e0b; border:1px solid #f59e0b66; font-size:11px;">⭐ โปรด</span>' : '';
+    const favStar = `<button class="fav-star-btn" data-toggle-fav="${esc(p.name)}" title="${p.is_favorite ? i18n("ยกเลิกรายการโปรด") : i18n("เพิ่มในรายการโปรด")}" style="background:none; border:none; cursor:pointer; font-size:18px; line-height:1; padding:0 2px;" aria-label="${i18n("รายการโปรด")}">${p.is_favorite ? '⭐' : '☆'}</button>`;
+    const favBadge = p.is_favorite ? i18n("<span class=\"pill\" style=\"background:#ffd70033; color:#f59e0b; border:1px solid #f59e0b66; font-size:11px;\">⭐ โปรด</span>") : '';
 
     return `
       <div class="provider-card ${isCool ? 'cooldown-card' : ''} ${p.is_favorite ? 'favorite-card' : ''}" style="${p.is_favorite ? 'border-color:#f59e0b66;' : ''}">
@@ -1191,32 +1191,32 @@ function renderKeysCatalog(cat) {
               ${privBadge}
               ${favBadge}
               ${statBadge}
-              ${isCool ? `<button class="btn btn-sm danger" type="button" data-reset-cooldown="${esc(p.name)}" data-engine="${esc(p.name)}" title="ล้างคูลดาวน์ทั้งค่าย">⚡ รีเซ็ตโควตา</button>` : ''}
+              ${isCool ? `<button class="btn btn-sm danger" type="button" data-reset-cooldown="${esc(p.name)}" data-engine="${esc(p.name)}" title="${i18n("ล้างคูลดาวน์ทั้งค่าย")}">${i18n("⚡ รีเซ็ตโควตา")}</button>` : ''}
             </div>
           </div>
           <label class="check" style="font-size:13px; white-space:nowrap;">
-            <input type="checkbox" data-engine-toggle="${esc(p.name)}" ${p.enabled ? "checked" : ""}> เปิด
+            <input type="checkbox" data-engine-toggle="${esc(p.name)}" ${p.enabled ? "checked" : ""}> ${i18n("เปิด")}
           </label>
         </div>
 
         <div class="provider-model-section" style="font-size:12px; color:var(--text); line-height:1.4;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:6px;">
-              <span class="muted" style="font-size:11px;">โมเดล:</span>
+              <span class="muted" style="font-size:11px;">${i18n("โมเดล:")}</span>
               <code class="mono" id="model-display-${esc(p.name)}" style="font-size:11px; background:var(--code-bg); padding:2px 5px; border-radius:4px;">${esc(p.model)}</code>
             </div>
-            <button class="btn btn-sm" type="button" data-fetch-models="${esc(p.name)}" data-current-model="${esc(p.model)}" style="font-size:11px; padding:2px 7px;" title="ดึงโมเดลที่ใช้งานได้จริงจาก API ของค่ายนี้">🔍 ดึงโมเดลจาก API</button>
+            <button class="btn btn-sm" type="button" data-fetch-models="${esc(p.name)}" data-current-model="${esc(p.model)}" style="font-size:11px; padding:2px 7px;" title="${i18n("ดึงโมเดลที่ใช้งานได้จริงจาก API ของค่ายนี้")}">${i18n("🔍 ดึงโมเดลจาก API")}</button>
           </div>
           <div id="model-box-${esc(p.name)}" style="${isBoxOpen ? 'display:block;' : 'display:none;'} margin-top:6px; padding:8px; background:var(--card-bg); border:1px solid var(--line); border-radius:6px;">
             ${boxContent}
           </div>
-          ${p.portal_url ? `<div style="margin-top:4px;"><a href="${esc(p.portal_url)}" target="_blank" rel="noopener">🔗 ขอรับ API Key ฟรีที่นี่ ↗</a></div>` : ''}
+          ${p.portal_url ? `<div style="margin-top:4px;"><a href="${esc(p.portal_url)}" target="_blank" rel="noopener">${i18n("🔗 ขอรับ API Key ฟรีที่นี่ ↗")}</a></div>` : ''}
         </div>
 
         <details class="provider-details">
-          <summary>รายละเอียดและโควตา</summary>
+          <summary>${i18n("รายละเอียดและโควตา")}</summary>
           <div class="muted" style="margin-top:6px;">${esc(p.description)}</div>
-          <div class="provider-info-box" style="margin-top:6px;">โควตา: <strong>${esc(p.quota_label)}</strong> · ลิมิต: ${esc(p.rate_limit)}</div>
+          <div class="provider-info-box" style="margin-top:6px;">${i18n("โควตา:")} <strong>${esc(p.quota_label)}</strong> ${i18n("· ลิมิต:")} ${esc(p.rate_limit)}</div>
         </details>
 
         <div class="provider-keys-group">
@@ -1224,29 +1224,29 @@ function renderKeysCatalog(cat) {
         </div>
 
         <div class="card-crud-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); gap:6px; flex-wrap:wrap;">
-          <button class="btn btn-sm" type="button" data-edit-engine="${esc(p.name)}" title="แก้ไขการตั้งค่า Engine นี้" style="font-size:12px; padding:4px 9px;">
-            ✏️ แก้ไข Engine
+          <button class="btn btn-sm" type="button" data-edit-engine="${esc(p.name)}" title="${i18n("แก้ไขการตั้งค่า Engine นี้")}" style="font-size:12px; padding:4px 9px;">
+            ${i18n("✏️ แก้ไข Engine")}
           </button>
           <div style="display:flex; gap:6px;">
-            ${!p.keyless && (p.keys || []).some(k => k.configured) ? `<button class="btn btn-sm" type="button" data-ping-engine="${esc(p.name)}" style="font-size:12px; padding:4px 9px;" title="ปิงทุกคีย์ของค่ายนี้ทีละคีย์">🧪 ปิงทุกคีย์</button>` : ""}
-            <button class="btn btn-sm ${p.is_favorite ? 'primary' : ''}" type="button" data-toggle-fav="${esc(p.name)}" style="font-size:12px; padding:4px 9px;" title="บันทึก/ยกเลิกรายการโปรด">
-              ${p.is_favorite ? '⭐ โปรด' : '☆ เพิ่มโปรด'}
+            ${!p.keyless && (p.keys || []).some(k => k.configured) ? `<button class="btn btn-sm" type="button" data-ping-engine="${esc(p.name)}" style="font-size:12px; padding:4px 9px;" title="${i18n("ปิงทุกคีย์ของค่ายนี้ทีละคีย์")}">${i18n("🧪 ปิงทุกคีย์")}</button>` : ""}
+            <button class="btn btn-sm ${p.is_favorite ? 'primary' : ''}" type="button" data-toggle-fav="${esc(p.name)}" style="font-size:12px; padding:4px 9px;" title="${i18n("บันทึก/ยกเลิกรายการโปรด")}">
+              ${p.is_favorite ? i18n("⭐ โปรด") : i18n("☆ เพิ่มโปรด")}
             </button>
-            <button class="btn btn-sm danger" type="button" data-delete-engine="${esc(p.name)}" title="ลบ Engine ออกจาก config.yaml" style="font-size:12px; padding:4px 9px;">
-              🗑️ ลบ
+            <button class="btn btn-sm danger" type="button" data-delete-engine="${esc(p.name)}" title="${i18n("ลบ Engine ออกจาก config.yaml")}" style="font-size:12px; padding:4px 9px;">
+              ${i18n("🗑️ ลบ")}
             </button>
           </div>
         </div>
       </div>
     `;
   };
-  const groups = [["core", "⭐ ค่ายหลัก"], ["standby", "📦 ค่ายสำรอง"]];
+  const groups = [["core", i18n("⭐ ค่ายหลัก")], ["standby", i18n("📦 ค่ายสำรอง")]];
   const customList = (cat.custom_keys || []).filter(ck => {
     if (!q) return true;
     return (ck.env_var || "").toLowerCase().includes(q);
   });
   const customHtml = customList.length ? `
-    <h3 class="group-title" style="grid-column:1 / -1">⚙️ คีย์ที่กำหนดเอง (Custom Keys) (${customList.length})</h3>
+    <h3 class="group-title" style="grid-column:1 / -1">${i18n("⚙️ คีย์ที่กำหนดเอง (Custom Keys) (")}${customList.length})</h3>
     ${customList.map(ck => {
       const val = dirtyKeys[ck.env_var] !== undefined ? dirtyKeys[ck.env_var] : (ck.configured ? ck.masked : "");
       const roles = ck.roles || ["coder"];
@@ -1256,7 +1256,7 @@ function renderKeysCatalog(cat) {
                       r === "scan" ? (active ? "background:#06b6d4;color:#fff;" : "opacity:0.4;border:1px dashed var(--line);") :
                       (active ? "background:#10b981;color:#fff;" : "opacity:0.4;border:1px dashed var(--line);");
         const label = r === "judge" ? "⚖️ Judge" : r === "scan" ? "🔍 Scan" : "💻 Coder";
-        return `<button type="button" class="btn btn-sm" data-key-role="${r}" data-key-var="${esc(ck.env_var)}" title="สลับบทบาท ${r} สำหรับคีย์นี้" style="padding:1px 5px; font-size:10px; border-radius:10px; margin-left:3px; cursor:pointer; ${color}">${label}</button>`;
+        return `<button type="button" class="btn btn-sm" data-key-role="${r}" data-key-var="${esc(ck.env_var)}" title="${i18n("สลับบทบาท")} ${r} ${i18n("สำหรับคีย์นี้")}" style="padding:1px 5px; font-size:10px; border-radius:10px; margin-left:3px; cursor:pointer; ${color}">${label}</button>`;
       }).join("");
       return `
       <div class="provider-card">
@@ -1267,9 +1267,9 @@ function renderKeysCatalog(cat) {
           </div>
         </div>
         <div class="key-row" style="margin-top:10px">
-          <input type="password" data-env-key="${esc(ck.env_var)}" aria-label="API Key ${esc(ck.env_var)}" placeholder="${ck.configured ? esc(ck.masked) : 'วาง API Key ที่นี่...'}" value="${esc(val)}" autocomplete="off">
-          <button class="btn btn-sm btn-icon" type="button" data-toggle-mask="${esc(ck.env_var)}" aria-label="แสดงหรือซ่อนคีย์ ${esc(ck.env_var)}" aria-pressed="false" title="แสดง/ซ่อนคีย์">👁️</button>
-          <button class="btn btn-sm btn-icon danger" type="button" data-delete-key="${esc(ck.env_var)}" aria-label="ลบคีย์ ${esc(ck.env_var)}" title="ลบคีย์นี้ออกจาก .env">🗑️</button>
+          <input type="password" data-env-key="${esc(ck.env_var)}" aria-label="API Key ${esc(ck.env_var)}" placeholder="${ck.configured ? esc(ck.masked) : i18n("วาง API Key ที่นี่...")}" value="${esc(val)}" autocomplete="off">
+          <button class="btn btn-sm btn-icon" type="button" data-toggle-mask="${esc(ck.env_var)}" aria-label="${i18n("แสดงหรือซ่อนคีย์")} ${esc(ck.env_var)}" aria-pressed="false" title="${i18n("แสดง/ซ่อนคีย์")}">👁️</button>
+          <button class="btn btn-sm btn-icon danger" type="button" data-delete-key="${esc(ck.env_var)}" aria-label="${i18n("ลบคีย์")} ${esc(ck.env_var)}" title="${i18n("ลบคีย์นี้ออกจาก .env")}">🗑️</button>
         </div>
       </div>
       `;
@@ -1286,8 +1286,8 @@ function renderKeysCatalog(cat) {
 function render() {
   const s = state, a = s.agent;
   $("#dot").classList.toggle("on", a.running);
-  $("#agentText").textContent = (a.running ? `กำลังทำงาน (${a.args.join(" ") || "1 งาน"}) ตั้งแต่ ${when(a.started)}`
-    : a.next_run ? `ว่าง — รอบถัดไป ${when(a.next_run)}` : "ว่าง") + (a.auto ? " · 🔁 อัตโนมัติ" : "");
+  $("#agentText").textContent = (a.running ? `${i18n("กำลังทำงาน (")}${a.args.join(" ") || i18n("1 งาน")}${i18n(") ตั้งแต่")} ${when(a.started)}`
+    : a.next_run ? `${i18n("ว่าง — รอบถัดไป")} ${when(a.next_run)}` : i18n("ว่าง")) + (a.auto ? i18n(" · 🔁 อัตโนมัติ") : "");
   $("#mergeMode").textContent = "merge: " + s.merge_mode;
   const mmSel = $("#mergeModeSel");
   if (mmSel && document.activeElement !== mmSel && s.merge_mode) mmSel.value = s.merge_mode;
@@ -1295,45 +1295,45 @@ function render() {
   const ciBtn = $("#ciToggleBtn");
   if (ciBtn) {
     if (ciInfo.allow_no_ci) {
-      ciBtn.textContent = "🛡️ CI: ยืดหยุ่น (Local Test) ✅";
+      ciBtn.textContent = i18n("🛡️ CI: ยืดหยุ่น (Local Test) ✅");
       ciBtn.style.background = "#059669";
       ciBtn.style.color = "#fff";
-      ciBtn.title = "อนุญาตให้ merge ได้แม้ไม่มี CI (allow_no_ci=true) — คลิกเพื่อสลับเป็นบังคับต้องมี CI";
+      ciBtn.title = i18n("อนุญาตให้ merge ได้แม้ไม่มี CI (allow_no_ci=true) — คลิกเพื่อสลับเป็นบังคับต้องมี CI");
     } else {
-      ciBtn.textContent = "🛡️ CI: บังคับต้องมี CI เท่านั้น 🔒";
+      ciBtn.textContent = i18n("🛡️ CI: บังคับต้องมี CI เท่านั้น 🔒");
       ciBtn.style.background = "#e11d48";
       ciBtn.style.color = "#fff";
-      ciBtn.title = "ต้องผ่าน CI checks เท่านั้นจึงจะ merge ได้ (allow_no_ci=false) — คลิกเพื่อสลับเป็นยืดหยุ่น";
+      ciBtn.title = i18n("ต้องผ่าน CI checks เท่านั้นจึงจะ merge ได้ (allow_no_ci=false) — คลิกเพื่อสลับเป็นยืดหยุ่น");
     }
   }
   const ev = s.evaluation || { enabled: true, engine: "auto" };
   const evalBtn = $("#evalToggleBtn");
   if (evalBtn) {
     if (ev.enabled !== false) {
-      evalBtn.textContent = "⚖️ Eval: เปิด ✅";
+      evalBtn.textContent = i18n("⚖️ Eval: เปิด ✅");
       evalBtn.style.background = "#8b5cf6";
       evalBtn.style.color = "#fff";
-      evalBtn.title = "ระบบประเมินผลเปิดอยู่ (Auto Judge) — คลิกเพื่อปิด";
+      evalBtn.title = i18n("ระบบประเมินผลเปิดอยู่ (Auto Judge) — คลิกเพื่อปิด");
     } else {
-      evalBtn.textContent = "⚖️ Eval: ปิด ⏸️";
+      evalBtn.textContent = i18n("⚖️ Eval: ปิด ⏸️");
       evalBtn.style.background = "var(--line)";
       evalBtn.style.color = "var(--muted)";
-      evalBtn.title = "ระบบประเมินผลปิดอยู่ — คลิกเพื่อเปิด";
+      evalBtn.title = i18n("ระบบประเมินผลปิดอยู่ — คลิกเพื่อเปิด");
     }
   }
   ["#runOnce", "#runLoop"].forEach(id => $(id).disabled = a.running);
   $("#stopBtn").disabled = !a.running && !a.auto;
 
   const sel = $("#persona");
-  if (sel.options.length === 1) s.personas.forEach(p => sel.add(new Option("บังคับ " + (PERSONAS[p] || p), p)));
+  if (sel.options.length === 1) s.personas.forEach(p => sel.add(new Option(i18n("บังคับ ") + (PERSONAS[p] || p), p)));
   const ars = $("#agentRepoSelect");
   if (ars) {
     const curVal = ars.value;
-    ars.innerHTML = '<option value="">🌐 ทุก Repo ที่เปิดใช้งาน</option>';
+    ars.innerHTML = i18n("<option value=\"\">🌐 ทุก Repo ที่เปิดใช้งาน</option>");
     s.repos.forEach(r => {
       const opt = document.createElement("option");
       opt.value = r.name;
-      const statusText = r.enabled === false ? ' [ปิดอัตโนมัติ]' : r.paused ? ' [⏸️ พัก]' : '';
+      const statusText = r.enabled === false ? i18n(" [ปิดอัตโนมัติ]") : r.paused ? i18n(" [⏸️ พัก]") : '';
       opt.textContent = `📦 ${r.name}${statusText}`;
       ars.appendChild(opt);
     });
@@ -1356,34 +1356,34 @@ function render() {
   }
   const se = $("#studioEngine");
   if (se && se.options.length === 0 && s.usage && s.usage.engines) {
-    s.usage.engines.forEach(e => se.add(new Option(e.name + (e.state === "disabled" ? " (ปิด)" : ""), e.name)));
+    s.usage.engines.forEach(e => se.add(new Option(e.name + (e.state === "disabled" ? i18n(" (ปิด)") : ""), e.name)));
   }
   if (curRepo && [...tr.options].some(o => o.value === curRepo)) tr.value = curRepo;
 
   const issues = s.repos.flatMap(r => r.issues), prs = s.repos.flatMap(r => r.prs), u = s.usage.today;
   const stats = [
-    [issues.filter(i => i.status === "queued").length, "งานรอคิว"],
-    [prs.filter(p => p.state === "OPEN").length, "PR รอรีวิว"],
-    [prs.filter(p => p.state === "MERGED").length, "PR merge แล้ว"],
-    [u.calls, "เรียกเอเจนต์วันนี้"],
+    [issues.filter(i => i.status === "queued").length, i18n("งานรอคิว")],
+    [prs.filter(p => p.state === "OPEN").length, i18n("PR รอรีวิว")],
+    [prs.filter(p => p.state === "MERGED").length, i18n("PR merge แล้ว")],
+    [u.calls, i18n("เรียกเอเจนต์วันนี้")],
   ];
   $("#stats").innerHTML = stats.map(([n, l]) => `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
 
   // "กำลังรอคุณ": สิ่งที่ต้องให้คนตัดสินหรือดูแล (อ่านจากข้อมูลเดียวกับ stats/repos)
   const needs = [];
   const openPrs = prs.filter(p => p.state === "OPEN").length;
-  if (openPrs) needs.push([["PR รอรีวิว", "info"], `${openPrs} PR รอคนตรวจ/merge`]);
+  if (openPrs) needs.push([[i18n("PR รอรีวิว"), "info"], `${openPrs} ${i18n("PR รอคนตรวจ/merge")}`]);
   const failedPrs = prs.filter(p => p.state === "FAILED" || p.state === "ERROR").length;
-  if (failedPrs) needs.push([["เทสต์ไม่ผ่าน", "bad"], `${failedPrs} PR ต้องดูสาเหตุ`]);
+  if (failedPrs) needs.push([[i18n("เทสต์ไม่ผ่าน"), "bad"], `${failedPrs} ${i18n("PR ต้องดูสาเหตุ")}`]);
   const failedIssues = issues.filter(i => i.status === "failed").length;
-  if (failedIssues) needs.push([["งานล้มเหลว", "bad"], `${failedIssues} issue ล้มเหลว`]);
+  if (failedIssues) needs.push([[i18n("งานล้มเหลว"), "bad"], `${failedIssues} ${i18n("issue ล้มเหลว")}`]);
   const needsEl = $("#needsList");
   if (needsEl) {
     $("#needsCount").textContent = needs.length;
     $("#needsCount").className = "pill " + (needs.length ? "warn" : "ok");
     needsEl.innerHTML = needs.length
       ? needs.map(([tag, text]) => `<div class="needs-item">${pill(tag)}<div class="t">${esc(text)}</div></div>`).join("")
-      : `<div class="needs-empty">ไม่มีอะไรรอคุณตอนนี้</div>`;
+      : `<div class="needs-empty">${i18n("ไม่มีอะไรรอคุณตอนนี้")}</div>`;
   }
 
   // Render Activity Status Banner (All Done / Idle / Working)
@@ -1399,17 +1399,17 @@ function render() {
               <div>
                 <div style="font-size:15px;font-weight:700;color:var(--ok);display:flex;align-items:center;gap:8px">
                   ${esc(act.title)}
-                  <span class="pill ok" style="font-size:11px;padding:2px 8px">สถานะ: ไม่มีอะไรทำงานแล้ว</span>
+                  <span class="pill ok" style="font-size:11px;padding:2px 8px">${i18n("สถานะ: ไม่มีอะไรทำงานแล้ว")}</span>
                 </div>
                 <div style="font-size:13px;color:var(--text);margin-top:4px;line-height:1.5">
                   ${esc(act.message)}
                 </div>
-                ${act.rest_time_str ? `<div class="muted" style="font-size:12px;margin-top:4px">🕒 พักผ่อนเพื่อประหยัดโควตา (เหลือเวลาพักอีก <strong>${esc(act.rest_time_str)}</strong> หรือกดปุ่มด้านขวาเพื่อเริ่มงานทันที)</div>` : ""}
+                ${act.rest_time_str ? `<div class="muted" style="font-size:12px;margin-top:4px">${i18n("🕒 พักผ่อนเพื่อประหยัดโควตา (เหลือเวลาพักอีก")} <strong>${esc(act.rest_time_str)}</strong> ${i18n("หรือกดปุ่มด้านขวาเพื่อเริ่มงานทันที)")}</div>` : ""}
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <button class="btn ok" id="btnWakePersonas" style="white-space:nowrap;font-weight:600">⚡ ปลุกให้ทำงานทันที</button>
-              <button class="btn" onclick="openTaskModal()" style="white-space:nowrap">+ สั่งงาน Issue</button>
+              <button class="btn ok" id="btnWakePersonas" style="white-space:nowrap;font-weight:600">${i18n("⚡ ปลุกให้ทำงานทันที")}</button>
+              <button class="btn" onclick="openTaskModal()" style="white-space:nowrap">${i18n("+ สั่งงาน Issue")}</button>
             </div>
           </div>
         </div>`;
@@ -1417,15 +1417,15 @@ function render() {
       if (wakeBtn) {
         wakeBtn.onclick = async () => {
           wakeBtn.disabled = true;
-          wakeBtn.textContent = "กำลังปลุก...";
+          wakeBtn.textContent = i18n("กำลังปลุก...");
           try {
             const res = await post("/api/wake-personas", {});
-            alert(res.message || "ปลุกสำเร็จ!");
+            alert(res.message || i18n("ปลุกสำเร็จ!"));
             refresh();
           } catch (err) {
-            alert("เกิดข้อผิดพลาด: " + err.message);
+            alert(i18n("เกิดข้อผิดพลาด: ") + err.message);
             wakeBtn.disabled = false;
-            wakeBtn.textContent = "⚡ ปลุกให้ทำงานทันที";
+            wakeBtn.textContent = i18n("⚡ ปลุกให้ทำงานทันที");
           }
         };
       }
@@ -1441,7 +1441,7 @@ function render() {
               </div>
             </div>
             <div>
-              <button class="btn btn-sm" onclick="openTaskModal()">+ สั่งงาน Issue</button>
+              <button class="btn btn-sm" onclick="openTaskModal()">${i18n("+ สั่งงาน Issue")}</button>
             </div>
           </div>
         </div>`;
@@ -1477,7 +1477,7 @@ function render() {
       Object.values(locks).forEach(fm => { totalLocked += Object.keys(fm).length; });
       const badge = $("#activeLocksBadge");
       if (badge) {
-        badge.textContent = `🔒 ${totalLocked} ไฟล์ล็อก`;
+        badge.textContent = `🔒 ${totalLocked} ${i18n("ไฟล์ล็อก")}`;
         badge.className = totalLocked > 0 ? "pill warn" : "pill";
       }
     } catch (e) {}
@@ -1496,14 +1496,14 @@ function render() {
     const isIdle = sl.state === "idle";
     const isResting = act.persona_resting && !isSlot1;
     const badgeCls = isIdle ? (isResting ? "warn" : "") : sl.state === "merging" ? "ok" : sl.state === "evaluating" ? "warn" : "info";
-    const stateLabel = isIdle ? (isSlot1 ? "สแตนด์บาย (ไม่มี Issue)" : isResting ? "💤 พักผ่อน (ไม่มีงาน)" : "ว่าง") :
+    const stateLabel = isIdle ? (isSlot1 ? i18n("สแตนด์บาย (ไม่มี Issue)") : isResting ? i18n("💤 พักผ่อน (ไม่มีงาน)") : i18n("ว่าง")) :
                        sl.state === "evaluating" ? "🔍 agentic-eval" :
-                       sl.state === "merging" ? "🔒 เข้าคิว merge" :
-                       sl.state === "testing" ? "🧪 รันเทสต์" :
-                       sl.state === "pushing" ? "⬆️ กำลัง push" : "⚡ กำลังเขียนโค้ด";
+                       sl.state === "merging" ? i18n("🔒 เข้าคิว merge") :
+                       sl.state === "testing" ? i18n("🧪 รันเทสต์") :
+                       sl.state === "pushing" ? i18n("⬆️ กำลัง push") : i18n("⚡ กำลังเขียนโค้ด");
     const jobDetail = !isIdle && sl.key ? `${sl.kind === "persona" ? (PERSONAS[sl.key] || sl.key) : "issue #" + sl.key}` : "";
-    const emptySubtext = isSlot1 ? "พร้อมรับงาน Issue ทันที" : isResting ? "สแกนไม่พบสิ่งที่ต้องแก้ (พักผ่อน)" : "รอรอบหมุนเวียน";
-    const filesDetail = sl.active_files && sl.active_files.length ? `<div class="muted" style="margin-top:4px;font-size:11px">แก้ ${sl.active_files.length} ไฟล์</div>` : "";
+    const emptySubtext = isSlot1 ? i18n("พร้อมรับงาน Issue ทันที") : isResting ? i18n("สแกนไม่พบสิ่งที่ต้องแก้ (พักผ่อน)") : i18n("รอรอบหมุนเวียน");
+    const filesDetail = sl.active_files && sl.active_files.length ? `<div class="muted" style="margin-top:4px;font-size:11px">${i18n("แก้")} ${sl.active_files.length} ${i18n("ไฟล์")}</div>` : "";
     return `<div class="card stat" style="margin:0;padding:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <strong>${esc(roleTitle)}</strong>
@@ -1518,35 +1518,35 @@ function render() {
     <div class="card" style="margin-top:12px;${r.enabled === false ? 'opacity:0.85;border-style:dashed;' : ''}">
       <div class="row" style="margin-bottom:8px; align-items:center; flex-wrap:wrap; gap:8px;">
         <h2 style="margin:0"><a href="https://github.com/${esc(r.name)}" target="_blank" rel="noopener">📦 ${esc(r.name)}</a></h2>
-        ${r.enabled !== false ? pill(["🟢 เปิดอัตโนมัติ", "ok"]) : pill(["⚪ ปิดอัตโนมัติ", "warn"])}
-        ${r.paused ? pill(["⏸️ หยุดชั่วคราว", "warn"]) : pill(["พร้อมทำงาน", "ok"])}
-        ${r.allow_no_ci !== false ? pill(["🛡️ CI: ไม่บังคับ", "ok"]) : pill(["🛡️ CI: บังคับ", "bad"])}
+        ${r.enabled !== false ? pill([i18n("🟢 เปิดอัตโนมัติ"), "ok"]) : pill([i18n("⚪ ปิดอัตโนมัติ"), "warn"])}
+        ${r.paused ? pill([i18n("⏸️ หยุดชั่วคราว"), "warn"]) : pill([i18n("พร้อมทำงาน"), "ok"])}
+        ${r.allow_no_ci !== false ? pill([i18n("🛡️ CI: ไม่บังคับ"), "ok"]) : pill([i18n("🛡️ CI: บังคับ"), "bad"])}
         <span class="spacer"></span>
-        <button class="btn btn-sm" data-toggle-ci-repo="${esc(r.name)}" data-allow="${r.allow_no_ci !== false ? 0 : 1}" title="สลับโหมดบังคับ CI / ผ่อนปรนใช้ Local test">${r.allow_no_ci !== false ? "🔒 บังคับต้องมี CI" : "🔓 ไม่บังคับ CI"}</button>
-        <button class="btn btn-sm" data-toggle-bootstrap-repo="${esc(r.name)}" data-on="${r.auto_bootstrap_ci ? 0 : 1}" title="เปิดแล้วระบบจะเปิด PR เพิ่ม CI ให้รีโปนี้เองเมื่อยังไม่มี workflow (ค่าเริ่มต้นปิด)">${r.auto_bootstrap_ci ? "🤖 เปิด PR CI อัตโนมัติ: เปิด" : "🤖 เปิด PR CI อัตโนมัติ: ปิด"}</button>
-        ${ciHasWorkflow.has(r.name) ? "" : `<button class="btn btn-sm" data-bootstrap-ci="${esc(r.name)}" title="สร้างและเปิด PR เพิ่ม GitHub Actions CI workflow ให้ repo นี้ทันที">🚀 เปิด PR CI</button>`}
-        <button class="btn btn-sm" data-toggle-repo="${esc(r.name)}" data-enabled="${r.enabled !== false ? 0 : 1}" title="เปิดหรือปิดให้ AI ทำงานกับ repo นี้อัตโนมัติ">${r.enabled !== false ? "ปิดอัตโนมัติ" : "เปิดอัตโนมัติ"}</button>
-        <button class="btn btn-sm" data-pause="${esc(r.name)}" data-on="${r.paused ? 0 : 1}">${r.paused ? "▶ ให้ทำต่อ" : "⏸️ หยุดชั่วคราว"}</button>
-        <button class="btn btn-sm danger" data-delete-repo="${esc(r.name)}" title="นำ repo ออกจากระบบ">🗑️ นำออก</button>
+        <button class="btn btn-sm" data-toggle-ci-repo="${esc(r.name)}" data-allow="${r.allow_no_ci !== false ? 0 : 1}" title="${i18n("สลับโหมดบังคับ CI / ผ่อนปรนใช้ Local test")}">${r.allow_no_ci !== false ? i18n("🔒 บังคับต้องมี CI") : i18n("🔓 ไม่บังคับ CI")}</button>
+        <button class="btn btn-sm" data-toggle-bootstrap-repo="${esc(r.name)}" data-on="${r.auto_bootstrap_ci ? 0 : 1}" title="${i18n("เปิดแล้วระบบจะเปิด PR เพิ่ม CI ให้รีโปนี้เองเมื่อยังไม่มี workflow (ค่าเริ่มต้นปิด)")}">${r.auto_bootstrap_ci ? i18n("🤖 เปิด PR CI อัตโนมัติ: เปิด") : i18n("🤖 เปิด PR CI อัตโนมัติ: ปิด")}</button>
+        ${ciHasWorkflow.has(r.name) ? "" : `<button class="btn btn-sm" data-bootstrap-ci="${esc(r.name)}" title="${i18n("สร้างและเปิด PR เพิ่ม GitHub Actions CI workflow ให้ repo นี้ทันที")}">${i18n("🚀 เปิด PR CI")}</button>`}
+        <button class="btn btn-sm" data-toggle-repo="${esc(r.name)}" data-enabled="${r.enabled !== false ? 0 : 1}" title="${i18n("เปิดหรือปิดให้ AI ทำงานกับ repo นี้อัตโนมัติ")}">${r.enabled !== false ? i18n("ปิดอัตโนมัติ") : i18n("เปิดอัตโนมัติ")}</button>
+        <button class="btn btn-sm" data-pause="${esc(r.name)}" data-on="${r.paused ? 0 : 1}">${r.paused ? i18n("▶ ให้ทำต่อ") : i18n("⏸️ หยุดชั่วคราว")}</button>
+        <button class="btn btn-sm danger" data-delete-repo="${esc(r.name)}" title="${i18n("นำ repo ออกจากระบบ")}">${i18n("🗑️ นำออก")}</button>
       </div>
       ${r.error ? `<p class="pill bad">${esc(r.error)}</p>` : ""}
-      <h2 class="muted" style="font-weight:500">งาน (issue)</h2>
+      <h2 class="muted" style="font-weight:500">${i18n("งาน (issue)")}</h2>
       <div class="table-wrap"><table>
-        <thead><tr><th style="width:60px">#</th><th>ชื่องาน</th><th>เวลาสร้าง</th><th>สถานะ</th></tr></thead>
+        <thead><tr><th style="width:60px">#</th><th>${i18n("ชื่องาน")}</th><th>${i18n("เวลาสร้าง")}</th><th>${i18n("สถานะ")}</th></tr></thead>
         <tbody>${r.issues.length ? r.issues.map(i => `
         <tr><td class="mono">#${i.number}</td><td><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.title)}</a></td>
         <td class="muted">${when(i.createdAt)}</td><td>${pill(ISSUE_STATE[i.status] || [i.status, ""])}</td></tr>`).join("")
-        : `<tr><td colspan="4" class="empty">ยังไม่มีงาน — ไปที่ปุ่ม "+ สั่งงานใหม่"</td></tr>`}</tbody></table></div>
-      <h2 class="muted" style="font-weight:500;margin-top:14px">Pull requests ของเอเจนต์</h2>
+        : `<tr><td colspan="4" class="empty">${i18n("ยังไม่มีงาน — ไปที่ปุ่ม")} "${i18n("+ สั่งงานใหม่")}"</td></tr>`}</tbody></table></div>
+      <h2 class="muted" style="font-weight:500;margin-top:14px">${i18n("Pull requests ของเอเจนต์")}</h2>
       <div class="table-wrap"><table>
-        <thead><tr><th style="width:60px">#</th><th>ชื่องาน / PR</th><th>เวลาสร้าง</th><th class="hide-sm">บรรทัด</th><th>สถานะ</th><th></th></tr></thead>
+        <thead><tr><th style="width:60px">#</th><th>${i18n("ชื่องาน / PR")}</th><th>${i18n("เวลาสร้าง")}</th><th class="hide-sm">${i18n("บรรทัด")}</th><th>${i18n("สถานะ")}</th><th></th></tr></thead>
         <tbody>${r.prs.length ? r.prs.map(p => `
         <tr><td class="mono">#${p.number}</td><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td>
         <td class="muted">${when(p.createdAt)}</td>
         <td class="mono hide-sm"><span style="color:var(--ok)">+${p.additions}</span> <span style="color:var(--bad)">−${p.deletions}</span></td>
         <td>${pill(RUN_STATE[p.state] || [p.state, ""])}</td>
-        <td><button class="btn" data-diff-pr="${p.number}" data-repo="${esc(r.name)}" data-title="${esc(p.title)}">ดู diff</button></td></tr>`).join("")
-        : `<tr><td colspan="6" class="empty">ยังไม่มี PR</td></tr>`}</tbody></table></div>
+        <td><button class="btn" data-diff-pr="${p.number}" data-repo="${esc(r.name)}" data-title="${esc(p.title)}">${i18n("ดู diff")}</button></td></tr>`).join("")
+        : `<tr><td colspan="6" class="empty">${i18n("ยังไม่มี PR")}</td></tr>`}</tbody></table></div>
     </div>`).join("");
 
   $("#historyRows").innerHTML = s.history.length ? s.history.map((h, i) => `
@@ -1554,19 +1554,19 @@ function render() {
     <td>${h.kind === "persona" ? esc(PERSONAS[h.key] || h.key) : "issue #" + esc(h.key)}</td>
     <td>${esc(h.title)}</td><td class="mono hide-sm">${h.lines ?? ""}</td>
     <td>${pill(RUN_STATE[h.state] || [h.state || "-", ""])}</td>
-    <td>${h.workdir ? `<button class="btn" data-diff-hist="${i}">ดู diff</button>` :
-         h.pr ? `<button class="btn" data-diff-pr="${h.pr}" data-repo="${esc(h.repo)}" data-title="${esc(h.title)}">ดู diff</button>` : ""}</td></tr>`).join("")
-    : `<tr><td colspan="6" class="empty">ยังไม่มีประวัติ</td></tr>`;
+    <td>${h.workdir ? `<button class="btn" data-diff-hist="${i}">${i18n("ดู diff")}</button>` :
+         h.pr ? `<button class="btn" data-diff-pr="${h.pr}" data-repo="${esc(h.repo)}" data-title="${esc(h.title)}">${i18n("ดู diff")}</button>` : ""}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="empty">${i18n("ยังไม่มีประวัติ")}</td></tr>`;
 
   const us = s.usage;
-  $("#usageStats").innerHTML = [[u.calls, "เรียกเอเจนต์วันนี้"], [u.tokens.toLocaleString(), "tokens วันนี้"], [u.minutes, "นาทีที่เอเจนต์ทำงานวันนี้"],
-    [us.last_quota ? when(us.last_quota) : "ไม่เคย", "โควตาหมดล่าสุด"]]
+  $("#usageStats").innerHTML = [[u.calls, i18n("เรียกเอเจนต์วันนี้")], [u.tokens.toLocaleString(), i18n("tokens วันนี้")], [u.minutes, i18n("นาทีที่เอเจนต์ทำงานวันนี้")],
+    [us.last_quota ? when(us.last_quota) : i18n("ไม่เคย"), i18n("โควตาหมดล่าสุด")]]
     .map(([n, l]) => `<div class="card stat" style="margin:0"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
   $("#engineRows").innerHTML = us.engines.map((e, idx) => {
-    const privBadge = e.trains_on_data ? pill(["⚠️ เก็บข้อมูลไปฝึก", "warn"]) : pill(["🔒 ไม่เก็บข้อมูล", "ok"]);
-    const statBadge = e.state === "disabled" ? pill(["⚪ ปิดใช้งาน", ""]) :
-                      e.state === "quota" ? pill([`🟡 ติดโควตา${e.cooldown_until ? " (พักถึง " + when(e.cooldown_until) + ")" : ""}`, "bad"]) :
-                      pill([`🟢 พร้อมใช้งาน${e.keys_status ? " (" + e.keys_status + ")" : ""}`, "ok"]);
+    const privBadge = e.trains_on_data ? pill([i18n("⚠️ เก็บข้อมูลไปฝึก"), "warn"]) : pill([i18n("🔒 ไม่เก็บข้อมูล"), "ok"]);
+    const statBadge = e.state === "disabled" ? pill([i18n("⚪ ปิดใช้งาน"), ""]) :
+                      e.state === "quota" ? pill([`${i18n("🟡 ติดโควตา")}${e.cooldown_until ? i18n(" (พักถึง ") + when(e.cooldown_until) + ")" : ""}`, "bad"]) :
+                      pill([`${i18n("🟢 พร้อมใช้งาน")}${e.keys_status ? " (" + e.keys_status + ")" : ""}`, "ok"]);
     const isFirst = idx === 0;
     const isLast = idx === us.engines.length - 1;
     return `<tr>
@@ -1574,8 +1574,8 @@ function render() {
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="min-width:22px; font-weight:600; text-align:right;">#${e.order}</span>
           <div style="display:inline-flex; flex-direction:column; gap:2px;">
-            <button class="btn btn-sm" data-engine-up="${esc(e.name)}" title="เลื่อนขึ้นสู่ลำดับก่อนหน้า" ${isFirst ? "disabled" : ""} style="padding:1px 7px; font-size:10px; line-height:1.2;">▲ ขึ้น</button>
-            <button class="btn btn-sm" data-engine-down="${esc(e.name)}" title="เลื่อนลงสู่ลำดับถัดไป" ${isLast ? "disabled" : ""} style="padding:1px 7px; font-size:10px; line-height:1.2;">▼ ลง</button>
+            <button class="btn btn-sm" data-engine-up="${esc(e.name)}" title="${i18n("เลื่อนขึ้นสู่ลำดับก่อนหน้า")}" ${isFirst ? "disabled" : ""} style="padding:1px 7px; font-size:10px; line-height:1.2;">${i18n("▲ ขึ้น")}</button>
+            <button class="btn btn-sm" data-engine-down="${esc(e.name)}" title="${i18n("เลื่อนลงสู่ลำดับถัดไป")}" ${isLast ? "disabled" : ""} style="padding:1px 7px; font-size:10px; line-height:1.2;">${i18n("▼ ลง")}</button>
           </div>
         </div>
       </td>
@@ -1584,23 +1584,23 @@ function render() {
       <td class="mono">${esc(e.model)}</td>
       <td>${privBadge}</td>
       <td>${statBadge}</td>
-      <td><label class="check"><input type="checkbox" data-engine-toggle="${esc(e.name)}" ${e.enabled ? "checked" : ""}> เปิด</label></td>
+      <td><label class="check"><input type="checkbox" data-engine-toggle="${esc(e.name)}" ${e.enabled ? "checked" : ""}> ${i18n("เปิด")}</label></td>
       <td>
         <div style="display:flex; gap:6px; align-items:center;">
-          <button class="btn btn-sm" data-edit-engine="${esc(e.name)}" title="แก้ไขข้อมูล Engine" style="padding:4px 9px; font-size:12px;">✏️ แก้ไข</button>
-          <button class="btn btn-sm danger" data-delete-engine="${esc(e.name)}" title="ลบ Engine ออกจากระบบ" style="padding:4px 9px; font-size:12px;">🗑️ ลบ</button>
+          <button class="btn btn-sm" data-edit-engine="${esc(e.name)}" title="${i18n("แก้ไขข้อมูล Engine")}" style="padding:4px 9px; font-size:12px;">${i18n("✏️ แก้ไข")}</button>
+          <button class="btn btn-sm danger" data-delete-engine="${esc(e.name)}" title="${i18n("ลบ Engine ออกจากระบบ")}" style="padding:4px 9px; font-size:12px;">${i18n("🗑️ ลบ")}</button>
         </div>
       </td>
     </tr>`;
   }).join("");
   $("#usageRows").innerHTML = us.recent.length ? us.recent.map(r => `<tr><td class="muted">${when(r.ts)}</td><td class="mono">${esc(r.model)}</td>
-    <td>${pill(r.status === "SUCCESS" ? ["สำเร็จ", "ok"] : r.status === "QUOTA" ? ["โควตาหมด", "bad"] : [r.status, "warn"])}</td>
+    <td>${pill(r.status === "SUCCESS" ? [i18n("สำเร็จ"), "ok"] : r.status === "QUOTA" ? [i18n("โควตาหมด"), "bad"] : [r.status, "warn"])}</td>
     <td class="mono">${(r.tokens || 0).toLocaleString()}</td><td class="mono">${r.seconds}</td></tr>`).join("")
-    : `<tr><td colspan="5" class="empty">ยังไม่มีการเรียก (เริ่มบันทึกตั้งแต่เวอร์ชันนี้)</td></tr>`;
+    : `<tr><td colspan="5" class="empty">${i18n("ยังไม่มีการเรียก (เริ่มบันทึกตั้งแต่เวอร์ชันนี้)")}</td></tr>`;
   $("#keyOutcomeRows").innerHTML = (us.keys || []).length ? us.keys.map(k => `<tr><td class="mono">${esc(k.key_id)}</td>
     <td class="mono">${k.success}</td><td class="mono">${k.failed}</td><td class="mono">${k.quota}</td>
     <td class="mono">${k.today_success} / ${k.today_failed}</td></tr>`).join("")
-    : `<tr><td colspan="5" class="empty">ยังไม่มีผลการทำงานแยกตาม key (เริ่มบันทึกตั้งแต่เวอร์ชันนี้)</td></tr>`;
+    : `<tr><td colspan="5" class="empty">${i18n("ยังไม่มีผลการทำงานแยกตาม key (เริ่มบันทึกตั้งแต่เวอร์ชันนี้)")}</td></tr>`;
   const activeEl = document.activeElement;
   const isTyping = activeEl && (
     activeEl.id === "providerSearch" ||
@@ -1632,7 +1632,7 @@ function checkCiPlans(repos) {
 
 async function refresh() {
   try { state = await (await fetch("/api/status")).json(); render(); checkCiPlans(state.repos); }
-  catch (e) { console.error("refresh error:", e); $("#agentText").textContent = "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้"; }
+  catch (e) { console.error("refresh error:", e); $("#agentText").textContent = i18n("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้"); }
 }
 
 // ---------- actions
@@ -1645,7 +1645,7 @@ async function startRun(loop) {
       persona: $("#persona").value,
       repo: selectedRepo
     });
-    toast(selectedRepo ? `เริ่มเอเจนต์สำหรับ ${selectedRepo} แล้ว` : "เริ่มเอเจนต์สำหรับทุก Repo ที่เปิดใช้งานแล้ว");
+    toast(selectedRepo ? `${i18n("เริ่มเอเจนต์สำหรับ")} ${selectedRepo} ${i18n("แล้ว")}` : i18n("เริ่มเอเจนต์สำหรับทุก Repo ที่เปิดใช้งานแล้ว"));
     go("work", "log");
     refresh();
   } catch (e) { toast(e.message); }
@@ -1653,36 +1653,36 @@ async function startRun(loop) {
 $("#saveSlot2Btn").onclick = async () => {
   try {
     await post("/api/slots/assign", { slot_id: 2, persona: $("#slot2Persona").value, repo: $("#slot2Repo").value });
-    toast("บันทึกการมอบหมายงาน Slot 2 สำเร็จ");
+    toast(i18n("บันทึกการมอบหมายงาน Slot 2 สำเร็จ"));
     refresh();
   } catch (e) { toast(e.message); }
 };
 $("#saveSlot3Btn").onclick = async () => {
   try {
     await post("/api/slots/assign", { slot_id: 3, persona: $("#slot3Persona").value, repo: $("#slot3Repo").value });
-    toast("บันทึกการมอบหมายงาน Slot 3 สำเร็จ");
+    toast(i18n("บันทึกการมอบหมายงาน Slot 3 สำเร็จ"));
     refresh();
   } catch (e) { toast(e.message); }
 };
 $("#runOnce").onclick = () => startRun(false);
 $("#runLoop").onclick = () => startRun(true);
-$("#stopBtn").onclick = async () => { if (!confirm("หยุดเอเจนต์ตอนนี้?\n• งานที่กำลังทำจะถูกยกเลิก ความคืบหน้าที่ยังไม่ได้ push จะหาย\n• PR ที่เปิดไปแล้วบน GitHub ไม่ถูกปิด\n• หยุดแล้วต้องกด ▶ ทำ 1 งาน หรือ ⟳ ทำต่อเนื่อง เพื่อเริ่มใหม่")) return; await post("/api/stop").catch(e => toast(e.message)); refresh(); };
+$("#stopBtn").onclick = async () => { if (!confirm(i18n("หยุดเอเจนต์ตอนนี้?\n• งานที่กำลังทำจะถูกยกเลิก ความคืบหน้าที่ยังไม่ได้ push จะหาย\n• PR ที่เปิดไปแล้วบน GitHub ไม่ถูกปิด\n• หยุดแล้วต้องกด ▶ ทำ 1 งาน หรือ ⟳ ทำต่อเนื่อง เพื่อเริ่มใหม่"))) return; await post("/api/stop").catch(e => toast(e.message)); refresh(); };
 async function restartRun() {
   // Keeps the settings of the last run on the server (it does not read the form, so a stale
   // checkbox cannot turn a dry run into a real run).
   const busy = state && state.agent && state.agent.running;
-  const msg = "รีสตาร์ทเอเจนต์ตอนนี้ใช่ไหม?\n"
-    + (busy ? "• งานที่กำลังทำอยู่จะถูกยกเลิก: ความคืบหน้าที่ยังไม่ได้ push หรือเปิด PR จะหาย\n" : "• ตอนนี้ไม่มีงานกำลังทำ จึงไม่มีงานที่จะถูกยกเลิก\n")
-    + "• PR ที่เปิดไปแล้วบน GitHub ไม่ถูกปิด\n"
-    + "• เริ่มรอบใหม่ด้วยค่าเดิมของรอบล่าสุด (โหมดทดลอง / repo / ต่อเนื่อง)";
+  const msg = i18n("รีสตาร์ทเอเจนต์ตอนนี้ใช่ไหม?\n")
+    + (busy ? i18n("• งานที่กำลังทำอยู่จะถูกยกเลิก: ความคืบหน้าที่ยังไม่ได้ push หรือเปิด PR จะหาย\n") : i18n("• ตอนนี้ไม่มีงานกำลังทำ จึงไม่มีงานที่จะถูกยกเลิก\n"))
+    + i18n("• PR ที่เปิดไปแล้วบน GitHub ไม่ถูกปิด\n")
+    + i18n("• เริ่มรอบใหม่ด้วยค่าเดิมของรอบล่าสุด (โหมดทดลอง / repo / ต่อเนื่อง)");
   if (!confirm(msg)) return;
   try {
     const res = await post("/api/restart", {});
-    toast(res.message || "รีสตาร์ทเอเจนต์สำเร็จแล้ว");
+    toast(res.message || i18n("รีสตาร์ทเอเจนต์สำเร็จแล้ว"));
     go("work", "log");
     refresh();
   } catch (e) {
-    toast("เกิดข้อผิดพลาดในการรีสตาร์ท: " + e.message);
+    toast(i18n("เกิดข้อผิดพลาดในการรีสตาร์ท: ") + e.message);
   }
 }
 $("#restartBtn").onclick = restartRun;
@@ -1694,31 +1694,31 @@ $("#shutdownConfirmBtn").onclick = async () => {
   try {
     await post("/api/server/shutdown");
   } catch (e) { /* server may close before the response is read */ }
-  document.body.innerHTML = '<main style="padding:48px 16px;text-align:center;font-family:sans-serif"><h1>ปิด GUI server แล้ว</h1><p>หน้านี้ไม่สามารถเชื่อมต่อได้อีก เปิดใหม่ด้วยคำสั่ง <code>python -m auto_dev_crew.gui</code> ในเทอร์มินัล</p></main>';
+  document.body.innerHTML = i18n("<main style=\"padding:48px 16px;text-align:center;font-family:sans-serif\"><h1>ปิด GUI server แล้ว</h1><p>หน้านี้ไม่สามารถเชื่อมต่อได้อีก เปิดใหม่ด้วยคำสั่ง <code>python -m auto_dev_crew.gui</code> ในเทอร์มินัล</p></main>");
 };
 if ($("#logRestartBtn")) $("#logRestartBtn").onclick = restartRun;
 
 $("#addRepoBtn").onclick = async () => {
-  const name = prompt("ระบุ GitHub Repo ในรูปแบบ owner/repo (เช่น example-owner/my-repo):");
+  const name = prompt(i18n("ระบุ GitHub Repo ในรูปแบบ owner/repo (เช่น example-owner/my-repo):"));
   if (!name || !name.trim()) return;
   try {
-    $("#taskMsg").textContent = "กำลังตรวจสอบและเพิ่ม repo…";
+    $("#taskMsg").textContent = i18n("กำลังตรวจสอบและเพิ่ม repo…");
     const r = await post("/api/repos/add", {repo: name.trim()});
-    $("#taskMsg").textContent = "เพิ่ม repo สำเร็จ!";
+    $("#taskMsg").textContent = i18n("เพิ่ม repo สำเร็จ!");
     await refresh();
     if (r.repo && r.repo.name) {
       $("#taskRepo").value = r.repo.name;
     }
   } catch (e) {
-    $("#taskMsg").textContent = "ไม่สามารถเพิ่ม repo ได้: " + e.message;
+    $("#taskMsg").textContent = i18n("ไม่สามารถเพิ่ม repo ได้: ") + e.message;
   }
 };
 
 $("#createTask").onclick = async () => {
-  const btn = $("#createTask"); btn.disabled = true; $("#taskMsg").textContent = "กำลังสร้าง…";
+  const btn = $("#createTask"); btn.disabled = true; $("#taskMsg").textContent = i18n("กำลังสร้าง…");
   try {
     const r = await post("/api/task", {repo: $("#taskRepo").value, title: $("#taskTitle").value, body: $("#taskBody").value});
-    $("#taskMsg").innerHTML = `สร้างแล้ว: <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`;
+    $("#taskMsg").innerHTML = `${i18n("สร้างแล้ว:")} <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`;
     $("#taskTitle").value = ""; $("#taskBody").value = ""; refresh();
   } catch (e) { $("#taskMsg").textContent = e.message; }
   btn.disabled = false;
@@ -1730,7 +1730,7 @@ document.addEventListener("click", async (ev) => {
     if (pauseBusy.has(repo)) return;
     pauseBusy.add(repo);
     t.disabled = true;
-    try { await post("/api/pause", {repo, on: t.dataset.on === "1"}); toast(t.dataset.on === "1" ? "หยุดชั่วคราวแล้ว" : "ให้ทำต่อแล้ว"); }
+    try { await post("/api/pause", {repo, on: t.dataset.on === "1"}); toast(t.dataset.on === "1" ? i18n("หยุดชั่วคราวแล้ว") : i18n("ให้ทำต่อแล้ว")); }
     catch (e) { toast(e.message); }
     finally { pauseBusy.delete(repo); }
     refresh();
@@ -1740,28 +1740,28 @@ document.addEventListener("click", async (ev) => {
       const repoName = t.dataset.toggleCiRepo;
       const allow = t.dataset.allow === "1";
       const res = await post("/api/ci/toggle", {repo: repoName, allow_no_ci: allow});
-      toast(res.message || "เปลี่ยนสถานะการบังคับใช้ CI แล้ว");
+      toast(res.message || i18n("เปลี่ยนสถานะการบังคับใช้ CI แล้ว"));
       await refresh();
     } catch (e) { toast(e.message); t.disabled = false; }
   } else if (t.dataset.toggleBootstrapRepo) {
     const repoName = t.dataset.toggleBootstrapRepo;
     const turningOn = t.dataset.on === "1";
-    if (turningOn && !confirm(`เปิดแล้วระบบจะเปิด PR เพิ่มไฟล์ CI ใน ${repoName} เองเมื่อยังไม่มี workflow ต้องการเปิดหรือไม่?`)) return;
+    if (turningOn && !confirm(`${i18n("เปิดแล้วระบบจะเปิด PR เพิ่มไฟล์ CI ใน")} ${repoName} ${i18n("เองเมื่อยังไม่มี workflow ต้องการเปิดหรือไม่?")}`)) return;
     t.disabled = true;
     try {
       const res = await post("/api/ci/bootstrap-toggle", {repo: repoName, auto_bootstrap_ci: turningOn});
-      toast(res.message || "เปลี่ยนสถานะการเปิด PR CI อัตโนมัติแล้ว");
+      toast(res.message || i18n("เปลี่ยนสถานะการเปิด PR CI อัตโนมัติแล้ว"));
       await refresh();
     } catch (e) { toast(e.message); t.disabled = false; }
   } else if (t.dataset.bootstrapCi) {
     const repoName = t.dataset.bootstrapCi;
-    if (ciHasWorkflow.has(repoName)) { t.remove(); toast(`${repoName} มี workflow อยู่แล้ว ไม่ต้องเพิ่ม`); return; }
-    if (!confirm(`ต้องการสั่งให้ Auto Dev Crew สร้างไฟล์ CI workflow และเปิด PR ให้ ${repoName} ตอนนี้เลยหรือไม่?`)) return;
+    if (ciHasWorkflow.has(repoName)) { t.remove(); toast(`${repoName} ${i18n("มี workflow อยู่แล้ว ไม่ต้องเพิ่ม")}`); return; }
+    if (!confirm(`${i18n("ต้องการสั่งให้ Auto Dev Crew สร้างไฟล์ CI workflow และเปิด PR ให้")} ${repoName} ${i18n("ตอนนี้เลยหรือไม่?")}`)) return;
     t.disabled = true;
-    toast(`กำลังส่งคำสั่งสร้าง CI PR สำหรับ ${repoName}...`);
+    toast(`${i18n("กำลังส่งคำสั่งสร้าง CI PR สำหรับ")} ${repoName}...`);
     try {
       const res = await post("/api/repos/bootstrap-ci", {repo: repoName});
-      toast(res.message || "เปิด PR เพิ่ม CI สำเร็จแล้ว!");
+      toast(res.message || i18n("เปิด PR เพิ่ม CI สำเร็จแล้ว!"));
       await refresh();
     } catch (e) { toast(e.message); t.disabled = false; }
   } else if (t.dataset.toggleRepo) {
@@ -1770,7 +1770,7 @@ document.addEventListener("click", async (ev) => {
       const repoName = t.dataset.toggleRepo;
       const willEnable = t.dataset.enabled === "1";
       await post("/api/repos/toggle", {repo: repoName, enabled: willEnable});
-      toast(willEnable ? `เปิดการทำงานอัตโนมัติสำหรับ ${repoName} แล้ว` : `ปิดการทำงานอัตโนมัติสำหรับ ${repoName} แล้ว`);
+      toast(willEnable ? `${i18n("เปิดการทำงานอัตโนมัติสำหรับ")} ${repoName} ${i18n("แล้ว")}` : `${i18n("ปิดการทำงานอัตโนมัติสำหรับ")} ${repoName} ${i18n("แล้ว")}`);
       await refresh();
       if ($("#scanRepoModal") && $("#scanRepoModal").open) {
         await loadScannedRepos();
@@ -1778,11 +1778,11 @@ document.addEventListener("click", async (ev) => {
     } catch (e) { toast(e.message); t.disabled = false; }
   } else if (t.dataset.deleteRepo) {
     const repoName = t.dataset.deleteRepo;
-    if (!confirm(`ต้องการนำ ${repoName} ออกจากระบบ AI หรือไม่? (จะไม่ลบโค้ดบน GitHub)`)) return;
+    if (!confirm(`${i18n("ต้องการนำ")} ${repoName} ${i18n("ออกจากระบบ AI หรือไม่? (จะไม่ลบโค้ดบน GitHub)")}`)) return;
     t.disabled = true;
     try {
       await post("/api/repos/delete", {repo: repoName});
-      toast(`นำ ${repoName} ออกเรียบร้อย`);
+      toast(`${i18n("นำ")} ${repoName} ${i18n("ออกเรียบร้อย")}`);
       await refresh();
       if ($("#scanRepoModal") && $("#scanRepoModal").open) {
         await loadScannedRepos();
@@ -1794,7 +1794,7 @@ document.addEventListener("click", async (ev) => {
     const baseBranch = t.dataset.branch || "main";
     try {
       await post("/api/repos/add", {repo: repoName, base: baseBranch});
-      toast(`เพิ่ม ${repoName} ลงระบบอัตโนมัติสำเร็จ!`);
+      toast(`${i18n("เพิ่ม")} ${repoName} ${i18n("ลงระบบอัตโนมัติสำเร็จ!")}`);
       await refresh();
       await loadScannedRepos();
     } catch (e) { toast(e.message); t.disabled = false; }
@@ -1807,14 +1807,14 @@ document.addEventListener("click", async (ev) => {
 });
 
 async function showDiff(title, url, summary) {
-  $("#diffTitle").textContent = title; $("#diff").textContent = "กำลังโหลด…";
-  $("#diffSummary").innerHTML = summary ? `<details style="margin:10px 0"><summary>คำอธิบายจากเอเจนต์</summary><pre class="mono" style="white-space:pre-wrap">${esc(summary)}</pre></details>` : "";
+  $("#diffTitle").textContent = title; $("#diff").textContent = i18n("กำลังโหลด…");
+  $("#diffSummary").innerHTML = summary ? `<details style="margin:10px 0"><summary>${i18n("คำอธิบายจากเอเจนต์")}</summary><pre class="mono" style="white-space:pre-wrap">${esc(summary)}</pre></details>` : "";
   $("#diffDlg").showModal();
   const text = await (await fetch(url)).text();
   $("#diff").innerHTML = text.split("\n").map(l => {
     const cls = l.startsWith("+") && !l.startsWith("+++") ? "a" : l.startsWith("-") && !l.startsWith("---") ? "d" : l.startsWith("@@") || l.startsWith("diff ") ? "h" : "";
     return cls ? `<span class="${cls}">${esc(l)}</span>` : esc(l) + "\n";
-  }).join("") || "(ไม่มีการเปลี่ยนแปลง)";
+  }).join("") || i18n("(ไม่มีการเปลี่ยนแปลง)");
 }
 $("#closeDiff").onclick = () => $("#diffDlg").close();
 
@@ -1825,7 +1825,7 @@ document.addEventListener("change", async (ev) => {
     const enabled = t.checked;
     try {
       await post("/api/engine", {name, enabled});
-      toast(`${name}: ${enabled ? "เปิดใช้งานแล้ว" : "ปิดใช้งานแล้ว"}`);
+      toast(`${name}: ${enabled ? i18n("เปิดใช้งานแล้ว") : i18n("ปิดใช้งานแล้ว")}`);
     } catch (e) {
       toast(e.message);
       t.checked = !enabled;
@@ -1862,12 +1862,12 @@ document.addEventListener("input", (ev) => {
     const matched = qLower ? provModels.filter(m => m.toLowerCase().includes(qLower)) : provModels;
     const sel = document.getElementById(`model-select-${prov}`);
     if (sel) {
-      sel.innerHTML = matched.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("") + '<option value="__custom__">✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)...</option>';
+      sel.innerHTML = matched.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("") + i18n("<option value=\"__custom__\">✏️ กำหนดเอง (พิมพ์ชื่อโมเดล)...</option>");
     }
     const box = document.getElementById(`model-box-${prov}`);
     const countSpan = box ? box.querySelector("div > div > span") : null;
     if (countSpan) {
-      countSpan.textContent = `เลือกรุ่นโมเดล (พบ ${matched.length} จาก ${provModels.length} รุ่น):`;
+      countSpan.textContent = `${i18n("เลือกรุ่นโมเดล (พบ")} ${matched.length} ${i18n("จาก")} ${provModels.length} ${i18n("รุ่น):")}`;
     }
   }
 });
@@ -1887,19 +1887,19 @@ document.addEventListener("change", (ev) => {
 // ---------- โหมดทีละช่อง (parallel.active_slot)
 function renderActiveSlotPicker(active) {
   const cur = (active === undefined || active === null || active === "") ? null : Number(active);
-  const opts = [{v: null, label: "ทุกช่อง (ขนาน)"}, {v: 1, label: "Slot 1"}, {v: 2, label: "Slot 2"}, {v: 3, label: "Slot 3"}];
+  const opts = [{v: null, label: i18n("ทุกช่อง (ขนาน)")}, {v: 1, label: "Slot 1"}, {v: 2, label: "Slot 2"}, {v: 3, label: "Slot 3"}];
   $("#activeSlotPicker").innerHTML = opts.map(o => {
     const on = cur === o.v;
     return `<button class="btn btn-sm ${on ? "primary" : ""}" type="button" data-active-slot="${o.v === null ? "all" : o.v}" aria-pressed="${on}">${o.label}</button>`;
   }).join("");
-  $("#activeSlotHint").textContent = cur ? `ตอนนี้รันเฉพาะ Slot ${cur} (ช่องอื่นพัก)` : "ตอนนี้รันทุกช่องพร้อมกัน";
+  $("#activeSlotHint").textContent = cur ? `${i18n("ตอนนี้รันเฉพาะ Slot")} ${cur} ${i18n("(ช่องอื่นพัก)")}` : i18n("ตอนนี้รันทุกช่องพร้อมกัน");
 }
 
 // ---------- ปิงคีย์ (ทีละคีย์ หรือทั้งค่าย)
 async function pingKeys(engine, keyId, label) {
   const box = $("#pingResultBox");
   box.style.display = "block";
-  box.innerHTML = `<div class="muted">🧪 กำลังปิง ${esc(label || engine)} … (อาจใช้เวลาถึงหลายสิบวินาทีต่อคีย์)</div>`;
+  box.innerHTML = `<div class="muted">${i18n("🧪 กำลังปิง")} ${esc(label || engine)} ${i18n("… (อาจใช้เวลาถึงหลายสิบวินาทีต่อคีย์)")}</div>`;
   try {
     const res = await post("/api/keys/ping", keyId ? {engine, key_id: keyId} : {engine});
     box.innerHTML = `<strong>${esc(res.message)}</strong>` + (res.results || []).map(r =>
@@ -1907,8 +1907,8 @@ async function pingKeys(engine, keyId, label) {
     ).join("");
     toast(res.message);
   } catch (e) {
-    box.innerHTML = `<span class="pill bad">ปิงไม่สำเร็จ: ${esc(e.message)}</span>`;
-    toast("ปิงไม่สำเร็จ: " + e.message);
+    box.innerHTML = `<span class="pill bad">${i18n("ปิงไม่สำเร็จ:")} ${esc(e.message)}</span>`;
+    toast(i18n("ปิงไม่สำเร็จ: ") + e.message);
   }
 }
 
@@ -1929,7 +1929,7 @@ document.addEventListener("click", async (ev) => {
       toast(res.message);
       refresh();
     } catch (e) {
-      toast("ตั้งโหมดไม่สำเร็จ: " + e.message);
+      toast(i18n("ตั้งโหมดไม่สำเร็จ: ") + e.message);
     }
   } else if (t.dataset.pingKey) {
     t.disabled = true;
@@ -1940,20 +1940,20 @@ document.addEventListener("click", async (ev) => {
   } else if (t.dataset.resetCooldown) {
     try {
       await post("/api/key/reset", {key_id: t.dataset.resetCooldown, engine: t.dataset.engine});
-      toast("ล้างคูลดาวน์แล้ว พร้อมใช้งานทันที");
+      toast(i18n("ล้างคูลดาวน์แล้ว พร้อมใช้งานทันที"));
       refresh();
     } catch (e) {
       toast(e.message);
     }
   } else if (t.dataset.deleteKey) {
     const k = t.dataset.deleteKey;
-    if (confirm(`ยืนยันการลบคีย์ ${k} ออกจาก .env?`)) {
+    if (confirm(`${i18n("ยืนยันการลบคีย์")} ${k} ${i18n("ออกจาก .env?")}`)) {
       try {
         await post("/api/key/delete", {key: k});
-        toast(`ลบคีย์ ${k} เรียบร้อยแล้ว`);
+        toast(`${i18n("ลบคีย์")} ${k} ${i18n("เรียบร้อยแล้ว")}`);
         refresh();
       } catch (e) {
-        toast("ลบคีย์ไม่สำเร็จ: " + e.message);
+        toast(i18n("ลบคีย์ไม่สำเร็จ: ") + e.message);
       }
     }
   } else if (t.dataset.keyRole) {
@@ -1979,7 +1979,7 @@ document.addEventListener("click", async (ev) => {
       if (currentRoles.length > 1) {
         currentRoles = currentRoles.filter(r => r !== role);
       } else {
-        toast("ต้องมีบทบาทอย่างน้อย 1 บทบาทสำหรับคีย์นี้");
+        toast(i18n("ต้องมีบทบาทอย่างน้อย 1 บทบาทสำหรับคีย์นี้"));
         return;
       }
     } else {
@@ -1987,25 +1987,25 @@ document.addEventListener("click", async (ev) => {
     }
     try {
       await post("/api/key/roles", {key: keyVar, roles: currentRoles});
-      toast(`อัปเดตบทบาท ${keyVar}: ${currentRoles.join(", ")}`);
+      toast(`${i18n("อัปเดตบทบาท")} ${keyVar}: ${currentRoles.join(", ")}`);
       refresh();
     } catch (e) {
-      toast("เกิดข้อผิดพลาด: " + e.message);
+      toast(i18n("เกิดข้อผิดพลาด: ") + e.message);
     }
   } else if (t.dataset.toggleFav) {
     const k = t.dataset.toggleFav;
     try {
       const res = await post("/api/key/favorite", {key: k});
-      toast(res.favorite ? `เพิ่ม ${k} ในรายการโปรดแล้ว ⭐` : `นำ ${k} ออกจากรายการโปรดแล้ว`);
+      toast(res.favorite ? `${i18n("เพิ่ม")} ${k} ${i18n("ในรายการโปรดแล้ว ⭐")}` : `${i18n("นำ")} ${k} ${i18n("ออกจากรายการโปรดแล้ว")}`);
       refresh();
     } catch (e) {
-      toast("เกิดข้อผิดพลาด: " + e.message);
+      toast(i18n("เกิดข้อผิดพลาด: ") + e.message);
     }
   } else if (t.dataset.editEngine) {
     const name = t.dataset.editEngine;
     try {
       const res = await (await fetch(`/api/engine?name=${encodeURIComponent(name)}`)).json();
-      if (!res.ok || !res.engine) throw new Error(res.error || "ไม่พบข้อมูล engine");
+      if (!res.ok || !res.engine) throw new Error(res.error || i18n("ไม่พบข้อมูล engine"));
       const eng = res.engine;
       $("#editEngineOrigName").value = eng.name;
       $("#editEngineName").value = eng.name;
@@ -2020,17 +2020,17 @@ document.addEventListener("click", async (ev) => {
       $("#editEngineMsg").textContent = "";
       $("#editEngineDlg").showModal();
     } catch (e) {
-      toast("โหลดข้อมูล Engine ไม่สำเร็จ: " + e.message);
+      toast(i18n("โหลดข้อมูล Engine ไม่สำเร็จ: ") + e.message);
     }
   } else if (t.dataset.deleteEngine) {
     const name = t.dataset.deleteEngine;
-    if (!confirm(`คุณต้องการลบ Engine "${name}" ออกจาก config.yaml หรือไม่?`)) return;
+    if (!confirm(`${i18n("คุณต้องการลบ Engine")} "${name}" ${i18n("ออกจาก config.yaml หรือไม่?")}`)) return;
     try {
       await post("/api/engine/delete", {name});
-      toast(`ลบ Engine ${name} เรียบร้อยแล้ว`);
+      toast(`${i18n("ลบ Engine")} ${name} ${i18n("เรียบร้อยแล้ว")}`);
       refresh();
     } catch (e) {
-      toast("ลบไม่สำเร็จ: " + e.message);
+      toast(i18n("ลบไม่สำเร็จ: ") + e.message);
     }
   } else if (t.dataset.engineUp || t.dataset.engineDown) {
     const isUp = Boolean(t.dataset.engineUp);
@@ -2046,19 +2046,19 @@ document.addEventListener("click", async (ev) => {
     const order = engines.map(e => e.name);
     try {
       await post("/api/engine/reorder", {order});
-      toast(`จัดลำดับเรียบร้อยแล้ว`);
+      toast(`${i18n("จัดลำดับเรียบร้อยแล้ว")}`);
       refresh();
     } catch (e) {
-      toast("จัดลำดับไม่สำเร็จ: " + e.message);
+      toast(i18n("จัดลำดับไม่สำเร็จ: ") + e.message);
     }
-    if (!confirm(`คุณต้องการลบคีย์ ${k} ออกจากไฟล์ .env หรือไม่?`)) return;
+    if (!confirm(`${i18n("คุณต้องการลบคีย์")} ${k} ${i18n("ออกจากไฟล์ .env หรือไม่?")}`)) return;
     try {
       await post("/api/key/delete", {key: k});
       delete dirtyKeys[k];
-      toast(`ลบคีย์ ${k} ออกเรียบร้อยแล้ว`);
+      toast(`${i18n("ลบคีย์")} ${k} ${i18n("ออกเรียบร้อยแล้ว")}`);
       refresh();
     } catch (e) {
-      toast("ลบคีย์ไม่สำเร็จ: " + e.message);
+      toast(i18n("ลบคีย์ไม่สำเร็จ: ") + e.message);
     }
   } else if (t.dataset.fetchModels) {
     const provName = t.dataset.fetchModels;
@@ -2080,15 +2080,15 @@ document.addEventListener("click", async (ev) => {
 
     const origText = t.textContent;
     t.disabled = true;
-    t.textContent = "⏳ กำลังดึงโมเดล...";
+    t.textContent = i18n("⏳ กำลังดึงโมเดล...");
     box.style.display = "block";
-    box.innerHTML = `<div class="muted" style="font-size:11px;">⏳ กำลังเชื่อมต่อไปยัง API ของ ${esc(provName)}...</div>`;
+    box.innerHTML = `<div class="muted" style="font-size:11px;">${i18n("⏳ กำลังเชื่อมต่อไปยัง API ของ")} ${esc(provName)}...</div>`;
 
     try {
       const res = await post("/api/models", {provider: provName, key: candidateKey || undefined});
       const models = (res && res.models) ? res.models : [];
       if (!models.length) {
-        box.innerHTML = `<div style="color:var(--bad); font-size:11px;">⚠️ ไม่พบโมเดลที่ใช้งานได้จาก API ของค่ายนี้</div>`;
+        box.innerHTML = `<div style="color:var(--bad); font-size:11px;">${i18n("⚠️ ไม่พบโมเดลที่ใช้งานได้จาก API ของค่ายนี้")}</div>`;
         return;
       }
       cachedModels[provName] = models;
@@ -2109,7 +2109,7 @@ document.addEventListener("click", async (ev) => {
       box.innerHTML = `
         <div style="color:var(--bad); font-size:11px; line-height:1.4;">
           ⚠️ ${esc(err.message)}
-          <div style="margin-top:4px;"><button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">ปิด</button></div>
+          <div style="margin-top:4px;"><button class="btn btn-sm" type="button" data-cancel-model="${esc(provName)}">${i18n("ปิด")}</button></div>
         </div>
       `;
     } finally {
@@ -2131,7 +2131,7 @@ document.addEventListener("click", async (ev) => {
     if (chosen === "__custom__") {
       chosen = (custInp ? custInp.value : "").trim();
       if (!chosen) {
-        toast("กรุณาพิมพ์ชื่อโมเดล");
+        toast(i18n("กรุณาพิมพ์ชื่อโมเดล"));
         if (custInp) custInp.focus();
         return;
       }
@@ -2147,13 +2147,13 @@ document.addEventListener("click", async (ev) => {
       if (box) box.style.display = "none";
       const fetchBtn = document.querySelector(`button[data-fetch-models="${provName}"]`);
       if (fetchBtn) fetchBtn.dataset.currentModel = chosen;
-      toast(`บันทึกโมเดล ${chosen} สำหรับ ${provName} สำเร็จ`);
+      toast(`${i18n("บันทึกโมเดล")} ${chosen} ${i18n("สำหรับ")} ${provName} ${i18n("สำเร็จ")}`);
       if (state && state.keys_catalog) {
         const pObj = (state.keys_catalog.providers || []).find(p => p.name === provName);
         if (pObj) pObj.model = chosen;
       }
     } catch (err) {
-      toast("บันทึกโมเดลไม่สำเร็จ: " + err.message);
+      toast(i18n("บันทึกโมเดลไม่สำเร็จ: ") + err.message);
     } finally {
       t.disabled = false;
     }
@@ -2173,17 +2173,17 @@ async function saveAllKeys() {
   });
 
   if (Object.keys(keysToSave).length === 0) {
-    toast("ไม่มีการเปลี่ยนแปลงคีย์ใหม่");
+    toast(i18n("ไม่มีการเปลี่ยนแปลงคีย์ใหม่"));
     return;
   }
 
   try {
     const res = await post("/api/keys", {keys: keysToSave});
-    toast(`บันทึก API Keys ลง .env เรียบร้อย (${(res.updated || []).length} รายการ)`);
+    toast(`${i18n("บันทึก API Keys ลง .env เรียบร้อย (")}${(res.updated || []).length} ${i18n("รายการ)")}`);
     dirtyKeys = {};
     refresh();
   } catch (e) {
-    toast("เกิดข้อผิดพลาดในการบันทึก: " + e.message);
+    toast(i18n("เกิดข้อผิดพลาดในการบันทึก: ") + e.message);
   }
 }
 
@@ -2194,10 +2194,10 @@ if ($("#ciToggleBtn")) {
   $("#ciToggleBtn").onclick = async () => {
     try {
       const res = await post("/api/ci/toggle", {});
-      toast(res.message || "เปลี่ยนสถานะการบังคับใช้ CI แล้ว");
+      toast(res.message || i18n("เปลี่ยนสถานะการบังคับใช้ CI แล้ว"));
       refresh();
     } catch (e) {
-      toast("เกิดข้อผิดพลาด: " + e.message);
+      toast(i18n("เกิดข้อผิดพลาด: ") + e.message);
     }
   };
 }
@@ -2205,16 +2205,16 @@ if ($("#mergeModeSel")) {
   $("#mergeModeSel").onchange = async () => {
     const sel = $("#mergeModeSel");
     const mode = sel.value;
-    if (mode === "merge-all" && !confirm("เปิด merge-all: เอเจนต์จะ merge PR เข้า main เองเมื่อ CI ผ่าน ยืนยันไหม?")) {
+    if (mode === "merge-all" && !confirm(i18n("เปิด merge-all: เอเจนต์จะ merge PR เข้า main เองเมื่อ CI ผ่าน ยืนยันไหม?"))) {
       sel.value = state?.merge_mode || "review-all";
       return;
     }
     try {
       const res = await post("/api/merge-mode", { mode });
-      toast(res.message || "เปลี่ยนโหมด merge แล้ว");
+      toast(res.message || i18n("เปลี่ยนโหมด merge แล้ว"));
       refresh();
     } catch (e) {
-      toast("เกิดข้อผิดพลาด: " + e.message);
+      toast(i18n("เกิดข้อผิดพลาด: ") + e.message);
       sel.value = state?.merge_mode || "review-all";
     }
   };
@@ -2223,10 +2223,10 @@ if ($("#evalToggleBtn")) {
   $("#evalToggleBtn").onclick = async () => {
     try {
       const res = await post("/api/evaluation/toggle", {});
-      toast(res.message || "เปลี่ยนสถานะระบบประเมินผลแล้ว");
+      toast(res.message || i18n("เปลี่ยนสถานะระบบประเมินผลแล้ว"));
       refresh();
     } catch (e) {
-      toast("เกิดข้อผิดพลาด: " + e.message);
+      toast(i18n("เกิดข้อผิดพลาด: ") + e.message);
     }
   };
 }
@@ -2234,7 +2234,7 @@ $("#newTaskBtn").onclick = () => $("#newTaskDlg").showModal();
 $("#closeNewTask").onclick = () => $("#newTaskDlg").close();
 $("#newTaskDlg").addEventListener("click", (e) => { if (e.target === $("#newTaskDlg")) $("#newTaskDlg").close(); });
 $("#diffDlg").addEventListener("click", (e) => { if (e.target === $("#diffDlg")) $("#diffDlg").close(); });
-$("#reloadKeysBtn").onclick = () => { toast("รีเฟรชข้อมูลคีย์แล้ว"); refresh(); };
+$("#reloadKeysBtn").onclick = () => { toast(i18n("รีเฟรชข้อมูลคีย์แล้ว")); refresh(); };
 
 // ---------- new key dialog (CRUD)
 const openNewKey = () => {
@@ -2267,24 +2267,24 @@ $("#saveNewKeySubmit").onclick = async () => {
   const name = ($("#newKeyName").value || "").trim().toUpperCase();
   const val = ($("#newKeyValue").value || "").trim();
   if (!name) {
-    $("#newKeyMsg").textContent = "กรุณาระบุชื่อตัวแปร";
+    $("#newKeyMsg").textContent = i18n("กรุณาระบุชื่อตัวแปร");
     return;
   }
   if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
-    $("#newKeyMsg").textContent = "ชื่อตัวแปรต้องเป็นภาษาอังกฤษและตัวเลขเท่านั้น (เช่น OPENAI_API_KEY)";
+    $("#newKeyMsg").textContent = i18n("ชื่อตัวแปรต้องเป็นภาษาอังกฤษและตัวเลขเท่านั้น (เช่น OPENAI_API_KEY)");
     return;
   }
   try {
-    $("#newKeyMsg").textContent = "กำลังบันทึก…";
+    $("#newKeyMsg").textContent = i18n("กำลังบันทึก…");
     await post("/api/keys", {keys: {[name]: val}});
     const chosenRole = $("#newKeyRole") ? $("#newKeyRole").value : "coder";
     const rolesList = chosenRole === "all" ? ["coder", "judge", "scan"] : [chosenRole];
     await post("/api/key/roles", {key: name, roles: rolesList});
-    toast(`เพิ่มคีย์ ${name} สำเร็จ`);
+    toast(`${i18n("เพิ่มคีย์")} ${name} ${i18n("สำเร็จ")}`);
     $("#newKeyDlg").close();
     refresh();
   } catch (e) {
-    $("#newKeyMsg").textContent = "เกิดข้อผิดพลาด: " + e.message;
+    $("#newKeyMsg").textContent = i18n("เกิดข้อผิดพลาด: ") + e.message;
   }
 };
 
@@ -2341,7 +2341,7 @@ function populateEnginePresets() {
   const sel = $("#newEnginePreset");
   if (!sel || !state || !state.keys_catalog) return;
   const provs = state.keys_catalog.providers || [];
-  sel.innerHTML = '<option value="">-- กำหนดเอง (Custom Engine) --</option>' +
+  sel.innerHTML = i18n("<option value=\"\">-- กำหนดเอง (Custom Engine) --</option>") +
     provs.map(p => `<option value="${esc(p.name)}">${esc(p.display_name)} (${esc(p.name)})</option>`).join("");
 }
 
@@ -2416,14 +2416,14 @@ if ($("#saveNewEngineBtn")) {
     if (base_url) {
       const api_key = $("#newEngineApiKey").value.trim();
       if (command !== "opencode") {
-        $("#newEngineMsg").textContent = "การเพิ่มด้วย URL ใช้ได้กับคำสั่ง opencode เท่านั้น";
+        $("#newEngineMsg").textContent = i18n("การเพิ่มด้วย URL ใช้ได้กับคำสั่ง opencode เท่านั้น");
         return;
       }
       if (!name || !model || !api_key) {
-        $("#newEngineMsg").textContent = "กรุณากรอกชื่อ Engine, โมเดล และ API Key";
+        $("#newEngineMsg").textContent = i18n("กรุณากรอกชื่อ Engine, โมเดล และ API Key");
         return;
       }
-      $("#newEngineMsg").textContent = "กำลังบันทึก...";
+      $("#newEngineMsg").textContent = i18n("กำลังบันทึก...");
       try {
         const res = await post("/api/provider/add", {
           id: name.replace(/^opencode-/, ""), display_name: provider || name, base_url,
@@ -2431,31 +2431,31 @@ if ($("#saveNewEngineBtn")) {
         });
         $("#newEngineApiKey").value = "";
         $("#newEngineBaseUrl").value = "";
-        toast(`เพิ่มผู้ให้บริการ ${res.id} เรียบร้อย (คีย์ ${res.key_var})`);
+        toast(`${i18n("เพิ่มผู้ให้บริการ")} ${res.id} ${i18n("เรียบร้อย (คีย์")} ${res.key_var})`);
         $("#newEngineDlg").close();
         refresh();
       } catch (e) {
-        $("#newEngineMsg").textContent = "เกิดข้อผิดพลาด: " + e.message;
+        $("#newEngineMsg").textContent = i18n("เกิดข้อผิดพลาด: ") + e.message;
       }
       return;
     }
 
     if (!name || !command || !model) {
-      $("#newEngineMsg").textContent = "กรุณากรอกชื่อ Engine, คำสั่ง, และโมเดล";
+      $("#newEngineMsg").textContent = i18n("กรุณากรอกชื่อ Engine, คำสั่ง, และโมเดล");
       return;
     }
 
-    $("#newEngineMsg").textContent = "กำลังบันทึก...";
+    $("#newEngineMsg").textContent = i18n("กำลังบันทึก...");
     try {
       await post("/api/engine/create", {
         name, provider: provider || name, command, model,
         timeout_minutes, path, trains_on_data, enabled, api_keys
       });
-      toast(`เพิ่ม Engine ${name} เรียบร้อยแล้ว`);
+      toast(`${i18n("เพิ่ม Engine")} ${name} ${i18n("เรียบร้อยแล้ว")}`);
       $("#newEngineDlg").close();
       refresh();
     } catch (e) {
-      $("#newEngineMsg").textContent = "เกิดข้อผิดพลาด: " + e.message;
+      $("#newEngineMsg").textContent = i18n("เกิดข้อผิดพลาด: ") + e.message;
     }
   };
 }
@@ -2481,11 +2481,11 @@ if ($("#saveEditEngineBtn")) {
     const api_keys = rawKeys ? rawKeys.split(",").map(k => k.trim()).filter(Boolean) : [];
 
     if (!name || !command || !model) {
-      $("#editEngineMsg").textContent = "กรุณากรอกชื่อ Engine, คำสั่ง, และโมเดล";
+      $("#editEngineMsg").textContent = i18n("กรุณากรอกชื่อ Engine, คำสั่ง, และโมเดล");
       return;
     }
 
-    $("#editEngineMsg").textContent = "กำลังบันทึก...";
+    $("#editEngineMsg").textContent = i18n("กำลังบันทึก...");
     try {
       await post("/api/engine/update", {
         name: origName,
@@ -2494,11 +2494,11 @@ if ($("#saveEditEngineBtn")) {
           timeout_minutes, path, trains_on_data, enabled, api_keys
         }
       });
-      toast(`แก้ไข Engine ${name} เรียบร้อยแล้ว`);
+      toast(`${i18n("แก้ไข Engine")} ${name} ${i18n("เรียบร้อยแล้ว")}`);
       $("#editEngineDlg").close();
       refresh();
     } catch (e) {
-      $("#editEngineMsg").textContent = "เกิดข้อผิดพลาด: " + e.message;
+      $("#editEngineMsg").textContent = i18n("เกิดข้อผิดพลาด: ") + e.message;
     }
   };
 }
@@ -2544,7 +2544,7 @@ async function loadStudioWorkspace(repoName) {
     renderStudioFileList(data.files || []);
     renderStudioIssues(data.issues || []);
   } catch (err) {
-    toast("โหลด Workspace ไม่สำเร็จ: " + err.message, "bad");
+    toast(i18n("โหลด Workspace ไม่สำเร็จ: ") + err.message, "bad");
   }
 }
 
@@ -2569,12 +2569,12 @@ function renderStudioFileList(files) {
   const listEl = $("#studioFileList");
   const countEl = $("#studioFileCount");
   if (!listEl) return;
-  countEl.textContent = `${files.length} ไฟล์`;
+  countEl.textContent = `${files.length} ${i18n("ไฟล์")}`;
   const filter = ($("#studioFileFilter")?.value || "").toLowerCase().trim();
   const filtered = filter ? files.filter(f => f.toLowerCase().includes(filter)) : files;
 
   if (!filtered.length) {
-    listEl.innerHTML = `<span class="empty">ไม่พบไฟล์ที่ตรงกับคำค้น</span>`;
+    listEl.innerHTML = `<span class="empty">${i18n("ไม่พบไฟล์ที่ตรงกับคำค้น")}</span>`;
     return;
   }
 
@@ -2599,7 +2599,7 @@ function renderStudioIssues(issues) {
   if (!listEl) return;
   countEl.textContent = `${issues.length}`;
   if (!issues.length) {
-    listEl.innerHTML = `<span class="empty">ไม่มี GitHub Issues ที่เปิดอยู่</span>`;
+    listEl.innerHTML = `<span class="empty">${i18n("ไม่มี GitHub Issues ที่เปิดอยู่")}</span>`;
     return;
   }
   listEl.innerHTML = issues.map(i => `
@@ -2617,9 +2617,9 @@ function renderStudioIssues(issues) {
     card.onclick = () => {
       const title = card.dataset.title;
       const num = card.dataset.number;
-      $("#studioPrompt").value = `[Issue #${num}] ${title}\nกรุณาตรวจสอบโค้ดและแก้ไขปัญหานี้`;
+      $("#studioPrompt").value = `[Issue #${num}] ${title}${i18n("\nกรุณาตรวจสอบโค้ดและแก้ไขปัญหานี้")}`;
       $("#studioPrompt").focus();
-      toast(`โหลด Issue #${num} เข้าสู่ Prompt แล้ว`, "ok");
+      toast(`${i18n("โหลด Issue #")}${num} ${i18n("เข้าสู่ Prompt แล้ว")}`, "ok");
     };
   });
 }
@@ -2633,14 +2633,14 @@ async function loadStudioFileContent(filePath) {
     if (res.error) throw new Error(res.error);
 
     $("#studioCodeOutput").textContent = res.content;
-    $("#studioCurrentFile").textContent = `${filePath} (${res.lines} บรรทัด)`;
+    $("#studioCurrentFile").textContent = `${filePath} (${res.lines} ${i18n("บรรทัด)")}`;
     $("#studioCodeControls").style.display = "flex";
-    $("#studioToggleAst").textContent = studioAstMode ? "แสดงโค้ดเต็ม" : "สลับเป็น AST Skeleton";
+    $("#studioToggleAst").textContent = studioAstMode ? i18n("แสดงโค้ดเต็ม") : i18n("สลับเป็น AST Skeleton");
 
     switchStudioTab("code");
     renderStudioFileList(studioWorkspaceData?.files || []);
   } catch (err) {
-    toast("อ่านไฟล์ไม่สำเร็จ: " + err.message, "bad");
+    toast(i18n("อ่านไฟล์ไม่สำเร็จ: ") + err.message, "bad");
   }
 }
 
@@ -2680,10 +2680,10 @@ if ($("#studioSyncBtn")) {
     $("#studioSyncBtn").disabled = true;
     try {
       const res = await post("/api/repo/sync", {repo});
-      toast(res.message || "ซิงค์สำเร็จ", res.ok ? "ok" : "warn");
+      toast(res.message || i18n("ซิงค์สำเร็จ"), res.ok ? "ok" : "warn");
       loadStudioWorkspace(repo);
     } catch (err) {
-      toast("เกิดข้อผิดพลาดในการซิงค์: " + err.message, "bad");
+      toast(i18n("เกิดข้อผิดพลาดในการซิงค์: ") + err.message, "bad");
     } finally {
       $("#studioSyncBtn").disabled = false;
     }
@@ -2699,7 +2699,7 @@ function resetStudioTodo() {
 async function studioTodoScan(create) {
   const repo = studioCurrentRepo || $("#studioRepoSelect").value;
   if (!repo) return;
-  if (create && !confirm("สร้าง GitHub issue (ป้าย ai-task) จาก [AI-TODO] ที่พบใน " + repo + " ?\n(สูงสุดตามค่า todo_scan.max_issues_per_run, ข้ามรายการที่เคยสร้างแล้ว)")) return;
+  if (create && !confirm(i18n("สร้าง GitHub issue (ป้าย ai-task) จาก [AI-TODO] ที่พบใน ") + repo + i18n(" ?\n(สูงสุดตามค่า todo_scan.max_issues_per_run, ข้ามรายการที่เคยสร้างแล้ว)"))) return;
   const scanBtn = $("#studioTodoScanBtn"), createBtn = $("#studioTodoCreateBtn");
   scanBtn.disabled = createBtn.disabled = true;
   try {
@@ -2708,19 +2708,19 @@ async function studioTodoScan(create) {
     const items = res.items || [];
     $("#studioTodoList").innerHTML = items.length
       ? items.map(i => `<div title="${esc(i.context)}">${esc(i.path)}:${i.line} — ${esc(i.text)}</div>`).join("")
-      : '<div class="muted">ไม่พบ [AI-TODO]</div>';
+      : i18n("<div class=\"muted\">ไม่พบ [AI-TODO]</div>");
     createBtn.style.display = items.length ? "" : "none";
     const errs = res.errors || [], warns = res.warnings || [];
     const parts = [];
     if (create && errs.length) {
-      parts.push(`สร้าง ${(res.created || []).length} issue, ล้มเหลว ${errs.length}: ${errs[0]}`);
+      parts.push(`${i18n("สร้าง")} ${(res.created || []).length} ${i18n("issue, ล้มเหลว")} ${errs.length}: ${errs[0]}`);
     } else {
-      parts.push(create ? `สร้าง ${(res.created || []).length} issue` : `พบ ${items.length} รายการ`);
+      parts.push(create ? `${i18n("สร้าง")} ${(res.created || []).length} issue` : `${i18n("พบ")} ${items.length} ${i18n("รายการ")}`);
     }
     if (warns.length) parts.push(warns.join("; "));
     toast(parts.join(" | "), (create && errs.length) || warns.length ? "warn" : "ok");
   } catch (err) {
-    toast("สแกน AI-TODO ไม่สำเร็จ: " + err.message, "bad");
+    toast(i18n("สแกน AI-TODO ไม่สำเร็จ: ") + err.message, "bad");
   } finally {
     scanBtn.disabled = createBtn.disabled = false;
   }
@@ -2740,7 +2740,7 @@ function renderDeepScan(repo, findings) {
   if (!findings.length) {
     const empty = document.createElement("div");
     empty.className = "muted";
-    empty.textContent = "ไม่พบปัญหา";
+    empty.textContent = i18n("ไม่พบปัญหา");
     list.appendChild(empty);
     return;
   }
@@ -2759,7 +2759,7 @@ function renderDeepScan(repo, findings) {
     row.append(head, loc, ev);
     if (f.suggested_fix) {
       const fix = document.createElement("div");
-      fix.textContent = "แนะนำ: " + f.suggested_fix;
+      fix.textContent = i18n("แนะนำ: ") + f.suggested_fix;
       row.appendChild(fix);
     }
     const bar = document.createElement("div");
@@ -2768,11 +2768,11 @@ function renderDeepScan(repo, findings) {
     if (f.status === "new" || !f.status) {
       const fileBtn = document.createElement("button");
       fileBtn.className = "btn btn-sm";
-      fileBtn.textContent = "สร้าง issue";
+      fileBtn.textContent = i18n("สร้าง issue");
       fileBtn.onclick = () => deepScanFile(repo, f, row, bar);
       const skipBtn = document.createElement("button");
       skipBtn.className = "btn btn-sm";
-      skipBtn.textContent = "ข้าม";
+      skipBtn.textContent = i18n("ข้าม");
       skipBtn.onclick = () => deepScanDismiss(repo, f, row, bar);
       bar.append(fileBtn, skipBtn);
     } else {
@@ -2785,17 +2785,17 @@ function renderDeepScan(repo, findings) {
 
 // Shows the live state of a filed finding's GitHub issue (from /api/deep-scan), not the saved "filed" flag alone.
 const DEEP_SCAN_ISSUE_STATE = {
-  open: {text: "🛠 เปิดอยู่ — รอ/กำลังแก้", cls: "pill"},
-  stuck: {text: "⚠️ ค้าง — ต้องให้คนตรวจ", cls: "pill warn"},
-  closed: {text: "✅ ปิดแล้ว", cls: "pill ok"},
-  unknown: {text: "สร้าง issue แล้ว", cls: "muted"},
+  open: {text: i18n("🛠 เปิดอยู่ — รอ/กำลังแก้"), cls: "pill"},
+  stuck: {text: i18n("⚠️ ค้าง — ต้องให้คนตรวจ"), cls: "pill warn"},
+  closed: {text: i18n("✅ ปิดแล้ว"), cls: "pill ok"},
+  unknown: {text: i18n("สร้าง issue แล้ว"), cls: "muted"},
 };
 
 function deepScanStatusBadge(bar, f) {
   if (f.status !== "filed") {
     const st = document.createElement("span");
     st.className = "muted";
-    st.textContent = "ข้ามแล้ว";
+    st.textContent = i18n("ข้ามแล้ว");
     bar.appendChild(st);
     return;
   }
@@ -2809,7 +2809,7 @@ function deepScanStatusBadge(bar, f) {
     link.href = f.issue_url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = f.issue_number ? `#${f.issue_number}` : "เปิด issue";
+    link.textContent = f.issue_number ? `#${f.issue_number}` : i18n("เปิด issue");
     bar.appendChild(link);
   }
 }
@@ -2823,22 +2823,22 @@ function deepScanMarkDone(row, bar, text) {
 }
 
 async function deepScanFile(repo, f, row, bar) {
-  if (!confirm("สร้าง GitHub issue จาก finding นี้ใน " + repo + " ?\n" + f.title + "\n" + f.path + ":" + f.line)) return;
+  if (!confirm(i18n("สร้าง GitHub issue จาก finding นี้ใน ") + repo + " ?\n" + f.title + "\n" + f.path + ":" + f.line)) return;
   const btns = bar.querySelectorAll("button");
   btns.forEach(b => b.disabled = true);
   try {
     const res = await post("/api/deep-scan/file", {repo, finding_id: f.id});
     if (studioCurrentRepo !== repo) return;
     if (!res.ok) {
-      toast("สร้าง issue ไม่สำเร็จ: " + (res.error || ""));
+      toast(i18n("สร้าง issue ไม่สำเร็จ: ") + (res.error || ""));
       btns.forEach(b => b.disabled = false);
       return;
     }
     f.status = res.status || "filed";
-    deepScanMarkDone(row, bar, res.skipped ? "มี issue ซ้ำอยู่แล้ว (ข้าม)" : "สร้าง issue แล้ว");
-    toast(res.warning || (res.skipped ? "มี issue ซ้ำอยู่แล้ว" : "สร้าง issue แล้ว"));
+    deepScanMarkDone(row, bar, res.skipped ? i18n("มี issue ซ้ำอยู่แล้ว (ข้าม)") : i18n("สร้าง issue แล้ว"));
+    toast(res.warning || (res.skipped ? i18n("มี issue ซ้ำอยู่แล้ว") : i18n("สร้าง issue แล้ว")));
   } catch (err) {
-    toast("สร้าง issue ไม่สำเร็จ: " + err.message);
+    toast(i18n("สร้าง issue ไม่สำเร็จ: ") + err.message);
     btns.forEach(b => b.disabled = false);
   }
 }
@@ -2850,9 +2850,9 @@ async function deepScanDismiss(repo, f, row, bar) {
     await post("/api/deep-scan/dismiss", {repo, finding_id: f.id});
     if (studioCurrentRepo !== repo) return;
     f.status = "dismissed";
-    deepScanMarkDone(row, bar, "ข้ามแล้ว");
+    deepScanMarkDone(row, bar, i18n("ข้ามแล้ว"));
   } catch (err) {
-    toast("ข้ามไม่สำเร็จ: " + err.message);
+    toast(i18n("ข้ามไม่สำเร็จ: ") + err.message);
     btns.forEach(b => b.disabled = false);
   }
 }
@@ -2873,7 +2873,7 @@ async function loadDeepScanEngines() {
   if (!sel.options.length) {
     const opt = document.createElement("option");
     opt.value = "";
-    opt.textContent = "ไม่มี engine role scan";
+    opt.textContent = i18n("ไม่มี engine role scan");
     sel.appendChild(opt);
   }
 }
@@ -2890,9 +2890,9 @@ async function studioDeepScan() {
   const repo = studioCurrentRepo || $("#studioRepoSelect").value;
   const engine = $("#studioDeepScanEngine").value;
   if (!repo) return;
-  if (!engine) { toast("ไม่มี engine ที่ใช้สแกนได้ (ต้องมี key role scan)"); return; }
+  if (!engine) { toast(i18n("ไม่มี engine ที่ใช้สแกนได้ (ต้องมี key role scan)")); return; }
   const autoOn = !!($("#studioAutoIssue") && $("#studioAutoIssue").checked);
-  if (!confirm("สแกนลึก " + repo + " ด้วย " + engine + " ?\n(เรียกโมเดลจริง ใช้โควตา)" + (autoOn ? "\nจะสร้าง issue อัตโนมัติจากผลที่พบ" : ""))) return;
+  if (!confirm(i18n("สแกนลึก ") + repo + i18n(" ด้วย ") + engine + i18n(" ?\n(เรียกโมเดลจริง ใช้โควตา)") + (autoOn ? i18n("\nจะสร้าง issue อัตโนมัติจากผลที่พบ") : ""))) return;
   const btn = $("#studioDeepScanBtn");
   btn.disabled = true;
   try {
@@ -2902,11 +2902,11 @@ async function studioDeepScan() {
     const warns = res.warnings || [];
     const auto = res.auto_issue || {};
     const autoText = auto.ran
-      ? ` | auto-issue: สร้าง ${auto.created || 0}, ซ้ำ ${auto.skipped || 0}` + ((auto.errors || []).length ? `, error ${auto.errors.length}` : "")
+      ? ` ${i18n("| auto-issue: สร้าง")} ${auto.created || 0}${i18n(", ซ้ำ")} ${auto.skipped || 0}` + ((auto.errors || []).length ? `, error ${auto.errors.length}` : "")
       : "";
-    toast(`พบ ${(res.findings || []).length} รายการ` + autoText + (warns.length ? " | " + warns.join("; ") : ""));
+    toast(`${i18n("พบ")} ${(res.findings || []).length} ${i18n("รายการ")}` + autoText + (warns.length ? " | " + warns.join("; ") : ""));
   } catch (err) {
-    toast("สแกนลึกไม่สำเร็จ: " + err.message);
+    toast(i18n("สแกนลึกไม่สำเร็จ: ") + err.message);
   } finally {
     btn.disabled = false;
   }
@@ -2932,9 +2932,9 @@ async function saveAutoIssue(body) {
   try {
     const res = await post("/api/deep-scan/auto-issue", body);
     renderAutoIssueSettings(res);
-    toast(res.message || "บันทึกการตั้งค่า auto-issue แล้ว");
+    toast(res.message || i18n("บันทึกการตั้งค่า auto-issue แล้ว"));
   } catch (err) {
-    toast("บันทึกการตั้งค่า auto-issue ไม่สำเร็จ: " + err.message);
+    toast(i18n("บันทึกการตั้งค่า auto-issue ไม่สำเร็จ: ") + err.message);
     loadAutoIssueSettings();
   }
 }
@@ -2942,7 +2942,7 @@ async function saveAutoIssue(body) {
 if ($("#studioAutoIssue")) {
   $("#studioAutoIssue").onchange = (e) => {
     const on = e.target.checked;
-    if (on && !confirm("เปิดสร้าง issue อัตโนมัติหลังสแกนลึก?\n- ระบบจะสร้าง issue ป้าย ai-task ให้ finding ที่พบ โดยไม่ถามทุกครั้ง\n- เอเจนต์จะหยิบ issue เหล่านี้ไปทำทันที (ใช้โควตาโมเดล)")) {
+    if (on && !confirm(i18n("เปิดสร้าง issue อัตโนมัติหลังสแกนลึก?\n- ระบบจะสร้าง issue ป้าย ai-task ให้ finding ที่พบ โดยไม่ถามทุกครั้ง\n- เอเจนต์จะหยิบ issue เหล่านี้ไปทำทันที (ใช้โควตาโมเดล)"))) {
       e.target.checked = false;
       return;
     }
@@ -2975,7 +2975,7 @@ function renderFeatureGen(view) {
   if (!(view.plans || []).length) {
     const none = document.createElement("span");
     none.className = "muted";
-    none.textContent = "ยังไม่มีแผนที่รออนุมัติ";
+    none.textContent = i18n("ยังไม่มีแผนที่รออนุมัติ");
     list.appendChild(none);
     return;
   }
@@ -2993,13 +2993,13 @@ function renderFeatureGen(view) {
     if (plan.approved) {
       const st = document.createElement("span");
       st.className = "muted";
-      st.textContent = "อนุมัติแล้ว (รอสร้างงาน)";
+      st.textContent = i18n("อนุมัติแล้ว (รอสร้างงาน)");
       row.appendChild(st);
     } else {
       const btn = document.createElement("button");
       btn.className = "btn btn-sm";
-      btn.textContent = "✅ อนุมัติ";
-      btn.title = "เพิ่มป้าย ai-plan-approved แล้วสร้างงานให้เอเจนต์ทำ";
+      btn.textContent = i18n("✅ อนุมัติ");
+      btn.title = i18n("เพิ่มป้าย ai-plan-approved แล้วสร้างงานให้เอเจนต์ทำ");
       btn.onclick = () => fgApprove(fgRepo(), plan);
       row.appendChild(btn);
     }
@@ -3015,7 +3015,7 @@ async function loadFeatureGen() {
     if (fgRepo() !== repo) return;
     renderFeatureGen(view);
   } catch (err) {
-    toast("โหลดแผนฟีเจอร์ไม่สำเร็จ: " + err.message);
+    toast(i18n("โหลดแผนฟีเจอร์ไม่สำเร็จ: ") + err.message);
   }
 }
 
@@ -3023,20 +3023,20 @@ async function saveFeatureGen(body) {
   const repo = fgRepo();
   try {
     await post("/api/feature-gen/settings", {repo, ...body});
-    toast("บันทึกการตั้งค่าแผนฟีเจอร์แล้ว");
+    toast(i18n("บันทึกการตั้งค่าแผนฟีเจอร์แล้ว"));
   } catch (err) {
-    toast("บันทึกไม่สำเร็จ: " + err.message);
+    toast(i18n("บันทึกไม่สำเร็จ: ") + err.message);
   }
   loadFeatureGen();
 }
 
 async function fgApprove(repo, plan) {
-  if (!confirm(`อนุมัติแผน #${plan.number} "${plan.title}" ?\n- ระบบจะสร้าง issue งานใน ${repo} และเอเจนต์จะเริ่มเขียนโค้ดตามแผน\n- ใช้โควตาโมเดลจริง และอาจเปิด PR ตามระดับ merge ของ repo`)) return;
+  if (!confirm(`${i18n("อนุมัติแผน #")}${plan.number} "${plan.title}" ${i18n("?\n- ระบบจะสร้าง issue งานใน")} ${repo} ${i18n("และเอเจนต์จะเริ่มเขียนโค้ดตามแผน\n- ใช้โควตาโมเดลจริง และอาจเปิด PR ตามระดับ merge ของ repo")}`)) return;
   try {
     const res = await post("/api/feature-gen/approve", {repo, number: plan.number});
-    toast(res.message || "อนุมัติแล้ว");
+    toast(res.message || i18n("อนุมัติแล้ว"));
   } catch (err) {
-    toast("อนุมัติไม่สำเร็จ: " + err.message);
+    toast(i18n("อนุมัติไม่สำเร็จ: ") + err.message);
   }
   loadFeatureGen();
 }
@@ -3045,16 +3045,16 @@ async function fgPropose() {
   const repo = fgRepo();
   const engine = $("#studioDeepScanEngine").value;
   if (!repo) return;
-  if (!engine) { toast("ไม่มี engine ที่ใช้สแกนได้ (ต้องมี key role scan)"); return; }
-  if (!confirm("เสนอฟีเจอร์ใหม่สำหรับ " + repo + " ด้วย " + engine + " ?\n(เรียกโมเดลจริง ใช้โควตา และตั้ง issue แผนรออนุมัติไม่เกิน 3 รายการ)")) return;
+  if (!engine) { toast(i18n("ไม่มี engine ที่ใช้สแกนได้ (ต้องมี key role scan)")); return; }
+  if (!confirm(i18n("เสนอฟีเจอร์ใหม่สำหรับ ") + repo + i18n(" ด้วย ") + engine + i18n(" ?\n(เรียกโมเดลจริง ใช้โควตา และตั้ง issue แผนรออนุมัติไม่เกิน 3 รายการ)"))) return;
   const btn = $("#fgProposeBtn");
   btn.disabled = true;
   try {
     const res = await post("/api/feature-gen/propose", {repo, engine});
-    if (!res.ok) { toast(res.error || "เสนอฟีเจอร์ไม่สำเร็จ"); return; }
-    toast(res.ran === false || res.reason ? (res.reason || "ไม่ได้เสนอ") : `เสนอ ${res.proposed || 0} แผน สร้าง issue ${res.created || 0}, ซ้ำ ${res.skipped || 0}`);
+    if (!res.ok) { toast(res.error || i18n("เสนอฟีเจอร์ไม่สำเร็จ")); return; }
+    toast(res.ran === false || res.reason ? (res.reason || i18n("ไม่ได้เสนอ")) : `${i18n("เสนอ")} ${res.proposed || 0} ${i18n("แผน สร้าง issue")} ${res.created || 0}${i18n(", ซ้ำ")} ${res.skipped || 0}`);
   } catch (err) {
-    toast("เสนอฟีเจอร์ไม่สำเร็จ: " + err.message);
+    toast(i18n("เสนอฟีเจอร์ไม่สำเร็จ: ") + err.message);
   } finally {
     btn.disabled = false;
     loadFeatureGen();
@@ -3082,8 +3082,8 @@ if ($("#studioDispatchBtn")) {
   $("#studioDispatchBtn").onclick = async () => {
     const repo = studioCurrentRepo || $("#studioRepoSelect").value;
     const prompt = $("#studioPrompt").value.trim();
-    if (!repo) { toast("กรุณาเลือก Repository", "bad"); return; }
-    if (!prompt) { toast("กรุณาระบุคำสั่ง Prompt สำหรับการเขียนโค้ด", "bad"); return; }
+    if (!repo) { toast(i18n("กรุณาเลือก Repository"), "bad"); return; }
+    if (!prompt) { toast(i18n("กรุณาระบุคำสั่ง Prompt สำหรับการเขียนโค้ด"), "bad"); return; }
 
     const persona = $("#studioPersona").value;
     const mode = $("#studioMode").value;
@@ -3091,56 +3091,56 @@ if ($("#studioDispatchBtn")) {
     const sandbox = $("#studioSandboxCheck").checked;
 
     $("#studioDispatchBtn").disabled = true;
-    $("#studioDispatchBtn").textContent = "⏳ กำลังดำเนินการ...";
+    $("#studioDispatchBtn").textContent = i18n("⏳ กำลังดำเนินการ...");
 
     try {
       const res = await post("/api/repo/dispatch-task", {repo, prompt, persona, mode, engine, sandbox});
       if (res.sandbox) {
         switchStudioTab("diff");
-        $("#studioDiffSummary").textContent = `Diff ใน Sandbox สำหรับ ${repo} (${persona} · ${mode})`;
-        $("#studioDiffOutput").textContent = res.diff || "(ไม่มีความเปลี่ยนแปลง)";
+        $("#studioDiffSummary").textContent = `${i18n("Diff ใน Sandbox สำหรับ")} ${repo} (${persona} · ${mode})`;
+        $("#studioDiffOutput").textContent = res.diff || i18n("(ไม่มีความเปลี่ยนแปลง)");
         $("#studioCreatePrBtn").style.display = "inline-block";
         $("#studioCreatePrBtn").onclick = async () => {
           $("#studioSandboxCheck").checked = false;
           $("#studioDispatchBtn").click();
         };
-        toast("สร้าง Sandbox Preview สำเร็จ", "ok");
+        toast(i18n("สร้าง Sandbox Preview สำเร็จ"), "ok");
       } else {
-        toast(res.message || "สั่งงานเรียบร้อยแล้ว", "ok");
+        toast(res.message || i18n("สั่งงานเรียบร้อยแล้ว"), "ok");
         $("#studioPrompt").value = "";
       }
     } catch (err) {
-      toast("เกิดข้อผิดพลาด: " + err.message, "bad");
+      toast(i18n("เกิดข้อผิดพลาด: ") + err.message, "bad");
     } finally {
       $("#studioDispatchBtn").disabled = false;
-      $("#studioDispatchBtn").textContent = "🚀 สั่ง AI เขียนโค้ด";
+      $("#studioDispatchBtn").textContent = i18n("🚀 สั่ง AI เขียนโค้ด");
     }
   };
 }
 
 async function runStudioCheck(checkType, label) {
   const repo = studioCurrentRepo || $("#studioRepoSelect").value;
-  if (!repo) { toast("กรุณาเลือก Repository", "bad"); return; }
+  if (!repo) { toast(i18n("กรุณาเลือก Repository"), "bad"); return; }
 
   switchStudioTab("console");
-  $("#studioConsoleStatus").textContent = `กำลังรัน ${label}...`;
+  $("#studioConsoleStatus").textContent = `${i18n("กำลังรัน")} ${label}...`;
   $("#studioConsoleStatus").className = "pill warn";
   $("#studioConsoleCmd").textContent = "";
-  $("#studioConsoleOutput").textContent = `> กำลังสั่งรันคำสั่งสำหรับ ${repo}...\n`;
+  $("#studioConsoleOutput").textContent = `> ${i18n("กำลังสั่งรันคำสั่งสำหรับ")} ${repo}...\n`;
 
   try {
     const res = await post("/api/repo/run-command", {repo, check_type: checkType});
     $("#studioConsoleCmd").textContent = res.command || "";
     if (res.ok) {
-      $("#studioConsoleStatus").textContent = `✓ ${label} ผ่าน (Exit code: 0)`;
+      $("#studioConsoleStatus").textContent = `✓ ${label} ${i18n("ผ่าน (Exit code: 0)")}`;
       $("#studioConsoleStatus").className = "pill ok";
     } else {
-      $("#studioConsoleStatus").textContent = `✗ ${label} ไม่ผ่าน (Exit code: ${res.exit_code})`;
+      $("#studioConsoleStatus").textContent = `✗ ${label} ${i18n("ไม่ผ่าน (Exit code:")} ${res.exit_code})`;
       $("#studioConsoleStatus").className = "pill bad";
     }
     $("#studioConsoleOutput").textContent = (res.stdout || "") + (res.stderr ? "\n[STDERR]:\n" + res.stderr : "");
   } catch (err) {
-    $("#studioConsoleStatus").textContent = "เกิดข้อผิดพลาด";
+    $("#studioConsoleStatus").textContent = i18n("เกิดข้อผิดพลาด");
     $("#studioConsoleStatus").className = "pill bad";
     $("#studioConsoleOutput").textContent = "Error: " + err.message;
   }
@@ -3157,16 +3157,16 @@ let scannedReposCache = [];
 async function loadScannedRepos(forceRefresh = false) {
   const rowsEl = $("#scanRepoRows");
   const msgEl = $("#scanSummaryMsg");
-  rowsEl.innerHTML = '<tr><td colspan="5" class="empty">⏳ กำลังสแกนหา Repositories จาก GitHub และในเครื่อง...</td></tr>';
-  msgEl.textContent = "กำลังสแกนหา Repositories...";
+  rowsEl.innerHTML = i18n("<tr><td colspan=\"5\" class=\"empty\">⏳ กำลังสแกนหา Repositories จาก GitHub และในเครื่อง...</td></tr>");
+  msgEl.textContent = i18n("กำลังสแกนหา Repositories...");
   try {
     const res = await (await fetch("/api/repos/scan")).json();
-    if (!res.ok) throw new Error(res.error || "สแกนไม่สำเร็จ");
+    if (!res.ok) throw new Error(res.error || i18n("สแกนไม่สำเร็จ"));
     scannedReposCache = res.repositories || [];
     renderScannedRepos(scannedReposCache);
   } catch (err) {
-    rowsEl.innerHTML = `<tr><td colspan="5" class="empty pill bad">เกิดข้อผิดพลาดในการสแกน: ${esc(err.message)}</td></tr>`;
-    msgEl.textContent = "สแกนล้มเหลว";
+    rowsEl.innerHTML = `<tr><td colspan="5" class="empty pill bad">${i18n("เกิดข้อผิดพลาดในการสแกน:")} ${esc(err.message)}</td></tr>`;
+    msgEl.textContent = i18n("สแกนล้มเหลว");
   }
 }
 
@@ -3178,10 +3178,10 @@ function renderScannedRepos(list) {
 
   const autoCapableCount = list.filter(r => r.can_automate).length;
   const configuredCount = list.filter(r => r.is_configured).length;
-  msgEl.innerHTML = `พบทั้งหมด <b>${list.length}</b> Repositories · สามารถทำงานอัตโนมัติได้ <b>${autoCapableCount}</b> รายการ · เพิ่มในระบบแล้ว <b>${configuredCount}</b> รายการ`;
+  msgEl.innerHTML = `${i18n("พบทั้งหมด")} <b>${list.length}</b> ${i18n("Repositories · สามารถทำงานอัตโนมัติได้")} <b>${autoCapableCount}</b> ${i18n("รายการ · เพิ่มในระบบแล้ว")} <b>${configuredCount}</b> ${i18n("รายการ")}`;
 
   if (!filtered.length) {
-    rowsEl.innerHTML = '<tr><td colspan="5" class="empty">ไม่พบ Repository ที่ตรงกับคำค้นหา</td></tr>';
+    rowsEl.innerHTML = i18n("<tr><td colspan=\"5\" class=\"empty\">ไม่พบ Repository ที่ตรงกับคำค้นหา</td></tr>");
     return;
   }
 
@@ -3193,7 +3193,7 @@ function renderScannedRepos(list) {
         ${r.local_path ? `<div class="muted mono" style="font-size:11px; margin-top:2px;">📁 ${esc(r.local_path)}</div>` : ''}
       </td>
       <td>
-        ${r.is_private ? pill(["🔒 ส่วนตัว", "warn"]) : pill(["🌐 สาธารณะ", "info"])}
+        ${r.is_private ? pill([i18n("🔒 ส่วนตัว"), "warn"]) : pill([i18n("🌐 สาธารณะ"), "info"])}
       </td>
       <td>
         <span class="mono" style="font-size:12px;">${esc(r.default_branch || 'main')}</span>
@@ -3201,17 +3201,17 @@ function renderScannedRepos(list) {
       </td>
       <td>
         ${r.is_configured ?
-          (r.enabled ? pill(["🟢 เปิดอัตโนมัติ", "ok"]) : pill(["⚪ ปิดอัตโนมัติ", "warn"])) :
-          (r.can_automate ? pill(["⚡ พร้อมทำงาน", "ok"]) : pill(["⚠️ มีข้อจำกัด", "bad"]))
+          (r.enabled ? pill([i18n("🟢 เปิดอัตโนมัติ"), "ok"]) : pill([i18n("⚪ ปิดอัตโนมัติ"), "warn"])) :
+          (r.can_automate ? pill([i18n("⚡ พร้อมทำงาน"), "ok"]) : pill([i18n("⚠️ มีข้อจำกัด"), "bad"]))
         }
       </td>
       <td style="text-align:right">
         ${r.is_configured ?
           `<button class="btn btn-sm" data-toggle-repo="${esc(r.name)}" data-enabled="${r.enabled ? 0 : 1}">
-            ${r.enabled ? "ปิดอัตโนมัติ" : "เปิดอัตโนมัติ"}
+            ${r.enabled ? i18n("ปิดอัตโนมัติ") : i18n("เปิดอัตโนมัติ")}
           </button>` :
           `<button class="btn btn-sm primary" data-scan-add-repo="${esc(r.name)}" data-branch="${esc(r.default_branch || 'main')}">
-            + เพิ่มลงระบบ
+            ${i18n("+ เพิ่มลงระบบ")}
           </button>`
         }
       </td>
@@ -3241,13 +3241,13 @@ if ($("#addAllAutoCapableBtn")) {
   $("#addAllAutoCapableBtn").onclick = async () => {
     const unadded = scannedReposCache.filter(r => r.can_automate && !r.is_configured);
     if (!unadded.length) {
-      toast("ทุก Repo ที่พร้อมทำงานถูกเพิ่มไว้ในระบบเรียบร้อยแล้ว");
+      toast(i18n("ทุก Repo ที่พร้อมทำงานถูกเพิ่มไว้ในระบบเรียบร้อยแล้ว"));
       return;
     }
-    if (!confirm(`ต้องการเพิ่ม ${unadded.length} Repositories ที่พร้อมทำงานอัตโนมัติลงในระบบหรือไม่?`)) return;
+    if (!confirm(`${i18n("ต้องการเพิ่ม")} ${unadded.length} ${i18n("Repositories ที่พร้อมทำงานอัตโนมัติลงในระบบหรือไม่?")}`)) return;
     const btn = $("#addAllAutoCapableBtn");
     btn.disabled = true;
-    btn.textContent = "⏳ กำลังเพิ่ม...";
+    btn.textContent = i18n("⏳ กำลังเพิ่ม...");
     let successCount = 0;
     for (const r of unadded) {
       try {
@@ -3257,9 +3257,9 @@ if ($("#addAllAutoCapableBtn")) {
         console.error("Failed to add repo:", r.name, e);
       }
     }
-    toast(`เพิ่มสำเร็จ ${successCount} จาก ${unadded.length} Repositories`);
+    toast(`${i18n("เพิ่มสำเร็จ")} ${successCount} ${i18n("จาก")} ${unadded.length} Repositories`);
     btn.disabled = false;
-    btn.textContent = "⚡ เพิ่มทั้งหมดที่พร้อมทำงานอัตโนมัติ";
+    btn.textContent = i18n("⚡ เพิ่มทั้งหมดที่พร้อมทำงานอัตโนมัติ");
     await refresh();
     await loadScannedRepos();
   };
@@ -3272,12 +3272,12 @@ async function byopRefresh() {
   try {
     const r = await fetch("/api/byop/status", {headers: {"X-Token": TOKEN}});
     const s = await r.json();
-    if (!s.app_key_configured) box.textContent = "ยังไม่ได้ตั้งค่า POLLINATIONS_APP_KEY (pk_…) ใน .env: สร้าง App Key ที่ enter.pollinations.ai แล้วใส่ค่านี้ก่อน";
-    else if (s.connected) box.textContent = "เชื่อมต่อแล้ว · เลือกโมเดลที่การ์ด Pollinations.ai กดปุ่ม 🔍 ดึงโมเดลจาก API แล้วเลือกรายการ";
-    else box.textContent = "ยังไม่ได้เชื่อมต่อ";
+    if (!s.app_key_configured) box.textContent = i18n("ยังไม่ได้ตั้งค่า POLLINATIONS_APP_KEY (pk_…) ใน .env: สร้าง App Key ที่ enter.pollinations.ai แล้วใส่ค่านี้ก่อน");
+    else if (s.connected) box.textContent = i18n("เชื่อมต่อแล้ว · เลือกโมเดลที่การ์ด Pollinations.ai กดปุ่ม 🔍 ดึงโมเดลจาก API แล้วเลือกรายการ");
+    else box.textContent = i18n("ยังไม่ได้เชื่อมต่อ");
     dis.disabled = !s.connected;
   } catch (e) {
-    box.textContent = "ตรวจสถานะไม่ได้: " + e.message;
+    box.textContent = i18n("ตรวจสถานะไม่ได้: ") + e.message;
   }
 }
 
@@ -3286,18 +3286,18 @@ async function byopConnect() {
   try {
     const res = await post("/api/byop/start", {budget: 5, expiry: 7});
     window.open(res.authorize_url, "_blank", "noopener");
-    box.textContent = "ไปอนุมัติในแท็บที่เปิดขึ้นมา เมื่อเสร็จระบบจะกลับมาที่หน้านี้และอัปเดตสถานะเอง";
+    box.textContent = i18n("ไปอนุมัติในแท็บที่เปิดขึ้นมา เมื่อเสร็จระบบจะกลับมาที่หน้านี้และอัปเดตสถานะเอง");
   } catch (e) {
-    box.textContent = "เชื่อมต่อไม่สำเร็จ: " + e.message;
+    box.textContent = i18n("เชื่อมต่อไม่สำเร็จ: ") + e.message;
   }
 }
 
 async function byopDisconnect() {
-  if (!confirm("ยกเลิกการเชื่อมต่อ Pollinations? (คีย์ BYOP จะถูกลบจาก .env)")) return;
+  if (!confirm(i18n("ยกเลิกการเชื่อมต่อ Pollinations? (คีย์ BYOP จะถูกลบจาก .env)"))) return;
   try {
     await post("/api/byop/disconnect");
   } catch (e) {
-    document.getElementById("byopStatus").textContent = "ยกเลิกไม่สำเร็จ: " + e.message;
+    document.getElementById("byopStatus").textContent = i18n("ยกเลิกไม่สำเร็จ: ") + e.message;
   }
   byopRefresh();
 }
@@ -3319,7 +3319,7 @@ async function byopLoadPool() {
     byopRenderKeys(p.keys || []);
     byopRenderModels(p.models || []);
   } catch (e) {
-    box.textContent = "โหลดคลังคีย์ไม่ได้: " + e.message;
+    box.textContent = i18n("โหลดคลังคีย์ไม่ได้: ") + e.message;
   }
 }
 
@@ -3327,7 +3327,7 @@ function byopRenderKeys(rows) {
   const list = document.getElementById("byopPoolKeys");
   list.replaceChildren();
   if (!rows.length) {
-    list.append(byopMuted("ยังไม่มีคีย์ · กดเชื่อมต่อ Pollinations เพื่อเพิ่มคีย์"));
+    list.append(byopMuted(i18n("ยังไม่มีคีย์ · กดเชื่อมต่อ Pollinations เพื่อเพิ่มคีย์")));
     return;
   }
   for (const row of rows) {
@@ -3346,7 +3346,7 @@ function byopRenderKeys(rows) {
     const del = document.createElement("button");
     del.type = "button";
     del.className = "btn btn-sm";
-    del.textContent = "ลบ";
+    del.textContent = i18n("ลบ");
     del.addEventListener("click", () => byopRemoveKey(row.var));
     line.append(cb, txt, del);
     list.append(line);
@@ -3357,7 +3357,7 @@ function byopRenderModels(models) {
   const list = document.getElementById("byopModelList");
   list.replaceChildren();
   if (!models.length) {
-    list.append(byopMuted("ยังไม่มีโมเดลที่ผูกบทบาท"));
+    list.append(byopMuted(i18n("ยังไม่มีโมเดลที่ผูกบทบาท")));
     return;
   }
   for (const m of models) {
@@ -3371,7 +3371,7 @@ function byopRenderModels(models) {
     const del = document.createElement("button");
     del.type = "button";
     del.className = "btn btn-sm";
-    del.textContent = "ลบ";
+    del.textContent = i18n("ลบ");
     del.addEventListener("click", () => byopRemoveModel(m.id));
     row.append(txt, del);
     list.append(row);
@@ -3383,19 +3383,19 @@ async function byopSaveSelection() {
   const keysChecked = [...document.querySelectorAll(".byop-key-check")].filter(c => c.checked).map(c => c.value);
   try {
     await post("/api/byop/keys/select", {keys: keysChecked});
-    box.textContent = "บันทึกคีย์ที่เลือกแล้ว (" + keysChecked.length + " คีย์)";
+    box.textContent = i18n("บันทึกคีย์ที่เลือกแล้ว (") + keysChecked.length + i18n(" คีย์)");
   } catch (e) {
-    box.textContent = "บันทึกไม่สำเร็จ: " + e.message;
+    box.textContent = i18n("บันทึกไม่สำเร็จ: ") + e.message;
   }
 }
 
 async function byopRemoveKey(name) {
   const box = document.getElementById("byopPoolMsg");
-  if (!confirm("ลบคีย์ " + name + " ออกจาก .env ?")) return;
+  if (!confirm(i18n("ลบคีย์ ") + name + i18n(" ออกจาก .env ?"))) return;
   try {
     await post("/api/byop/keys/remove", {key: name});
   } catch (e) {
-    box.textContent = "ลบไม่สำเร็จ: " + e.message;
+    box.textContent = i18n("ลบไม่สำเร็จ: ") + e.message;
     return;
   }
   byopRefresh();
@@ -3404,13 +3404,13 @@ async function byopRemoveKey(name) {
 
 async function byopScan() {
   const out = document.getElementById("byopScanOut");
-  out.textContent = "กำลังสแกน…";
+  out.textContent = i18n("กำลังสแกน…");
   try {
     const res = await post("/api/byop/keys/scan", {});
     const results = res.results || [];
     out.replaceChildren();
     if (!results.length) {
-      out.textContent = "ไม่มีคีย์ให้สแกน";
+      out.textContent = i18n("ไม่มีคีย์ให้สแกน");
       return;
     }
     for (const r of results) {
@@ -3419,7 +3419,7 @@ async function byopScan() {
       out.append(line);
     }
   } catch (e) {
-    out.textContent = "สแกนไม่สำเร็จ: " + e.message;
+    out.textContent = i18n("สแกนไม่สำเร็จ: ") + e.message;
   }
 }
 
@@ -3430,9 +3430,9 @@ async function byopAddModel() {
   try {
     await post("/api/byop/models/add", {id: idInput.value.trim(), roles: roles});
     idInput.value = "";
-    box.textContent = "เพิ่มโมเดลแล้ว";
+    box.textContent = i18n("เพิ่มโมเดลแล้ว");
   } catch (e) {
-    box.textContent = "เพิ่มโมเดลไม่สำเร็จ: " + e.message;
+    box.textContent = i18n("เพิ่มโมเดลไม่สำเร็จ: ") + e.message;
     return;
   }
   byopLoadPool();
@@ -3443,7 +3443,7 @@ async function byopRemoveModel(id) {
   try {
     await post("/api/byop/models/remove", {id: id});
   } catch (e) {
-    box.textContent = "ลบโมเดลไม่สำเร็จ: " + e.message;
+    box.textContent = i18n("ลบโมเดลไม่สำเร็จ: ") + e.message;
     return;
   }
   byopLoadPool();
@@ -3460,7 +3460,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
-<script src="/static/i18n_en.js"></script>
 <script src="/static/i18n.js"></script>
+<script>window.applyI18n();</script>
 </body>
 </html>

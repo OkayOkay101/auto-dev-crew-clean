@@ -46,7 +46,7 @@ def parse_gh_login(status_text: str) -> dict[str, Any]:
 
 
 def gh_login_status(which=shutil.which, run=subprocess.run) -> dict[str, Any]:
-    """Read-only GitHub CLI login state for the simple-mode setup step.
+    """Read-only GitHub CLI login state for the GitHub setup status.
 
     Returns only installed / logged_in / account. The raw `gh` output is redacted and parsed here,
     so no token or other credential text can reach the caller.

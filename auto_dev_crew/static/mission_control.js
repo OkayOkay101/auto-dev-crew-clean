@@ -36,24 +36,6 @@
     } catch (_) {}
   }
 
-  // 1. Simple vs Pro Mode Controller
-  // ผู้ใช้ครั้งแรก (ยังไม่เคยเลือกโหมด) = ง่าย · การเลือกของผู้ใช้จะถูกจำไว้ (adc_ui_mode)
-  // applyUiMode แสดงผลอย่างเดียว ไม่เขียน storage; setUiComplexityMode = การกดของผู้ใช้
-  function applyUiMode(mode) {
-    const clean = mode === "pro" ? "pro" : "simple";
-    document.documentElement.setAttribute("data-ui-mode", clean);
-    document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
-      btn.setAttribute("aria-pressed", String(btn.dataset.modeBtn === clean));
-      btn.classList.toggle("active", btn.dataset.modeBtn === clean);
-    });
-  }
-
-  function setUiComplexityMode(mode) {
-    const clean = mode === "pro" ? "pro" : "simple";
-    applyUiMode(clean);
-    storageSet("adc_ui_mode", clean);
-  }
-
   // 2. Category 8 Rubric Safety Self-Quiz Gate (Protects Level 3 & merge-all)
   const QUIZ_ITEMS = [
     {
@@ -122,7 +104,7 @@
     const isHigh = selectEl.value === "merge-all" || selectEl.value === "3";
     if (isHigh && !hasPassedSafetyQuiz()) {
       selectEl.value = fallbackVal;
-      if (window.confirm("โหมดอัตโนมัติระดับสูงสุด (merge-all / ระดับ 3) ต้องผ่านแบบทดสอบความปลอดภัย 5 ข้อในหน้าคู่มือก่อน ต้องการเปิดแบบทดสอบตอนนี้หรือไม่?")) {
+      if (window.confirm(i18n("โหมดอัตโนมัติระดับสูงสุด (merge-all / ระดับ 3) ต้องผ่านแบบทดสอบความปลอดภัย 5 ข้อในหน้าคู่มือก่อน ต้องการเปิดแบบทดสอบตอนนี้หรือไม่?"))) {
         if (typeof openQuizCallback === "function") openQuizCallback();
       }
       return false;
@@ -187,51 +169,51 @@
   function buildDrainSection() {
     const out = el("div", {class: "adc-out", "aria-live": "polite"});
     const row = el("div", {class: "row"});
-    const requestBtn = button("⏸ ขอ Graceful Drain", {id: "mcDrainStart"});
-    const clearBtn = button("▶ ยกเลิก Drain", {id: "mcDrainClear"});
-    const statusBtn = button("ตรวจสถานะ Drain", {id: "mcDrainStatus"});
+    const requestBtn = button(i18n("⏸ ขอ Graceful Drain"), {id: "mcDrainStart"});
+    const clearBtn = button(i18n("▶ ยกเลิก Drain"), {id: "mcDrainClear"});
+    const statusBtn = button(i18n("ตรวจสถานะ Drain"), {id: "mcDrainStatus"});
     row.append(requestBtn, clearBtn, statusBtn);
 
     requestBtn.addEventListener("click", async () => {
       const ok = window.confirm(
-        "Graceful Drain: ระบบจะรอให้ช่องที่กำลังทำงานเสร็จ แล้วหยุดโดยไม่รับงานใหม่ " +
-        "และปิดโหมดอัตโนมัติด้วย ต้องการดำเนินการหรือไม่?"
+        i18n("Graceful Drain: ระบบจะรอให้ช่องที่กำลังทำงานเสร็จ แล้วหยุดโดยไม่รับงานใหม่ ") +
+        i18n("และปิดโหมดอัตโนมัติด้วย ต้องการดำเนินการหรือไม่?")
       );
       if (!ok) return;
-      setOutput(out, "กำลังส่งคำขอ…");
+      setOutput(out, i18n("กำลังส่งคำขอ…"));
       try {
         const data = await mcRequest("POST", "/api/graceful-drain", {});
-        setOutput(out, data.message || "เปิดโหมด Graceful Drain แล้ว");
+        setOutput(out, data.message || i18n("เปิดโหมด Graceful Drain แล้ว"));
       } catch (err) {
-        setOutput(out, `ส่งคำขอไม่สำเร็จ: ${err.message}`, true);
+        setOutput(out, `${i18n("ส่งคำขอไม่สำเร็จ:")} ${err.message}`, true);
       }
     });
 
     clearBtn.addEventListener("click", async () => {
-      setOutput(out, "กำลังยกเลิก…");
+      setOutput(out, i18n("กำลังยกเลิก…"));
       try {
         const data = await mcRequest("POST", "/api/graceful-drain", {clear: true});
-        setOutput(out, data.message || "ยกเลิกโหมด Graceful Drain แล้ว");
+        setOutput(out, data.message || i18n("ยกเลิกโหมด Graceful Drain แล้ว"));
       } catch (err) {
-        setOutput(out, `ยกเลิกไม่สำเร็จ: ${err.message}`, true);
+        setOutput(out, `${i18n("ยกเลิกไม่สำเร็จ:")} ${err.message}`, true);
       }
     });
 
     statusBtn.addEventListener("click", async () => {
-      setOutput(out, "กำลังอ่านสถานะ… (อาจใช้เวลาครู่หนึ่ง)");
+      setOutput(out, i18n("กำลังอ่านสถานะ… (อาจใช้เวลาครู่หนึ่ง)"));
       try {
         const data = await mcRequest("GET", "/api/status");
         const drain = data.drain || {draining: false};
         if (!drain.draining) {
-          setOutput(out, "ยังไม่ได้เปิด Graceful Drain");
+          setOutput(out, i18n("ยังไม่ได้เปิด Graceful Drain"));
           return;
         }
         const when = drain.requested_at
           ? new Date(drain.requested_at * 1000).toLocaleString("th-TH")
-          : "ไม่ทราบเวลา";
-        setOutput(out, `กำลัง Drain ตั้งแต่ ${when} — ช่องที่ทำงานอยู่จะหยุดหลังจบงาน`);
+          : i18n("ไม่ทราบเวลา");
+        setOutput(out, `${i18n("กำลัง Drain ตั้งแต่")} ${when} ${i18n("— ช่องที่ทำงานอยู่จะหยุดหลังจบงาน")}`);
       } catch (err) {
-        setOutput(out, `อ่านสถานะไม่สำเร็จ: ${err.message}`, true);
+        setOutput(out, `${i18n("อ่านสถานะไม่สำเร็จ:")} ${err.message}`, true);
       }
     });
 
@@ -244,15 +226,15 @@
     const refId = "mcSlicerRef";
     const pathField = el("div", {class: "field"});
     pathField.append(
-      el("label", {for: pathId}, "พาธไฟล์ในโปรเจกต์"),
-      el("input", {id: pathId, name: "path", placeholder: "เช่น auto_dev_crew/runner.py…", autocomplete: "off", spellcheck: "false"})
+      el("label", {for: pathId}, i18n("พาธไฟล์ในโปรเจกต์")),
+      el("input", {id: pathId, name: "path", placeholder: i18n("เช่น auto_dev_crew/runner.py…"), autocomplete: "off", spellcheck: "false"})
     );
     const refField = el("div", {class: "field"});
     refField.append(
-      el("label", {for: refId}, "ข้อความอ้างอิง (ใส่ได้ เช่นข้อความ issue ที่อ้างเลขบรรทัด)"),
-      el("textarea", {id: refId, name: "reference", rows: "3", placeholder: "เช่น ดูบั๊กที่ line 1200…", autocomplete: "off"})
+      el("label", {for: refId}, i18n("ข้อความอ้างอิง (ใส่ได้ เช่นข้อความ issue ที่อ้างเลขบรรทัด)")),
+      el("textarea", {id: refId, name: "reference", rows: "3", placeholder: i18n("เช่น ดูบั๊กที่ line 1200…"), autocomplete: "off"})
     );
-    const go = button("ดูตัวอย่างการตัด", {type: "submit"});
+    const go = button(i18n("ดูตัวอย่างการตัด"), {type: "submit"});
     const out = el("div", {class: "adc-out", "aria-live": "polite"});
     const actions = el("div", {class: "row", style: "margin-top:10px"});
     actions.appendChild(go);
@@ -262,21 +244,21 @@
       ev.preventDefault();
       const path = form.elements.path.value.trim();
       if (!path) {
-        setOutput(out, "กรอกพาธไฟล์ก่อน", true);
+        setOutput(out, i18n("กรอกพาธไฟล์ก่อน"), true);
         return;
       }
-      setOutput(out, "กำลังตัดไฟล์…");
+      setOutput(out, i18n("กำลังตัดไฟล์…"));
       try {
         const data = await mcRequest("POST", "/api/context-slicer/preview", {
           path, reference: form.elements.reference.value
         });
         out.textContent = "";
         out.appendChild(el("p", {class: "muted"},
-          `${data.path}: ${data.total_lines} บรรทัด · อ้างอิง ${data.cited_lines.length} บรรทัด · ` +
-          `${data.windows.length} ช่วง · ส่งได้ ${data.sliced_chars} ตัวอักษร`));
-        out.appendChild(el("pre", {class: "adc-code"}, data.preview + (data.truncated ? "\n… (แสดงเฉพาะ 4000 ตัวอักษรแรก)" : "")));
+          `${data.path}: ${data.total_lines} ${i18n("บรรทัด · อ้างอิง")} ${data.cited_lines.length} ${i18n("บรรทัด ·")} ` +
+          `${data.windows.length} ${i18n("ช่วง · ส่งได้")} ${data.sliced_chars} ${i18n("ตัวอักษร")}`));
+        out.appendChild(el("pre", {class: "adc-code"}, data.preview + (data.truncated ? i18n("\n… (แสดงเฉพาะ 4000 ตัวอักษรแรก)") : "")));
       } catch (err) {
-        setOutput(out, `ตัดไฟล์ไม่สำเร็จ: ${err.message}`, true);
+        setOutput(out, `${i18n("ตัดไฟล์ไม่สำเร็จ:")} ${err.message}`, true);
       }
     });
 
@@ -289,146 +271,19 @@
 
     const card = el("div", {class: "card", id: "toolMissionControl"});
     card.appendChild(el("div", {class: "card-head"}, null)).appendChild(el("h2", {}, "🛰️ Mission Control"));
-    card.appendChild(el("p", {class: "muted"}, "ขอหยุดอย่างปลอดภัย (Graceful Drain) และดูตัวอย่างการตัดไฟล์ · ไม่แตะ GitHub"));
+    card.appendChild(el("p", {class: "muted"}, i18n("ขอหยุดอย่างปลอดภัย (Graceful Drain) และดูตัวอย่างการตัดไฟล์ · ไม่แตะ GitHub")));
 
     card.appendChild(el("h3", {}, "Graceful Drain"));
     buildDrainSection().forEach((node) => card.appendChild(node));
 
-    card.appendChild(el("h3", {}, "Context Slicer (ดูตัวอย่างอย่างเดียว)"));
+    card.appendChild(el("h3", {}, i18n("Context Slicer (ดูตัวอย่างอย่างเดียว)")));
     buildSlicerSection().forEach((node) => card.appendChild(node));
 
     anchor.parentElement.insertBefore(card, anchor);
   }
 
-  // โหมดการแสดงผล (ง่าย / โปร) อยู่บนแถบบน (topbar) ไม่ได้อยู่ในการ์ด Mission Control
-  function bindModeSwitch() {
-    document.querySelectorAll("[data-mode-btn]").forEach((btn) => {
-      btn.addEventListener("click", () => setUiComplexityMode(btn.dataset.modeBtn));
-    });
-    applyUiMode(storageGet("adc_ui_mode", "simple"));
-  }
-
-  // 5. บทแนะนำการใช้งาน (Tutorial): เปิดอัตโนมัติครั้งแรก และเปิดซ้ำได้จากหน้าตั้งค่า
-  // ใช้ textContent เท่านั้น · ภาษาตาม adc_lang ของหน้า (th / en) ณ ตอนเปิด
-  const TUTORIAL_STEPS = [
-    {
-      target: null,
-      th: {title: "ยินดีต้อนรับสู่ Auto Dev Crew", body: "เริ่มต้นด้วยโหมด \"ง่าย\" ซึ่งแสดงเฉพาะเมนูที่จำเป็น เปลี่ยนเป็นโหมด \"โปร\" ได้ทุกเมื่อที่มุมบนขวา (ง่าย / โปร)"},
-      en: {title: "Welcome to Auto Dev Crew", body: "You start in Simple mode, which shows only the essentials. Switch to Pro any time with the Simple / Pro toggle at the top right."}
-    },
-    {
-      target: "overview",
-      th: {title: "ภาพรวม", body: "ดูว่าเอเจนต์กำลังทำอะไร และมีงานที่รอให้คุณตัดสินใจหรือไม่"},
-      en: {title: "Overview", body: "See what the agents are doing and whether anything is waiting for your decision."}
-    },
-    {
-      target: "studio",
-      th: {title: "สตูดิโอ", body: "บอก AI ว่าต้องทำอะไร ระบบจะสร้างเป็น issue ให้เอเจนต์ทำ"},
-      en: {title: "Studio", body: "Tell the AI what to do. The system turns it into an issue for an agent to work on."}
-    },
-    {
-      target: "keys",
-      th: {title: "คีย์ AI", body: "เพิ่มคีย์ของผู้ให้บริการ AI อย่างน้อยหนึ่งตัวก่อนเริ่มงาน"},
-      en: {title: "AI keys", body: "Add at least one AI provider key before you start work."}
-    },
-    {
-      target: "work",
-      th: {title: "งาน", body: "ดูบันทึกสดและประวัติงานที่เอเจนต์ทำไปแล้ว"},
-      en: {title: "Work", body: "Watch the live log and review the history of finished agent work."}
-    },
-    {
-      target: "settings",
-      th: {title: "ตั้งค่า", body: "เปลี่ยนภาษา และเปิดบทแนะนำนี้ดูอีกครั้งได้ที่นี่ · พร้อมแล้ว เริ่มจากปุ่ม ➕ สั่งงานใหม่ ที่มุมบนขวา"},
-      en: {title: "Settings", body: "Change the language and reopen this guide here. Ready? Start with the ➕ New task button at the top right."}
-    }
-  ];
-
-  // เสร็จหรือข้ามแล้ว = จำไว้ในเบราว์เซอร์นี้ (ถ้า storage ใช้ไม่ได้ บทแนะนำจะเปิดทุกครั้งที่โหลดหน้า)
-  function tutorialDone() {
-    return storageGet("adc_tutorial_done", "false") === "true";
-  }
-
-  function tutorialLang() {
-    return storageGet("adc_lang", "th") === "en" ? "en" : "th";
-  }
-
-  function goToPanel(main) {
-    const btn = document.querySelector(`nav.side button[data-main="${main}"]`);
-    if (btn) btn.click();
-  }
-
-  function openTutorial() {
-    const old = document.getElementById("adcTutorialDlg");
-    if (old) old.remove();
-    const lang = tutorialLang();
-    const ui = lang === "en"
-      ? {skip: "Skip", back: "Back", next: "Next", finish: "Finish", counter: (n, t) => `${n} / ${t}`}
-      : {skip: "ข้าม", back: "ย้อนกลับ", next: "ถัดไป", finish: "เสร็จสิ้น", counter: (n, t) => `${n} / ${t}`};
-
-    const dlg = el("dialog", {id: "adcTutorialDlg", "aria-labelledby": "adcTutorialTitle", style: "width:min(520px,94vw)"});
-    const head = el("h2", {id: "adcTutorialTitle", style: "margin:0 0 6px"});
-    const counter = el("p", {class: "muted", style: "margin:0 0 8px; font-size:12px"});
-    const body = el("p", {style: "margin:0 0 12px"});
-    const skipBtn = button(ui.skip, {class: "btn btn-sm"});
-    const backBtn = button(ui.back, {class: "btn btn-sm"});
-    const nextBtn = button(ui.next, {class: "btn btn-sm primary"});
-    const actions = el("div", {class: "row", style: "gap:8px; flex-wrap:wrap"});
-    actions.append(skipBtn, el("span", {class: "spacer"}), backBtn, nextBtn);
-    dlg.append(counter, head, body, actions);
-
-    let i = 0;
-    function render() {
-      const step = TUTORIAL_STEPS[i];
-      const text = step[lang];
-      head.textContent = text.title;
-      body.textContent = text.body;
-      counter.textContent = ui.counter(i + 1, TUTORIAL_STEPS.length);
-      backBtn.disabled = i === 0;
-      nextBtn.textContent = i === TUTORIAL_STEPS.length - 1 ? ui.finish : ui.next;
-      if (step.target) goToPanel(step.target);
-    }
-
-    // ทำงานซ้ำได้ (idempotent): บันทึกว่าดูแล้วและเอาออกจากหน้า
-    function onClosed() {
-      storageSet("adc_tutorial_done", "true");
-      dlg.remove();
-    }
-    // ไม่พึ่ง event "close" ที่อาจมาช้า: บันทึกและเอาออกทันที แล้วค่อยปิด dialog
-    function closeTutorial() {
-      if (dlg.open && typeof dlg.close === "function") dlg.close();
-      onClosed();
-    }
-
-    skipBtn.addEventListener("click", closeTutorial);
-    backBtn.addEventListener("click", () => {
-      if (i > 0) { i -= 1; render(); }
-    });
-    nextBtn.addEventListener("click", () => {
-      if (i < TUTORIAL_STEPS.length - 1) { i += 1; render(); }
-      else closeTutorial();
-    });
-    dlg.addEventListener("close", onClosed);
-
-    document.body.append(dlg);
-    render();
-    if (typeof dlg.showModal === "function") dlg.showModal();
-    else dlg.setAttribute("open", "");
-  }
-
-  function maybeAutoOpenTutorial() {
-    if (!tutorialDone()) setTimeout(openTutorial, 400);
-  }
-
-  function bindTutorial() {
-    const btn = document.getElementById("openTutorialBtn");
-    if (btn) btn.addEventListener("click", openTutorial);
-  }
-
   function initMissionControl() {
-    bindModeSwitch();
     mountMissionControlCard();
-    bindTutorial();
-    maybeAutoOpenTutorial();
   }
 
   if (document.readyState === "loading") {
@@ -440,7 +295,6 @@
   window.AutoDevCrewMissionControl = {
     esc,
     QUIZ_ITEMS,
-    setUiComplexityMode,
     hasPassedSafetyQuiz,
     guardHighAutonomySelection,
     validateClientRepo,

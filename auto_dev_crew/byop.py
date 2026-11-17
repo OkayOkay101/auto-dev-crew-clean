@@ -10,6 +10,7 @@
 คีย์ sk_... ไม่ถูกใส่ใน URL, ไม่ถูกส่งกลับไปที่เบราว์เซอร์ และแสดงเฉพาะค่าที่ mask แล้ว.
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import base64
 import hashlib
@@ -108,7 +109,7 @@ def start_authorization(*, redirect_uri: str, budget=DEFAULT_BUDGET, expiry=DEFA
                         env_path: Path | None = None) -> dict:
     app_key = get_app_key(env_path)
     if not app_key.startswith("pk_"):
-        raise ByopError(f"ยังไม่ได้ตั้งค่า {APP_KEY_ENV} (App Key ที่ขึ้นต้นด้วย pk_) ใน .env")
+        raise ByopError(_i18n.t("ยังไม่ได้ตั้งค่า {p0} (App Key ที่ขึ้นต้นด้วย pk_) ใน .env", p0=APP_KEY_ENV))
     verifier, challenge = make_pkce_pair()
     state = secrets.token_urlsafe(32)
     now = time.monotonic()
@@ -153,12 +154,12 @@ def exchange_code(*, code: str, verifier: str, app_key: str, redirect_uri: str, 
             err = json.loads(exc.read().decode("utf-8") or "{}").get("error", "")
         except (ValueError, AttributeError):
             err = ""
-        raise ByopError(f"Pollinations ปฏิเสธการแลกรหัส ({err or exc.code})") from None
+        raise ByopError(_i18n.t("Pollinations ปฏิเสธการแลกรหัส ({p0})", p0=err or exc.code)) from None
     except (urllib.error.URLError, OSError, ValueError):
-        raise ByopError("เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง") from None
+        raise ByopError(_i18n.t("เชื่อมต่อ Pollinations ไม่สำเร็จ ลองใหม่อีกครั้ง")) from None
     token = str(data.get("access_token") or "").strip()
     if not token.startswith("sk_"):
-        raise ByopError("Pollinations ไม่ได้ส่งคีย์ที่ใช้ได้กลับมา")
+        raise ByopError(_i18n.t("Pollinations ไม่ได้ส่งคีย์ที่ใช้ได้กลับมา"))
     return token
 
 
@@ -168,12 +169,12 @@ def connect(*, code: str, state: str, redirect_uri: str, env_path: Path | None =
     """ขั้นตอนหลังผู้ใช้อนุมัติ: ตรวจ state, แลกคีย์, บันทึกลง .env และลงทะเบียน provider."""
     verifier = consume_state(state)
     if verifier is None:
-        raise ByopError("state ไม่ถูกต้องหรือหมดอายุ กรุณากด Connect ใหม่อีกครั้ง")
+        raise ByopError(_i18n.t("state ไม่ถูกต้องหรือหมดอายุ กรุณากด Connect ใหม่อีกครั้ง"))
     if not code:
-        raise ByopError("ไม่มี authorization code จาก Pollinations")
+        raise ByopError(_i18n.t("ไม่มี authorization code จาก Pollinations"))
     app_key = get_app_key(env_path)
     if not app_key.startswith("pk_"):
-        raise ByopError(f"ยังไม่ได้ตั้งค่า {APP_KEY_ENV} ใน .env")
+        raise ByopError(_i18n.t("ยังไม่ได้ตั้งค่า {p0} ใน .env", p0=APP_KEY_ENV))
     token = exchange_code(code=code, verifier=verifier, app_key=app_key, redirect_uri=redirect_uri)
 
     kw = {"cfg_path": cfg_path} if cfg_path is not None else {}

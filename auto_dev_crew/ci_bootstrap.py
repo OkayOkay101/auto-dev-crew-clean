@@ -13,6 +13,7 @@ Flow (``bootstrap_ci``):
 """
 
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import json
@@ -202,7 +203,7 @@ def build_workflow_spec(repo_dir: Path, rcfg: dict | None = None) -> tuple[dict,
         test_run = "cargo test\n"
     else:
         test_run = None
-        warnings.append("ไม่พบคำสั่งทดสอบ — workflow จะไม่รันเทสต์จริง (ตั้งค่า test ใน config.yaml เพื่อแก้)")
+        warnings.append(_i18n.t("ไม่พบคำสั่งทดสอบ — workflow จะไม่รันเทสต์จริง (ตั้งค่า test ใน config.yaml เพื่อแก้)"))
     if test_run is None:
         test_run = "echo 'No test command defined'\n"
     # pytest is the default runner for Python repos, but the install steps above only install the
@@ -263,25 +264,25 @@ def validate_workflow(text: str) -> list[str]:
         return ["ไฟล์ไม่ใช่ mapping ระดับบนสุด"]
     errors: list[str] = []
     if not (doc.get("on") or doc.get(True)):
-        errors.append("ไม่มีส่วน on (trigger)")
+        errors.append(_i18n.t("ไม่มีส่วน on (trigger)"))
     jobs = doc.get("jobs")
     if not isinstance(jobs, dict) or not jobs:
         return errors + ["ไม่มี jobs"]
     for job_name, job in jobs.items():
         if not isinstance(job, dict):
-            errors.append(f"job {job_name} ไม่ใช่ mapping")
+            errors.append(_i18n.t("job {p0} ไม่ใช่ mapping", p0=job_name))
             continue
         if not job.get("runs-on") or not isinstance(job.get("runs-on"), (str, list, dict)):
-            errors.append(f"job {job_name} ไม่มี runs-on ที่ถูกต้อง")
+            errors.append(_i18n.t("job {p0} ไม่มี runs-on ที่ถูกต้อง", p0=job_name))
         steps = job.get("steps")
         if not isinstance(steps, list) or not steps:
-            errors.append(f"job {job_name} ไม่มี steps")
+            errors.append(_i18n.t("job {p0} ไม่มี steps", p0=job_name))
             continue
         for i, step in enumerate(steps, 1):
             if not isinstance(step, dict) or not (step.get("uses") or step.get("run")):
-                errors.append(f"job {job_name} step {i} ไม่มี uses หรือ run")
+                errors.append(_i18n.t("job {p0} step {p1} ไม่มี uses หรือ run", p0=job_name, p1=i))
             elif step.get("uses") and not _USES_RE.match(str(step["uses"])):
-                errors.append(f"job {job_name} step {i} uses รูปแบบไม่ถูกต้อง: {step['uses']}")
+                errors.append(_i18n.t("job {p0} step {p1} uses รูปแบบไม่ถูกต้อง: {p2}", p0=job_name, p1=i, p2=step['uses']))
     return errors
 
 
@@ -384,11 +385,11 @@ def _preflight_auth(repo: str) -> list[CiStep]:
     except (ValueError, RuntimeError):
         perm = ""
     if perm in _WRITE_PERMS:
-        steps.append(CiStep("สิทธิ์เขียน repo", "ok", perm))
+        steps.append(CiStep(_i18n.t("สิทธิ์เขียน repo"), "ok", perm))
     elif perm:
-        steps.append(CiStep("สิทธิ์เขียน repo", "fail", f"สิทธิ์ปัจจุบัน {perm} ไม่พอสำหรับ push"))
+        steps.append(CiStep(_i18n.t("สิทธิ์เขียน repo"), "fail", _i18n.t("สิทธิ์ปัจจุบัน {p0} ไม่พอสำหรับ push", p0=perm)))
     else:
-        steps.append(CiStep("สิทธิ์เขียน repo", "warn", "ตรวจสิทธิ์ไม่ได้ — จะลองทำจริง"))
+        steps.append(CiStep(_i18n.t("สิทธิ์เขียน repo"), "warn", _i18n.t("ตรวจสิทธิ์ไม่ได้ — จะลองทำจริง")))
     return steps
 
 
@@ -439,9 +440,9 @@ def _open_fallback_issue(repo: str, content: str, reason: str, steps: list[CiSte
     try:
         url = gh("issue", "create", "-R", repo, "--title", title, "--body", body)
     except RuntimeError as exc:
-        return CiBootstrapResult("failed", f"push/เปิด PR และเปิด issue ไม่สำเร็จ: {str(exc)[-300:]}",
+        return CiBootstrapResult("failed", _i18n.t("push/เปิด PR และเปิด issue ไม่สำเร็จ: {p0}", p0=str(exc)[-300:]),
                                  steps=steps, workflow=content)
-    return CiBootstrapResult("issue_opened", "push/เปิด PR ไม่ได้ จึงเปิด issue ให้เพิ่มไฟล์เอง",
+    return CiBootstrapResult("issue_opened", _i18n.t("push/เปิด PR ไม่ได้ จึงเปิด issue ให้เพิ่มไฟล์เอง"),
                              url=url, steps=steps, workflow=content)
 
 
@@ -511,53 +512,53 @@ def bootstrap_ci(
     try:
         steps.extend(_preflight_auth(repo_name))
         if any(s.status == "fail" for s in steps):
-            return CiBootstrapResult("failed", "ตรวจสอบก่อนเริ่มไม่ผ่าน — ดูขั้นตอนที่ล้มเหลว", steps=steps)
+            return CiBootstrapResult("failed", _i18n.t("ตรวจสอบก่อนเริ่มไม่ผ่าน — ดูขั้นตอนที่ล้มเหลว"), steps=steps)
 
         if not _BRANCH_RE.match(base_branch):
-            steps.append(CiStep("สาขาฐาน", "fail", f"ชื่อสาขา {base_branch!r} ไม่ถูกต้อง"))
-            return CiBootstrapResult("failed", "ชื่อสาขาฐานไม่ถูกต้อง", steps=steps)
+            steps.append(CiStep(_i18n.t("สาขาฐาน"), "fail", _i18n.t("ชื่อสาขา {p0} ไม่ถูกต้อง", p0=repr(base_branch))))
+            return CiBootstrapResult("failed", _i18n.t("ชื่อสาขาฐานไม่ถูกต้อง"), steps=steps)
         if not gh("api", f"repos/{repo_name}/branches/{base_branch}", "--jq", ".name", check=False):
-            steps.append(CiStep("สาขาฐาน", "fail", f"ไม่พบสาขา {base_branch} ใน {repo_name}"))
-            return CiBootstrapResult("failed", f"ไม่พบสาขาฐาน {base_branch}", steps=steps)
-        steps.append(CiStep("สาขาฐาน", "ok", base_branch))
+            steps.append(CiStep(_i18n.t("สาขาฐาน"), "fail", _i18n.t("ไม่พบสาขา {p0} ใน {p1}", p0=base_branch, p1=repo_name)))
+            return CiBootstrapResult("failed", _i18n.t("ไม่พบสาขาฐาน {p0}", p0=base_branch), steps=steps)
+        steps.append(CiStep(_i18n.t("สาขาฐาน"), "ok", base_branch))
 
         # A dry run only needs the tree to detect the stack, so it clones shallowly.
         cwd = clone(repo_name, base_branch, branch, slot_id=slot_id, depth=1 if dry_run else 50)
-        steps.append(CiStep("clone สาขาหลัก", "ok", base_branch))
+        steps.append(CiStep(_i18n.t("clone สาขาหลัก"), "ok", base_branch))
 
         if has_ci_workflows(cwd):
-            steps.append(CiStep("ตรวจ workflow เดิม", "skip", "มี workflow อยู่แล้ว"))
-            return CiBootstrapResult("skipped", f"{repo_name} มี workflow อยู่แล้ว ไม่ต้องเพิ่ม", steps=steps)
-        steps.append(CiStep("ตรวจ workflow เดิม", "ok", "ยังไม่มี"))
+            steps.append(CiStep(_i18n.t("ตรวจ workflow เดิม"), "skip", _i18n.t("มี workflow อยู่แล้ว")))
+            return CiBootstrapResult("skipped", _i18n.t("{p0} มี workflow อยู่แล้ว ไม่ต้องเพิ่ม", p0=repo_name), steps=steps)
+        steps.append(CiStep(_i18n.t("ตรวจ workflow เดิม"), "ok", _i18n.t("ยังไม่มี")))
 
         spec, warnings = build_workflow_spec(cwd, rcfg)
         content = render_workflow(spec)
-        steps.extend(CiStep("คำเตือน", "warn", w) for w in warnings)
+        steps.extend(CiStep(_i18n.t("คำเตือน"), "warn", w) for w in warnings)
 
         errors = validate_workflow(content)
         if errors:
-            steps.append(CiStep("ตรวจโครงสร้าง YAML", "fail", "; ".join(errors)))
-            return CiBootstrapResult("failed", "workflow ที่สร้างไม่ผ่านการตรวจ", steps=steps, workflow=content)
-        steps.append(CiStep("ตรวจโครงสร้าง YAML", "ok", f"{len(spec['jobs']['test']['steps'])} steps"))
+            steps.append(CiStep(_i18n.t("ตรวจโครงสร้าง YAML"), "fail", "; ".join(errors)))
+            return CiBootstrapResult("failed", _i18n.t("workflow ที่สร้างไม่ผ่านการตรวจ"), steps=steps, workflow=content)
+        steps.append(CiStep(_i18n.t("ตรวจโครงสร้าง YAML"), "ok", f"{len(spec['jobs']['test']['steps'])} steps"))
 
         lint = actionlint_errors(content)
         if lint is None:
-            steps.append(CiStep("ตรวจด้วย actionlint", "skip", "ไม่ได้ติดตั้ง actionlint (ข้ามการตรวจ schema)"))
+            steps.append(CiStep(_i18n.t("ตรวจด้วย actionlint"), "skip", _i18n.t("ไม่ได้ติดตั้ง actionlint (ข้ามการตรวจ schema)")))
         elif lint:
-            steps.append(CiStep("ตรวจด้วย actionlint", "fail", "; ".join(lint)))
-            return CiBootstrapResult("failed", "workflow ที่สร้างไม่ผ่าน actionlint", steps=steps, workflow=content)
+            steps.append(CiStep(_i18n.t("ตรวจด้วย actionlint"), "fail", "; ".join(lint)))
+            return CiBootstrapResult("failed", _i18n.t("workflow ที่สร้างไม่ผ่าน actionlint"), steps=steps, workflow=content)
         else:
-            steps.append(CiStep("ตรวจด้วย actionlint", "ok"))
+            steps.append(CiStep(_i18n.t("ตรวจด้วย actionlint"), "ok"))
 
         if _contains_secret(content):
-            steps.append(CiStep("ตรวจความลับ", "fail", "คำสั่งใน config มีค่าที่หน้าตาเหมือนความลับ — ไม่ commit"))
-            return CiBootstrapResult("failed", "พบค่าที่เหมือนความลับใน workflow", steps=steps)
-        steps.append(CiStep("ตรวจความลับ", "ok"))
+            steps.append(CiStep(_i18n.t("ตรวจความลับ"), "fail", _i18n.t("คำสั่งใน config มีค่าที่หน้าตาเหมือนความลับ — ไม่ commit")))
+            return CiBootstrapResult("failed", _i18n.t("พบค่าที่เหมือนความลับใน workflow"), steps=steps)
+        steps.append(CiStep(_i18n.t("ตรวจความลับ"), "ok"))
 
         if dry_run:
-            steps.append(CiStep("push branch", "skip", f"จะ push {branch} (ยังไม่ทำในโหมดดราฟต์)"))
-            steps.append(CiStep("เปิด PR", "skip", f"จะเปิด PR เข้า {base_branch}"))
-            return CiBootstrapResult("dry_run", "แผนการเพิ่ม CI (ยังไม่ได้ push หรือเปิด PR)",
+            steps.append(CiStep("push branch", "skip", _i18n.t("จะ push {p0} (ยังไม่ทำในโหมดดราฟต์)", p0=branch)))
+            steps.append(CiStep(_i18n.t("เปิด PR"), "skip", _i18n.t("จะเปิด PR เข้า {p0}", p0=base_branch)))
+            return CiBootstrapResult("dry_run", _i18n.t("แผนการเพิ่ม CI (ยังไม่ได้ push หรือเปิด PR)"),
                                      steps=steps, workflow=content)
 
         target = cwd / WORKFLOW_REL
@@ -572,8 +573,8 @@ def bootstrap_ci(
             reason = str(exc)
             if _is_transient_push_error(reason):
                 # Network trouble is not a refusal: leave it retryable instead of opening an issue.
-                steps.append(CiStep("push branch", "fail", "เครือข่ายขัดข้องหลังลองซ้ำแล้ว — จะลองใหม่รอบถัดไป"))
-                return CiBootstrapResult("failed", "push ไม่สำเร็จเพราะเครือข่าย", steps=steps, workflow=content)
+                steps.append(CiStep("push branch", "fail", _i18n.t("เครือข่ายขัดข้องหลังลองซ้ำแล้ว — จะลองใหม่รอบถัดไป")))
+                return CiBootstrapResult("failed", _i18n.t("push ไม่สำเร็จเพราะเครือข่าย"), steps=steps, workflow=content)
             steps.append(CiStep("push branch", "fail", reason.splitlines()[-1][:200]))
             say("⚠️ [CI-Bootstrap] push ถูกปฏิเสธ — เปิด issue แนบไฟล์แทน")
             return _open_fallback_issue(repo_name, content, reason, steps)
@@ -583,17 +584,17 @@ def bootstrap_ci(
         if not url:
             url = _existing_pr_url(repo_name, branch)  # the PR may exist even if gh reported failure
         if url:
-            steps.append(CiStep("เปิด PR", "ok", url))
+            steps.append(CiStep(_i18n.t("เปิด PR"), "ok", url))
             say(f"[CI-Bootstrap] เปิด PR เพิ่ม CI ให้ {repo_name} สำเร็จ: {url} ✅")
-            return CiBootstrapResult("pr_opened", "เปิด PR เพิ่ม CI แล้ว", url=url, steps=steps, workflow=content)
+            return CiBootstrapResult("pr_opened", _i18n.t("เปิด PR เพิ่ม CI แล้ว"), url=url, steps=steps, workflow=content)
 
-        steps.append(CiStep("เปิด PR", "fail", "gh pr create ไม่สำเร็จ"))
+        steps.append(CiStep(_i18n.t("เปิด PR"), "fail", _i18n.t("gh pr create ไม่สำเร็จ")))
         run(["git", "push", "origin", "--delete", branch], cwd=cwd, check=False)
         say("⚠️ [CI-Bootstrap] เปิด PR ไม่สำเร็จ — เปิด issue แนบไฟล์แทน")
-        return _open_fallback_issue(repo_name, content, "gh pr create ไม่สำเร็จ", steps)
+        return _open_fallback_issue(repo_name, content, _i18n.t("gh pr create ไม่สำเร็จ"), steps)
     except Exception as exc:
         say(f"⚠️ [CI-Bootstrap] ไม่สามารถเพิ่ม CI ให้ {repo_name} ได้: {exc}")
-        steps.append(CiStep("ข้อผิดพลาด", "fail", str(exc)[-300:]))
+        steps.append(CiStep(_i18n.t("ข้อผิดพลาด"), "fail", str(exc)[-300:]))
         return CiBootstrapResult("failed", str(exc)[-300:], steps=steps)
     finally:
         if cwd and cwd.exists():

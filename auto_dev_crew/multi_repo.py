@@ -1,6 +1,7 @@
 """GitHub Multi-Repo Support & Cross-Repo Dispatching."""
 
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import dataclasses
 import json
@@ -415,7 +416,7 @@ IGNORE_DIRS = {".git", ".venv", "venv", "__pycache__", "node_modules", ".pytest_
 
 def _validate_repo_name(repo_name: str) -> str:
     if not isinstance(repo_name, str) or not REPO_NAME_RE.match(repo_name) or ".." in repo_name.split("/"):
-        raise ValueError(f"ชื่อ repo ไม่ถูกต้อง: {repo_name!r}")
+        raise ValueError(_i18n.t("ชื่อ repo ไม่ถูกต้อง: {p0}", p0=repr(repo_name)))
     return repo_name
 
 
@@ -466,12 +467,12 @@ def find_or_prepare_repo_dir(repo_name: str, cfg: dict | None = None) -> Path:
         )
     except subprocess.TimeoutExpired as exc:
         shutil.rmtree(cached_repo, ignore_errors=True)
-        raise RuntimeError(f"clone {repo_name} หมดเวลา ({CLONE_TIMEOUT_SECONDS}s)") from exc
+        raise RuntimeError(_i18n.t("clone {p0} หมดเวลา ({p1}s)", p0=repo_name, p1=CLONE_TIMEOUT_SECONDS)) from exc
 
     if res.returncode != 0 or not (cached_repo / ".git").exists():
         shutil.rmtree(cached_repo, ignore_errors=True)
         detail = (res.stderr or res.stdout or "").strip() or "no .git directory created"
-        raise RuntimeError(f"clone {repo_name} ไม่สำเร็จ: {detail}")
+        raise RuntimeError(_i18n.t("clone {p0} ไม่สำเร็จ: {p1}", p0=repo_name, p1=detail))
     return cached_repo.resolve()
 
 
@@ -525,10 +526,10 @@ def get_repo_file_content(repo_name: str, rel_path: str, mode: str = "full", cfg
     clean_rel = rel_path.lstrip("/\\")
     target = (repo_dir / clean_rel).resolve()
     if repo_dir.resolve() not in target.parents and target != repo_dir.resolve():
-        raise PermissionError("Path นอกขอบเขตของ repository")
+        raise PermissionError(_i18n.t("Path นอกขอบเขตของ repository"))
 
     if not target.exists() or not target.is_file():
-        raise FileNotFoundError(f"ไม่พบไฟล์: {rel_path}")
+        raise FileNotFoundError(_i18n.t("ไม่พบไฟล์: {p0}", p0=rel_path))
 
     raw_text = target.read_text(encoding="utf-8", errors="replace")
     if mode == "ast" and clean_rel.endswith(".py"):
@@ -551,7 +552,7 @@ def run_repo_verification(repo_name: str, check_type: str, cfg: dict) -> dict:
     # Only the named checks may run. Anything else used to be executed as a raw shell
     # command, which made /api/repo/run-command a remote-code-execution path (CRIT-01).
     if check_type not in VERIFICATION_CHECKS:
-        raise ValueError(f"check_type ไม่ถูกต้อง: {check_type!r} (ใช้ได้: {', '.join(VERIFICATION_CHECKS)})")
+        raise ValueError(_i18n.t("check_type ไม่ถูกต้อง: {p0} (ใช้ได้: {p1})", p0=repr(check_type), p1=', '.join(VERIFICATION_CHECKS)))
 
     rcfg = ensure_repo_config(cfg, repo_name)
     repo_dir = find_or_prepare_repo_dir(repo_name, cfg)
@@ -659,7 +660,7 @@ def dispatch_studio_coding_task(
             "ok": True,
             "sandbox": False,
             "issue_url": issue_url,
-            "message": f"สั่งงานลงคิว GitHub เรียบร้อยแล้ว ({issue_url})",
+            "message": _i18n.t("สั่งงานลงคิว GitHub เรียบร้อยแล้ว ({p0})", p0=issue_url),
         }
 
 
@@ -679,7 +680,7 @@ def sync_repo(repo_name: str, cfg: dict | None = None) -> dict:
             "ok": res.returncode == 0,
             "stdout": res.stdout,
             "stderr": res.stderr,
-            "message": "ซิงค์ repository สำเร็จ" if res.returncode == 0 else "เกิดข้อผิดพลาดในการซิงค์",
+            "message": _i18n.t("ซิงค์ repository สำเร็จ") if res.returncode == 0 else _i18n.t("เกิดข้อผิดพลาดในการซิงค์"),
         }
     except Exception as exc:
         return {"ok": False, "message": str(exc)}

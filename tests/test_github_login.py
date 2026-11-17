@@ -197,24 +197,5 @@ class TestGithubLoginRoutesAndUi(unittest.TestCase):
     def test_get_state_route_registered(self):
         _must_contain(GUI_SRC, 'url.path == "/api/github/login/state"')
 
-    def test_step2_has_connect_controls(self):
-        start = SIDEBAR.index('data-simple-step="2"')
-        end = SIDEBAR.index('data-simple-step="3"')
-        step2 = SIDEBAR[start:end]
-        for id_ in ["simpleGhLoginBtn", "simpleGhCancelBtn", "simpleGhCode"]:
-            _must_contain(step2, f'id="{id_}"')
-
-    def test_frontend_calls_endpoints_with_token_and_no_innerhtml(self):
-        _must_contain(SIDEBAR, 'fetch("/api/github/login/start"')
-        _must_contain(SIDEBAR, 'fetch("/api/github/login/cancel"')
-        _must_contain(SIDEBAR, 'fetch("/api/github/login/state"')
-        start = SIDEBAR.index("async function loadSimpleGhStatus")
-        end = SIDEBAR.index("/* end simple-gh */", start)
-        block = SIDEBAR[start:end]
-        if "innerHTML" in block:
-            raise AssertionError("innerHTML must not be used in the GitHub connect code")
-        _must_contain(block, '"X-Token": TOKEN')
-
-
 if __name__ == "__main__":
     unittest.main()

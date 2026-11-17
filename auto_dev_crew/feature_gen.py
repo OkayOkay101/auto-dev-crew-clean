@@ -6,6 +6,7 @@ and opens a PR -> try_merge applies the per-repo merge level. When that task iss
 close_done_plans closes the plan issue too (otherwise the plan stays open forever).
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import hashlib
@@ -264,7 +265,7 @@ def propose(repo: str, cfg: dict | None, root: Path, call_model: Callable[[str],
     raw = call_model(prompt)
     parsed = deep_scan._parse_model_array(raw)
     if parsed is None:
-        raise ValueError("โมเดลตอบไม่เป็น JSON array (ผิดรูปแบบ) จึงอ่านแผนไม่ได้")
+        raise ValueError(_i18n.t("โมเดลตอบไม่เป็น JSON array (ผิดรูปแบบ) จึงอ่านแผนไม่ได้"))
     items = validate_proposals(parsed, s["max_proposals"])
     for p in items:
         p["risk"] = risk_reasons(p["files"], s["large_change_files"])

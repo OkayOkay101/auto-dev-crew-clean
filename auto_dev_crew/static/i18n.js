@@ -1,125 +1,100 @@
-/* ตัวแปลหน้า GUI เป็น English (ทำงานเมื่อ adc_lang = "en" เท่านั้น)
- * - แปลข้อความและ attribute (title / placeholder / aria-label) ทั้งหน้าตอนโหลด
- * - MutationObserver แปลข้อความที่ JS เขียนเพิ่มทีหลัง (ตาราง, toast, ฯลฯ)
- * - confirm() / alert() แปลข้อความก่อนแสดง
- * พจนานุกรมอยู่ใน i18n_en.js (window.ADC_EN) ข้อความจริง เช่น ชื่อ issue และ log ของเอเจนต์ยังเป็นภาษาไทย */
+/* ตัวแปลหน้าเว็บ (แทนระบบแทนข้อความย่อยแบบเดิม)
+ * - ข้อความไทยเป็นคีย์ของพจนานุกรม ค่าอังกฤษมาจาก GET /api/i18n (auto_dev_crew/locales/en.json)
+ * - window.i18n(key, params?)            คืนข้อความตามภาษาที่ตั้งไว้ ไม่พบคีย์คืนคีย์เอง (= ไทย)
+ * - window.applyI18n(root?)           แปล [data-i18n] (ข้อความ) และ [data-i18n-attr="title placeholder"] (attribute)
+ * - window.adcLoadI18n(token?)        โหลดพจนานุกรมและภาษาจากเซิร์ฟเวอร์; เรียกครั้งเดียวตอนเริ่มหน้า
+ * - window.adcI18nReady               Promise ที่จบเมื่อโหลดเสร็จ (สำเร็จหรือไม่ก็ตาม)
+ * - window.setLanguage(lang)          บันทึกภาษาในเซิร์ฟเวอร์แล้วโหลดหน้าใหม่
+ * ถ้าโหลดพจนานุกรมไม่ได้ ใช้ข้อความไทยเดิมทั้งหน้า */
 (function () {
   "use strict";
-  // ค่าเริ่มต้นเป็นภาษาไทย: เปิดเวอร์ชันนี้ครั้งแรกในเบราว์เซอร์ใด ให้ตั้ง adc_lang เป็นไทยหนึ่งครั้ง
-  // หลังจากนั้นผู้ใช้สลับเป็น English เองได้ตามปกติ (ค่าที่เลือกจะถูกจำและไม่ถูกเขียนทับอีก)
-  try {
-    if (!localStorage.getItem("adc_lang_default")) {
-      localStorage.setItem("adc_lang", "th");
-      localStorage.setItem("adc_lang_default", "th");
-    }
-  } catch (e) { /* storage ใช้ไม่ได้ ใช้ค่าเริ่มต้นในโค้ดด้านล่างแทน */ }
   var lang = "th";
-  try { lang = localStorage.getItem("adc_lang") === "en" ? "en" : "th"; } catch (e) { /* ใช้ค่าเริ่มต้น */ }
-  if (lang !== "en" || !window.ADC_EN) return;
+  var dict = {};
 
-  var DICT = window.ADC_EN;
-  var THAI = /[฀-๿]/;
-  var KEYS = Object.keys(DICT)
-    .filter(function (k) { return k.trim().length > 0; })
-    .sort(function (a, b) { return b.length - a.length; });
-  // วลีที่แทนได้ภายในข้อความยาว: ยาว >= 12 ตัวอักษร หรือมีช่องว่าง/วงเล็บและยาว >= 2
-  // (คำไทยเดี่ยว ๆ เช่น "บรรทัด" "สถานะ" ไม่แทนในข้อความ เพราะจะไปทับข้อมูลจริง เช่น ชื่อ issue
-  //  แต่คำสั้นที่มีช่องว่างกำกับ เช่น "พบ " "นำ " ปลอดภัยพอ เพราะหมายถึงข้อความของ UI ที่ตามด้วยตัวเลขหรือชื่อ)
-  function isPhrase(k) {
-    var t = k.trim();
-    return t.length >= 12 || (/[\s()]/.test(k) && t.length >= 2);
-  }
-  var ATTRS = ["title", "placeholder", "aria-label"];
-  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 0 };
-
-  // แปลข้อความหนึ่งชิ้น: ตรงทั้งข้อความก่อน แล้วค่อยแทนวลีที่ยาว (>= 5 ตัวอักษร) ที่อยู่ในข้อความ
-  function tr(s) {
-    if (!s || !THAI.test(s)) return s;
-    var t = s.trim().replace(/\r\n/g, "\n");
-    if (Object.prototype.hasOwnProperty.call(DICT, t)) {
-      var lead = s.match(/^\s*/)[0];
-      var trail = s.match(/\s*$/)[0];
-      return lead + DICT[t] + trail;
-    }
-    var out = s;
-    for (var i = 0; i < KEYS.length; i++) {
-      var k = KEYS[i];
-      if (!isPhrase(k)) continue;
-      if (out.indexOf(k) !== -1) out = out.split(k).join(DICT[k]);
-    }
-    if (out !== s) {
-      // เว้นช่องว่างระหว่างคำอังกฤษที่แทนแล้วกับตัวอักษรไทยที่ติดกัน (เช่น "ลำดับProvider" → "ลำดับ Provider")
-      out = out.replace(/([A-Za-z0-9\)])([฀-๿])/g, "$1 $2").replace(/([฀-๿])([A-Za-z0-9\(])/g, "$1 $2");
-    }
-    return out;
-  }
-  window.ADC_trText = tr;
-
-  function translateText(node) {
-    var cur = node.nodeValue;
-    var nv = tr(cur);
-    if (nv !== cur) node.nodeValue = nv;
-  }
-
-  function translateAttrs(el) {
-    for (var i = 0; i < ATTRS.length; i++) {
-      var a = ATTRS[i];
-      if (!el.hasAttribute || !el.hasAttribute(a)) continue;
-      var v = el.getAttribute(a);
-      var nv = tr(v);
-      if (nv !== v) el.setAttribute(a, nv);
-    }
-    if (el.tagName === "INPUT" && (el.type === "button" || el.type === "submit") && el.value) {
-      var nvv = tr(el.value);
-      if (nvv !== el.value) el.value = nvv;
-    }
-  }
-
-  function walk(node) {
-    if (node.nodeType === 3) return translateText(node);
-    if (node.nodeType !== 1) return;
-    translateAttrs(node); // แปล placeholder ของ TEXTAREA ด้วย แม้ไม่แปลเนื้อหาข้างใน
-    if (SKIP[node.tagName]) return;
-    for (var c = node.firstChild; c; c = c.nextSibling) walk(c);
-  }
-
-  var observer = new MutationObserver(function (records) {
-    observer.disconnect();
-    try {
-      records.forEach(function (rec) {
-        if (rec.type === "childList") {
-          for (var i = 0; i < rec.addedNodes.length; i++) walk(rec.addedNodes[i]);
-        } else if (rec.type === "characterData") {
-          translateText(rec.target);
-        } else if (rec.type === "attributes") {
-          translateAttrs(rec.target);
-        }
+  function t(key, params) {
+    var text = (lang === "en" && Object.prototype.hasOwnProperty.call(dict, key)) ? dict[key] : key;
+    if (params) {
+      text = text.replace(/\{(\w+)\}/g, function (m, name) {
+        return Object.prototype.hasOwnProperty.call(params, name) ? String(params[name]) : m;
       });
-    } finally {
-      observe();
     }
-  });
+    return text;
+  }
+  window.i18n = t;
+  window.adcLang = lang;
 
-  function observe() {
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: ATTRS
+  function applyI18n(root) {
+    var scope = root || document;
+    scope.querySelectorAll("[data-i18n]").forEach(function (el) {
+      if (!el.dataset.adcKey) {
+        // data-i18n="html" = ข้อความมี HTML ปน (เช่น <strong>, <code>) ใช้ innerHTML เดิมเป็นคีย์
+        el.dataset.adcHtml = el.getAttribute("data-i18n") === "html" ? "1" : "";
+        el.dataset.adcKey = el.dataset.adcHtml ? el.innerHTML.trim() : el.textContent.trim();
+      }
+      if (el.dataset.adcHtml) el.innerHTML = t(el.dataset.adcKey);
+      else el.textContent = t(el.dataset.adcKey);
     });
+    scope.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
+      el.getAttribute("data-i18n-attr").split(/\s+/).forEach(function (attr) {
+        if (!attr) return;
+        var orig = el.dataset["adcOrig_" + attr.replace(/-/g, "_")];
+        if (orig === undefined) {
+          orig = el.getAttribute(attr) || "";
+          el.dataset["adcOrig_" + attr.replace(/-/g, "_")] = orig;
+        }
+        el.setAttribute(attr, t(orig));
+      });
+    });
+    document.documentElement.lang = lang;
+  }
+  window.applyI18n = applyI18n;
+
+  function headers(token, json) {
+    var h = {};
+    if (token) h["X-Token"] = token;
+    if (json) h["Content-Type"] = "application/json";
+    return h;
   }
 
-  function start() {
-    document.documentElement.lang = "en";
-    walk(document.body);
-    observe();
+  // ทางหลัก: เซิร์ฟเวอร์ฝัง window.ADC_INIT = {lang, dict} ลงในหน้าตอนเสิร์ฟ (ซิงโครนัส ไม่มีช่วงแสดงผลเป็นไทย)
+  if (window.ADC_INIT) {
+    lang = window.ADC_INIT.lang === "en" ? "en" : "th";
+    dict = window.ADC_INIT.dict || {};
+    window.adcI18nReady = Promise.resolve();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
-  else start();
+  window.adcLang = lang;
 
-  var nativeConfirm = window.confirm.bind(window);
-  var nativeAlert = window.alert.bind(window);
-  window.confirm = function (msg) { return nativeConfirm(tr(String(msg))); };
-  window.alert = function (msg) { return nativeAlert(tr(String(msg))); };
+  // ทางสำรอง: โหลดจาก API (ช่วงนี้หน้าอาจแสดงไทยก่อน)
+  window.adcLoadI18n = function (token) {
+    if (window.ADC_INIT) {
+      window.adcI18nReady = Promise.resolve();
+      return window.adcI18nReady;
+    }
+    window.adcI18nReady = fetch("/api/i18n", { headers: headers(token, false) })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (data) {
+        lang = data.lang === "en" ? "en" : "th";
+        dict = data.dict || {};
+        window.adcLang = lang;
+      })
+      .catch(function (err) {
+        console.warn("โหลดพจนานุกรมไม่ได้ ใช้ภาษาไทย:", err);
+        lang = "th";
+        dict = {};
+        window.adcLang = lang;
+      });
+    return window.adcI18nReady;
+  };
+
+  window.setLanguage = function (next, token) {
+    var value = next === "en" ? "en" : "th";
+    return fetch("/api/settings/language", {
+      method: "POST",
+      headers: headers(token, true),
+      body: JSON.stringify({ lang: value })
+    }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      location.reload();
+    });
+  };
 })();

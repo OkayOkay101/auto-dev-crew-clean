@@ -73,20 +73,5 @@ class TestGithubStatusRoute(unittest.TestCase):
         self.assertIn("doctor.gh_login_status(", GUI_SRC)
 
 
-class TestGithubStepInGuide(unittest.TestCase):
-    def test_step2_shows_github_status_slot(self):
-        start = SIDEBAR.index('data-simple-step="2"')
-        end = SIDEBAR.index('data-simple-step="3"')
-        step2 = SIDEBAR[start:end]
-        self.assertIn('id="simpleGhStatus"', step2)
-        self.assertIn("gh auth login", step2)
-
-    def test_frontend_fetches_status_endpoint_without_innerhtml(self):
-        self.assertIn('fetch("/api/github/status")', SIDEBAR)
-        start = SIDEBAR.index('fetch("/api/github/status")')
-        block = SIDEBAR[start:start + 900]
-        self.assertNotIn("innerHTML", block)
-
-
 if __name__ == "__main__":
     unittest.main()

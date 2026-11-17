@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto Dev Crew - สถานะสาธารณะ</title>
+<style>
+  body { font-family: system-ui, "Sanuk", sans-serif; margin: 0; padding: 16px; background: #f6f7f9; color: #1c1f24; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 8px 0 4px; }
+  p.sub { margin: 0 0 20px; color: #5b6270; font-size: 0.95rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .card { background: #fff; border: 1px solid #e2e5ea; border-radius: 10px; padding: 14px; }
+  .label { font-size: 0.85rem; color: #5b6270; }
+  .value { font-size: 1.6rem; font-weight: 600; margin-top: 4px; word-break: break-word; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  td { padding: 6px 4px; border-bottom: 1px solid #eceef2; }
+  #status { margin-top: 16px; font-size: 0.9rem; color: #5b6270; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #14161a; color: #e6e8ec; }
+    p.sub, .label, #status { color: #9aa3b2; }
+    .card { background: #1d2025; border-color: #2c3038; }
+    td { border-bottom-color: #2c3038; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Auto Dev Crew</h1>
+  <p class="sub">สถานะรวมแบบอ่านอย่างเดียว ไม่มีข้อมูล repo หรือคีย์</p>
+  <div class="grid">
+    <div class="card"><div class="label">จำนวนรอบที่รันทั้งหมด</div><div class="value" id="runs-total">-</div></div>
+    <div class="card"><div class="label">รอบล่าสุด</div><div class="value" id="runs-last">-</div></div>
+    <div class="card"><div class="label">repo ที่ติดตาม</div><div class="value" id="repos">-</div></div>
+    <div class="card"><div class="label">engine ที่เปิดใช้</div><div class="value" id="engines">-</div></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="label">ผลลัพธ์แยกตามสถานะ</div>
+    <table><tbody id="by-state"></tbody></table>
+  </div>
+  <div id="status">กำลังโหลดข้อมูล...</div>
+</main>
+<script>
+(function () {
+  var statusEl = document.getElementById("status");
+  function set(id, text) { document.getElementById(id).textContent = text; }
+  function fmtDate(s) {
+    var m = /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/.exec(s || "");
+    return m ? m[1] + "-" + m[2] + "-" + m[3] + " " + m[4] + ":" + m[5] : "-";
+  }
+  fetch("/api/public", { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function (d) {
+      set("runs-total", String(d.runs.total));
+      set("runs-last", fmtDate(d.runs.last_at));
+      set("repos", String(d.repos_tracked));
+      set("engines", String(d.engines_enabled));
+      var body = document.getElementById("by-state");
+      Object.keys(d.runs.by_state).sort().forEach(function (k) {
+        var tr = document.createElement("tr");
+        var a = document.createElement("td"); a.textContent = k;
+        var b = document.createElement("td"); b.textContent = String(d.runs.by_state[k]);
+        b.style.textAlign = "right";
+        tr.appendChild(a); tr.appendChild(b); body.appendChild(tr);
+      });
+      var t = new Date(d.generated_at);
+      statusEl.textContent = "อัปเดตเมื่อ " + (isNaN(t) ? "-" : t.toLocaleString("th-TH"));
+    })
+    .catch(function () { statusEl.textContent = "โหลดข้อมูลไม่ได้ ลองใหม่อีกครั้งภายหลัง"; });
+})();
+</script>
+</body>
+</html>

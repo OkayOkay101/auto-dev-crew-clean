@@ -17,7 +17,7 @@ class TestRepoDropdown(unittest.TestCase):
         m = re.search(r'<details class="repo-dd" id="repoDropdown"[^>]*>(.*?)</details>', SIDEBAR, re.S)
         self.assertIsNotNone(m, "repoDropdown <details> missing")
         inner = m.group(1)
-        self.assertIn("<summary>", inner)
+        self.assertIn("<summary", inner)
         self.assertIn('id="repos"', inner)
         self.assertIn('id="repoFilter"', inner)
         self.assertIn('id="repoLimit"', inner)
@@ -50,8 +50,9 @@ class TestRepoDropdown(unittest.TestCase):
 
     def test_count_message_shows_matched_and_total(self):
         body = _function_body("applyRepoFilter")
-        self.assertIn("ตรงกับการค้นหา ${matched} จาก ${total}", body)
-        self.assertIn("แสดง ${shown} จาก ${total}", body)
+        self.assertIn('i18n("ตรงกับการค้นหา")', body)
+        self.assertIn('i18n("จาก")', body)
+        self.assertIn('i18n("แสดง")', body)
 
     def test_filter_is_called_after_every_render(self):
         render_body = re.search(r"\$\(\"#repos\"\)\.innerHTML = .*?applyRepoFilter\(\);", SIDEBAR, re.S)

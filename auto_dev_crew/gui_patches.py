@@ -3,6 +3,7 @@
 Remediates audit findings BG-SEC-01 through BG-BUG-05 without adding external dependencies.
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import hmac
 import os
@@ -58,14 +59,14 @@ def require_registered_repo(repo_raw: Any, cfg: dict[str, Any]) -> str:
     """Validate owner/repo syntax (blocking leading '-' CLI flags) and verify config membership."""
     repo = str(repo_raw or "").strip()
     if not REPO_ALLOW_RE.fullmatch(repo):
-        raise ValueError("ชื่อ repo ไม่ถูกต้อง (ต้องอยู่ในรูปแบบ owner/repo และห้ามขึ้นต้นด้วย '-')")
+        raise ValueError(_i18n.t("ชื่อ repo ไม่ถูกต้อง (ต้องอยู่ในรูปแบบ owner/repo และห้ามขึ้นต้นด้วย '-')"))
     configured = {
         r.get("name")
         for r in (cfg.get("repos") or [])
         if isinstance(r, dict) and isinstance(r.get("name"), str)
     }
     if repo not in configured:
-        raise ValueError(f"ไม่พบ repo {repo} ใน config.yaml")
+        raise ValueError(_i18n.t("ไม่พบ repo {p0} ใน config.yaml", p0=repo))
     return repo
 
 
@@ -95,12 +96,12 @@ def resolve_safe_worktree_path(target_raw: str | Path, work_root: Path | None = 
     base = (work_root or runner.WORK).resolve()
     candidate = Path(target_raw).resolve()
     if candidate == base or not candidate.is_relative_to(base):
-        raise PermissionError("path นอกพื้นที่ทำงาน")
+        raise PermissionError(_i18n.t("path นอกพื้นที่ทำงาน"))
     for part in candidate.relative_to(base).parts:
         if part in FORBIDDEN_READ_NAMES:
-            raise PermissionError("ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว")
+            raise PermissionError(_i18n.t("ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว"))
     if candidate.name in FORBIDDEN_READ_NAMES:
-        raise PermissionError("ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว")
+        raise PermissionError(_i18n.t("ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว"))
     return candidate
 
 
@@ -139,7 +140,7 @@ def resolve_provider_and_key_for_models(
     """Unified provider ID and stored API-key resolver for both GET and POST /api/models."""
     provider = (provider_arg or "").strip()
     if not provider:
-        raise ValueError("ต้องระบุชื่อ provider")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ provider"))
     fetch_id = provider
     api_key = explicit_key if explicit_key else None
     eng = next((e for e in runner.get_engines(cfg) if runner.key_engine_name(e) == provider), None)

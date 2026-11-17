@@ -6,6 +6,7 @@
 แต่ทำเฉพาะเมื่อตารางว่าง (ไม่มีข้อมูลที่จะสูญหาย) และสำรอง DB ก่อนเสมอ.
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import sqlite3
@@ -86,9 +87,9 @@ def repair(db_path: Path = DEFAULT_DB, backup_dir: Path | None = None, apply: bo
         conn.execute(WORKSPACE_DDL)
         conn.execute("COMMIT")
         if "project_id" not in _columns(conn, "workspace"):
-            raise RuntimeError("สร้าง workspace แล้วยังไม่มี project_id")
+            raise RuntimeError(_i18n.t("สร้าง workspace แล้วยังไม่มี project_id"))
         if conn.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
-            raise RuntimeError("integrity_check ไม่ผ่านหลังซ่อม")
+            raise RuntimeError(_i18n.t("integrity_check ไม่ผ่านหลังซ่อม"))
     except Exception:
         if conn.in_transaction:
             conn.execute("ROLLBACK")

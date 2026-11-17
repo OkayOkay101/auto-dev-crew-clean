@@ -4,6 +4,7 @@ Supports concurrent execution slots (Slot 1 reserved for user issues, Slots 2-3 
 central merge queue, active collision detection, and pre-PR agentic-eval rubric gate.
 """
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import hashlib
@@ -459,7 +460,7 @@ def _target_commit_date(cfg: dict, repo_name: str) -> str:
 def repo_cfg(cfg: dict, name: str) -> dict:
     match = next((r for r in cfg.get("repos", []) if r.get("name") == name), None)
     if match is None:
-        raise ValueError(f"ไม่พบ repo {name!r} ใน config")
+        raise ValueError(_i18n.t("ไม่พบ repo {p0} ใน config", p0=repr(name)))
     return match
 
 
@@ -918,7 +919,7 @@ def call_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | None
             # (broken JSON) and the scan read-only config is skipped.
             return _execute_single_engine(eng, prompt, cwd, active_key, role=role)
     except LockTimeout as exc:
-        raise EngineBusy(f"Engine {eng_name} กำลังถูกใช้งานโดย Slot อื่น (รอล็อกเกิน {lock_timeout}s)") from exc
+        raise EngineBusy(_i18n.t("Engine {p0} กำลังถูกใช้งานโดย Slot อื่น (รอล็อกเกิน {p1}s)", p0=eng_name, p1=lock_timeout)) from exc
 
 
 def _idle_timeout_seconds(eng: dict) -> float:
@@ -1038,7 +1039,7 @@ def _execute_single_engine(eng: dict, prompt: str, cwd: Path, active_key: str | 
             data = {**data, "status": "ERROR", "response": data.get("response") or text[-2000:]}
 
     if data.get("status") != "SUCCESS" and any(h in text.lower() for h in CONCURRENCY_HINTS):
-        raise EngineBusy(f"คำขอชนกับคำขออื่นบน IP เดียวกัน: {text[-200:]}")
+        raise EngineBusy(_i18n.t("คำขอชนกับคำขออื่นบน IP เดียวกัน: {p0}", p0=text[-200:]))
 
     quota = is_quota_error(data)
     record_usage(eng, data, quota)
@@ -1096,11 +1097,11 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
                      *, engine_name: str | None = None) -> dict:
     engines = get_engines(cfg)
     if not engines:
-        raise RuntimeError("ไม่พบการตั้งค่า engine ใน config.yaml")
+        raise RuntimeError(_i18n.t("ไม่พบการตั้งค่า engine ใน config.yaml"))
     if engine_name is not None:
         engines = [e for e in engines if key_engine_name(e) == engine_name]
         if not engines:
-            raise ValueError(f"ไม่พบ engine ชื่อ '{engine_name}' ใน config.yaml")
+            raise ValueError(_i18n.t("ไม่พบ engine ชื่อ '{p0}' ใน config.yaml", p0=engine_name))
     status = load_engine_status()
     key_status = load_key_status()
     candidates = []
@@ -1217,10 +1218,10 @@ def _call_agent_pass(cfg: dict, prompt: str, cwd: Path, slot_id: int | None, rol
             return data
 
     if saw_quota:
-        raise QuotaExhausted(f"ทุก Engine สำรองโควตาหมดแล้ว: {last_exc}")
+        raise QuotaExhausted(_i18n.t("ทุก Engine สำรองโควตาหมดแล้ว: {p0}", p0=last_exc))
     if saw_busy and not other_failure:
-        raise EngineBusy(f"ทุก Engine ไม่ว่าง (กำลังถูกใช้โดย Slot อื่น): {last_exc}")
-    raise RuntimeError(f"ทุก Engine ล้มเหลว (ไม่ใช่โควตา): {last_exc}")
+        raise EngineBusy(_i18n.t("ทุก Engine ไม่ว่าง (กำลังถูกใช้โดย Slot อื่น): {p0}", p0=last_exc))
+    raise RuntimeError(_i18n.t("ทุก Engine ล้มเหลว (ไม่ใช่โควตา): {p0}", p0=last_exc))
 
 
 # key id ของคีย์ที่กำลังใช้เรียก engine (เช่น "opencode-gemini#GEMINI_API_KEY_1").
@@ -1881,7 +1882,7 @@ def _prepare_workspace(cwd: Path, repo: str, rcfg: dict, slot_id: int | None) ->
 
     ok, out = run_steps(setup_steps, cwd, env)
     if not ok:
-        raise RuntimeError(f"setup ล้มเหลว:\n{out}")
+        raise RuntimeError(_i18n.t("setup ล้มเหลว:\n{p0}", p0=out))
     return env, test_steps
 
 
@@ -1930,7 +1931,7 @@ def _agent_fix_loop(cfg: dict, base_prompt: str, cwd: Path, env: dict, test_step
         fix_rounds += 1
         if agent_res.get("status") == "ERROR":
             # MED-02: an agent error is not a silent round. Stop this job's fix loop.
-            raise RuntimeError(f"เอเจนต์ส่งข้อผิดพลาดในรอบ {attempt}: {str(agent_res.get('response') or '')[:1000]}")
+            raise RuntimeError(_i18n.t("เอเจนต์ส่งข้อผิดพลาดในรอบ {p0}: {p1}", p0=attempt, p1=str(agent_res.get('response') or '')[:1000]))
         result = read_result(result_path)
         if result.get("status") == "NO_ACTION" and not diff_stats(cwd)[1]:
             break  # genuine no change; NO_ACTION over an earlier round's edits still gets tested
@@ -2171,7 +2172,7 @@ def _eval_gate(job: Job, cfg: dict, cwd: Path, env: dict, test_steps: list[str],
                                      exclude_engine=coder_engine)
         if eval_res.engine_error:
             # BUG-6: the judge never ran. Do not refine or block the PR; the job is retried later.
-            raise EngineBusy("judge engine ไม่ว่าง — ยังไม่ได้ประเมิน จึงไม่นับเป็นคะแนนต่ำ")
+            raise EngineBusy(_i18n.t("judge engine ไม่ว่าง — ยังไม่ได้ประเมิน จึงไม่นับเป็นคะแนนต่ำ"))
         eval_res, mode = _escalate_fast_if_over_budget(eval_res, mode, diff_text, task_desc, test_out, cfg, cwd, entry, slot_id)
         if entry.get("triage_escalated"):
             base_prompt = base_prompt.removeprefix(FAST_PATH_PREFIX)  # heavy refinement: drop the "< 20 lines" brief
@@ -2217,7 +2218,7 @@ def _eval_gate(job: Job, cfg: dict, cwd: Path, env: dict, test_steps: list[str],
                 eval_res = _evaluate_guarded(diff_text, task_desc, test_out, cfg, cwd, slot_id=slot_id, mode=mode,
                                              exclude_engine=coder_engine)
                 if eval_res.engine_error:
-                    raise EngineBusy("judge engine ไม่ว่าง — ยังไม่ได้ประเมินรอบปรับปรุง")
+                    raise EngineBusy(_i18n.t("judge engine ไม่ว่าง — ยังไม่ได้ประเมินรอบปรับปรุง"))
                 entry["eval_score"] = round(eval_res.score, 2)
                 entry["eval_critique"] = eval_res.critique_th
                 entry["fix_options"] = eval_res.fix_options
@@ -2260,7 +2261,7 @@ def _push_and_open_pr(job: Job, cfg: dict, rcfg: dict, history: list[dict], entr
         if res.returncode == 0:
             break
         if attempt == GH_RETRIES:
-            raise RuntimeError(f"git push ล้มเหลว:\n{res.stderr[-1500:]}")
+            raise RuntimeError(_i18n.t("git push ล้มเหลว:\n{p0}", p0=res.stderr[-1500:]))
         time.sleep(15 * 2 ** (attempt - 1))
 
     job_ref = None
@@ -2496,7 +2497,7 @@ def _evaluate_guarded(diff_text: str, task_desc: str, test_out: str, cfg: dict, 
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th="⛔ ผู้ประเมินแก้ไขไฟล์ในพื้นที่งาน (ไม่อนุญาต)",
+            critique_th=_i18n.t("⛔ ผู้ประเมินแก้ไขไฟล์ในพื้นที่งาน (ไม่อนุญาต)"),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
         )
     return result
@@ -2548,7 +2549,7 @@ def fix_ci_failure(cfg: dict, rcfg: dict, repo: str, pr: int, branch: str, cwd: 
             if res.returncode == 0:
                 break
             if attempt == GH_RETRIES:
-                raise RuntimeError(f"git push ล้มเหลว:\n{res.stderr[-1500:]}")
+                raise RuntimeError(_i18n.t("git push ล้มเหลว:\n{p0}", p0=res.stderr[-1500:]))
             time.sleep(15 * 2 ** (attempt - 1))
         sha = run(["git", "rev-parse", "HEAD"], cwd=cwd).stdout.strip()
         entry["ci_fix_rounds"] = round_no

@@ -1,5 +1,6 @@
 """Pre-PR agentic-eval Gate: Evaluator-Optimizer pattern for quality-critical code PRs."""
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import json
 import re
@@ -129,7 +130,7 @@ def parse_eval_response(
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th="ไม่สามารถแยกผลการประเมิน JSON จากการตอบกลับของโมเดล",
+            critique_th=_i18n.t("ไม่สามารถแยกผลการประเมิน JSON จากการตอบกลับของโมเดล"),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
         )
 
@@ -141,7 +142,7 @@ def parse_eval_response(
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th="รูปแบบ JSON ของการประเมินไม่ถูกต้อง",
+            critique_th=_i18n.t("รูปแบบ JSON ของการประเมินไม่ถูกต้อง"),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
         )
 
@@ -155,7 +156,7 @@ def parse_eval_response(
     total_w = w_align + w_safety + w_quality or 1.0
 
     score = ((task_align * w_align) + (safety * w_safety) + (quality * w_quality)) / total_w
-    critique = str(data.get("critique_th") or "ประเมินผลเรียบร้อย")
+    critique = str(data.get("critique_th") or _i18n.t("ประเมินผลเรียบร้อย"))
 
     passed = score >= min_score and task_align >= 0.5 and safety >= 0.5
 
@@ -203,7 +204,7 @@ def evaluate_diff(
         return EvaluationResult(
             score=1.0,
             passed=True,
-            critique_th="ข้ามการประเมิน (evaluation.enabled: false)",
+            critique_th=_i18n.t("ข้ามการประเมิน (evaluation.enabled: false)"),
             dimensions={"task_alignment": 1.0, "safety_cleanliness": 1.0, "quality": 1.0}
         )
 
@@ -213,7 +214,7 @@ def evaluate_diff(
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th="⛔ Git diff ว่างเปล่า — ไม่พบการเปลี่ยนแปลงของโค้ด",
+            critique_th=_i18n.t("⛔ Git diff ว่างเปล่า — ไม่พบการเปลี่ยนแปลงของโค้ด"),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
         )
 
@@ -239,7 +240,7 @@ def evaluate_diff(
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th=f"⛔ Deterministic Pre-Eval ล้มเหลว: {pre_eval_msg}",
+            critique_th=_i18n.t("⛔ Deterministic Pre-Eval ล้มเหลว: {p0}", p0=pre_eval_msg),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
         )
 
@@ -323,7 +324,7 @@ def evaluate_diff(
             agent = call_agent or runner.call_agent  # default: runner's (patchable) call_agent
             res = agent(target_cfg, prompt, Path(judge_dir), role="judge")
         if res.get("status") == "ERROR":
-            err_msg = res.get("response") or "โมเดลประเมินไม่ตอบกลับหรือเกิดข้อผิดพลาด"
+            err_msg = res.get("response") or _i18n.t("โมเดลประเมินไม่ตอบกลับหรือเกิดข้อผิดพลาด")
             if matched:
                 fallback_used = True
                 runner.log(f"[agentic-eval] ⚠️ Judge เฉพาะกิจล้มเหลว ({err_msg}) -> สลับประเมินด้วย Default Fallback Engine...")
@@ -333,12 +334,12 @@ def evaluate_diff(
                 except Exception as fb_exc:
                     runner.log(f"[agentic-eval] Default Fallback Engine ล้มเหลวเช่นกัน: {fb_exc}")
             if res.get("status") == "ERROR":
-                err_msg = res.get("response") or "โมเดลประเมินไม่ตอบกลับหรือเกิดข้อผิดพลาด"
+                err_msg = res.get("response") or _i18n.t("โมเดลประเมินไม่ตอบกลับหรือเกิดข้อผิดพลาด")
                 runner.log(f"[agentic-eval] ⚠️ โมเดลประเมินตอบกลับล้มเหลว ({err_msg})")
                 return EvaluationResult(
                     score=0.0,
                     passed=False,
-                    critique_th=f"การประเมินล้มเหลว ({err_msg})",
+                    critique_th=_i18n.t("การประเมินล้มเหลว ({p0})", p0=err_msg),
                     dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0}
                 )
 
@@ -379,7 +380,7 @@ def evaluate_diff(
         return EvaluationResult(
             score=0.0,
             passed=False,
-            critique_th=f"การประเมินขัดข้อง ({exc}) — บล็อกการเปิด PR เพื่อความปลอดภัย",
+            critique_th=_i18n.t("การประเมินขัดข้อง ({p0}) — บล็อกการเปิด PR เพื่อความปลอดภัย", p0=exc),
             dimensions={"task_alignment": 0.0, "safety_cleanliness": 0.0, "quality": 0.0},
             engine_error=isinstance(exc, runner.EngineBusy),
         )

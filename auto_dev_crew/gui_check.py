@@ -12,6 +12,7 @@
 """
 
 from __future__ import annotations
+from auto_dev_crew import i18n as _i18n
 
 import json
 import subprocess
@@ -33,7 +34,7 @@ PAGE_TIMEOUT_MS = 20000
 def _open_http(url: str, timeout: float):
     """เปิด URL เฉพาะ http/https เท่านั้น — กัน scheme แปลก (file:, ftp:)"""
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
-        raise ValueError(f"อนุญาตเฉพาะ http/https URL: {url!r}")
+        raise ValueError(_i18n.t("อนุญาตเฉพาะ http/https URL: {p0}", p0=repr(url)))
     return urllib.request.urlopen(url, timeout=timeout)  # nosec B310 - scheme ถูกตรวจด้านบนแล้ว
 
 

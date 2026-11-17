@@ -83,7 +83,6 @@ class TestMissionControlCardWiring(unittest.TestCase):
             "/api/graceful-drain",
             "/api/context-slicer/preview",
             "/api/status",
-            'data-mode-btn',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, self.js)

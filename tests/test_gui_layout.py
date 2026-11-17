@@ -123,7 +123,7 @@ class TestGuiLayout(unittest.TestCase):
 
     def test_show_hide_key_button_has_aria_pressed(self):
         self.assertIn('aria-pressed="false"', HTML)
-        self.assertIn('aria-label="แสดงหรือซ่อนคีย์', HTML)
+        self.assertIn('aria-label="${i18n("แสดงหรือซ่อนคีย์")}', HTML)
 
 
     def test_key_inputs_have_accessible_name(self):
@@ -157,7 +157,7 @@ class TestGuiLayout(unittest.TestCase):
     def test_timing_in_issues_and_prs(self):
         self.assertIn("${when(p.createdAt)}", HTML)
         self.assertIn("${when(i.createdAt)}", HTML)
-        self.assertIn("<th>เวลาสร้าง</th>", HTML)
+        self.assertIn('<th>${i18n("เวลาสร้าง")}</th>', HTML)
 
     def test_crud_keys_ui_elements(self):
         html_content = (Path(__file__).resolve().parent.parent / "auto_dev_crew" / "static" / "index.html").read_text(encoding="utf-8")

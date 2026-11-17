@@ -29,6 +29,8 @@ from . import runner, multi_repo, todo_scan, ci_bootstrap, deep_scan, feature_ge
 from . import autonomous_upgrades, context_slicer, doctor, gui_patches, mcp_server, metrics, playground, routing
 from .redact import redact_secrets
 from . import keys, key_ping, providers, byop, byop_store, github_login
+from . import auth
+from http.cookies import SimpleCookie
 from .multi_repo import add_repo_to_config
 # หมายเหตุ: mcp_server import gui กลับ จึง import แบบ lazy ใน _api_mcp_call_preview เพื่อกัน circular import
 
@@ -49,6 +51,11 @@ def set_config_path(path) -> None:
 
 TOKEN = secrets.token_urlsafe(24)   # required on every POST (blocks drive-by requests from other sites)
 MAX_BODY_BYTES = 1024 * 1024        # largest POST body accepted (LOW-07)
+REQUIRE_LOGIN = False               # --require-login: every page and API needs a password session
+AUTH_FILE: Path | None = None       # where the password hash lives (set by main)
+SESSIONS = auth.SessionStore()
+LOGIN_LIMITER = auth.LoginLimiter()
+SESSION_COOKIE = "adc_session"
 
 
 def _engine_cfg_kw() -> dict:
@@ -1699,7 +1706,7 @@ class Handler(BaseHTTPRequestHandler):
         port = self.server.server_address[1]
         return origin in (f"http://127.0.0.1:{port}", f"http://localhost:{port}")
 
-    def _send(self, code: int, payload, ctype="application/json; charset=utf-8") -> None:
+    def _send(self, code: int, payload, ctype="application/json; charset=utf-8", extra_headers=None) -> None:
         try:
             data = payload if isinstance(payload, bytes) else (
                 payload.encode("utf-8") if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False).encode("utf-8"))
@@ -1707,10 +1714,69 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
             self.send_header("Cache-Control", "no-store")
+            for name, value in (extra_headers or {}).items():
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(data)
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass
+
+    def _session_token(self) -> str | None:
+        raw = self.headers.get("Cookie")
+        if not raw:
+            return None
+        jar = SimpleCookie()
+        try:
+            jar.load(raw)
+        except Exception:
+            return None
+        morsel = jar.get(SESSION_COOKIE)
+        return morsel.value if morsel else None
+
+    def _logged_in(self) -> bool:
+        return SESSIONS.is_valid(self._session_token())
+
+    def _redirect(self, location: str) -> None:
+        self.send_response(302)
+        self.send_header("Location", location)
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
+    def _auth_post(self, path: str) -> None:
+        """POST /api/login and /api/logout. They skip X-Token because the login page has no GUI token yet."""
+        ok_sec, sec_err = gui_patches.verify_request_security(self.headers, TOKEN, require_token=False)
+        if not ok_sec:
+            self._drain_small_body()
+            return self._send(403, {"error": sec_err})
+        if path == "/api/logout":
+            SESSIONS.revoke(self._session_token())
+            return self._send(200, {"ok": True}, extra_headers={"Set-Cookie": _session_cookie_header("", 0)})
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            return self._send(400, {"ok": False, "error": "Content-Length ไม่ถูกต้อง"})
+        if length < 0 or length > MAX_BODY_BYTES:
+            self.close_connection = True
+            return self._send(413, {"ok": False, "error": "ข้อมูลที่ส่งมาใหญ่เกินไป"})
+        try:
+            body = json.loads(self.rfile.read(length) or b"{}")
+        except ValueError:
+            return self._send(400, {"ok": False, "error": "รูปแบบข้อมูลไม่ถูกต้อง"})
+        key = self.client_address[0]
+        if LOGIN_LIMITER.is_locked(key):
+            return self._send(429, {"ok": False, "error": "พยายามผิดหลายครั้ง รอสักครู่แล้วลองใหม่"})
+        try:
+            stored = auth.load_password_hash(AUTH_FILE) if AUTH_FILE else None
+        except (OSError, ValueError):
+            stored = None
+        password = body.get("password") if isinstance(body, dict) else None
+        if stored and isinstance(password, str) and auth.verify_password(password, stored):
+            LOGIN_LIMITER.record_success(key)
+            token = SESSIONS.create()
+            return self._send(200, {"ok": True},
+                              extra_headers={"Set-Cookie": _session_cookie_header(token, auth.SESSION_TTL_SECONDS)})
+        LOGIN_LIMITER.record_failure(key)
+        return self._send(401, {"ok": False, "error": "รหัสผ่านไม่ถูกต้อง"})
 
     def do_GET(self) -> None:
         if not self._host_ok():
@@ -1719,7 +1785,14 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/api/byop/callback":
             # redirect กลับจาก enter.pollinations.ai เป็น cross-site จึงข้ามการเช็ก Sec-Fetch-Site ได้เฉพาะ path นี้
             # การป้องกันจริงคือ state ที่สร้างฝั่งเซิร์ฟเวอร์ (ใช้ครั้งเดียว) และ PKCE verifier
+            # cross-site redirect ไม่ส่ง cookie แบบ SameSite=Strict จึงต้องยกเว้นจาก session gate ด้วย
             return self._byop_callback(parse_qs(url.query))
+        if url.path == "/login":
+            return self._send(200, (STATIC / "login.html").read_bytes(), "text/html; charset=utf-8")
+        if REQUIRE_LOGIN and not self._logged_in():
+            if url.path == "/":
+                return self._redirect("/login")
+            return self._send(401, {"ok": False, "error": "ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน"})
         # endpoint ที่อ่านข้อมูลจาก repo ต้องมี token ด้วย (กันการอ่านจากสคริปต์ในเครื่องเดียวกันที่ไม่ใช่หน้า UI)
         needs_token = url.path in _GET_TOKEN_PATHS
         ok_sec, sec_err = gui_patches.verify_request_security(self.headers, TOKEN, require_token=needs_token)
@@ -1892,6 +1965,12 @@ class Handler(BaseHTTPRequestHandler):
         if not self._origin_ok():
             self._drain_small_body()
             return self._send(403, {"error": "Origin ไม่ถูกต้อง"})
+        post_path = urlparse(self.path).path
+        if post_path in ("/api/login", "/api/logout"):
+            return self._auth_post(post_path)
+        if REQUIRE_LOGIN and not self._logged_in():
+            self._drain_small_body()
+            return self._send(401, {"ok": False, "error": "ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน"})
         ok_sec, sec_err = gui_patches.verify_request_security(self.headers, TOKEN, require_token=True)
         if not ok_sec:
             self._drain_small_body()
@@ -1951,6 +2030,11 @@ class Handler(BaseHTTPRequestHandler):
             pass
 
 
+def _session_cookie_header(token: str, max_age: float) -> str:
+    """HttpOnly keeps scripts from reading it, Secure + SameSite=Strict keep it off cross-site requests."""
+    return f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age={int(max_age)}"
+
+
 def _clear_stale_slots() -> None:
     """A fresh GUI process owns no runner, so slot entries left in state/active_slots.json are stale.
 
@@ -1970,7 +2054,17 @@ def main() -> None:
     p.add_argument("--config", default=None, help="config file to read and edit (default: ROOT/config.yaml)")
     p.add_argument("--keep-slots", action="store_true",
                    help="ไม่ล้างสถานะ slot ตอนเริ่ม (ใช้เมื่อลูป runner เปิด GUI เองเพื่อตรวจ เพราะ runner อื่นอาจกำลังทำงานอยู่)")
+    p.add_argument("--require-login", action="store_true",
+                   help="ต้องล็อกอินด้วยรหัสผ่านก่อนใช้งานทุกหน้าและ API (ตั้งรหัสด้วย python -m auto_dev_crew.auth set-password)")
+    p.add_argument("--auth-file", default=None, help="ไฟล์เก็บ hash ของรหัสผ่าน (ค่าเริ่มต้น state/auth.json)")
     args = p.parse_args()
+    global REQUIRE_LOGIN, AUTH_FILE
+    if args.require_login:
+        AUTH_FILE = Path(args.auth_file) if args.auth_file else runner.STATE / "auth.json"
+        if auth.load_password_hash(AUTH_FILE) is None:
+            print("ยังไม่ได้ตั้งรหัสผ่าน ให้รัน: python -m auto_dev_crew.auth set-password", flush=True)
+            raise SystemExit(1)
+        REQUIRE_LOGIN = True
     if args.config:
         set_config_path(args.config)
     if not args.keep_slots:
