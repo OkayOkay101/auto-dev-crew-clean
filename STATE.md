@@ -1,7 +1,7 @@
 # STATE: auto-dev-crew-clean
 
 ID: B
-Updated 2026-11-18. Folder: `C:\Users\Smart\Documents\auto-dev-crew-clean` (no git remote). Nothing pushed.
+Updated 2026-11-18. Folder: `C:\Users\Smart\Documents\auto-dev-crew-clean`. Git remote `origin` = https://github.com/OkayOkay101/auto-dev-crew-clean (private), master pushed up to `f50cb13`.
 
 ## Goal
 Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI (Thai default).
