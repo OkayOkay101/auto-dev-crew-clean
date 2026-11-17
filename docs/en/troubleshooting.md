@@ -84,7 +84,7 @@ Checked against the code as of 2026-11-18.
 | 7 | `reserve_for_issues` has no effect | The key is in the config, but the running code does not read it (only tests do). | Removed 2026-11-18 |
 | 8 | Default for `max_fix_attempts` differs from the config | Code uses 2 when unset; the config sets 3. | The config value applies |
 | 9 | The guard hook does not single out force-push | In autonomous mode it blocks all `git push`. | Intentional or not, not yet decided |
-| 10 | Some README wording about branch `self/*` | Agents create branches named `ai/...`. `self/*` is used only in revert plans. | Documentation fixed in the Thai README; English docs follow the code |
+| 10 | Some README wording about branch `self/*` | Agents create branches named `ai/...`. `self/*` is used only in revert plans. | Fixed: the docs say `self/*` is used only in revert plans. |
 | 11 | `merge_level` values 1, 2, 3 | Traced: 1 = human reviews, 2 = auto-merge once CI passes and no risky files, 3 = auto-merge once CI passes. | See architecture §8.1 |
 | 12 | The GUI is not tested in every browser or screen size | Tested in a local browser only. | Testing limit |
 | 13 | Gates 1–4 | Traced against the code (see architecture §6). Gate 3 applies to every issue run, and the per-finding create button skips gate 4. | See row 16 |

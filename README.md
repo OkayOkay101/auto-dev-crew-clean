@@ -123,14 +123,14 @@ If the repo contains `AGENTS.md`, `CLAUDE.md`, or `.github/copilot-instructions.
 เอเจนต์เขียนโค้ดเบื้องหลังแทน Jules — รับงานจาก GitHub issue แล้วเปิด PR, และเมื่อคิวว่างให้ตัวละคร ⚡🛡️🎨🧪 หาจุดปรับปรุงเอง
 ใช้ **Antigravity CLI (`agy`)** บัญชี Google AI Pro เป็นหลัก และรองรับ **Multi-Engine Failover (F6)** สลับไปยัง OpenCode หรือ NVIDIA Build (ค่าหลัก) และ Pollinations.ai หรือ Mistral (สำรอง) อัตโนมัติเมื่อโควตาหมด งบ 0 บาท
 
-ดูข้อกำหนดทั้งหมดใน [REQUIREMENTS.md](REQUIREMENTS.md)
+ดูข้อกำหนดทั้งหมดใน [REQUIREMENTS.md](REQUIREMENTS.md) (ร่างเก่า เก็บไว้เป็นประวัติการออกแบบ ดูหมายเหตุท้ายไฟล์)
 คำอธิบายการทำงานอย่างละเอียด การใช้ AI และสถานะ GUI ดูที่ [docs/ABOUT.md](docs/ABOUT.md)
 English: [English section](#english) · English docs (About, configuration, API, and more): [docs/en/README.md](docs/en/README.md)
 
 ## ติดตั้ง (ครั้งเดียว)
 1. ติดตั้ง Python 3.12+, Git, GitHub CLI (`gh auth login`) และ Antigravity CLI (ล็อกอินบัญชี AI Pro แล้ว)
 2. `pip install -r requirements.txt`
-3. แก้ `config.yaml` (repo, โหมด merge, ตัวละคร)
+3. แก้ `config.yaml` (repo, โหมด merge, ตัวละคร) เริ่มจาก `config.example.yaml` ซึ่งเป็นไฟล์ต้นแบบที่ track ใน git
 
 ## วิธีสั่งงาน
 - เปิด issue ใน repo เป้าหมาย แล้วติดป้าย **`ai-task`** (ต้องเป็นบัญชี `owner` ใน config เท่านั้น)
@@ -198,7 +198,7 @@ python -m auto_dev_crew --loop                    # ทำต่อเนื่�
 judge คือ AI ที่ให้คะแนน diff ผ่านเมื่อคะแนนถึงเกณฑ์และผ่านเงื่อนไขความปลอดภัย/ความตรงกับงาน ต้องมีคีย์ที่มีบทบาท `judge` (ระบบจะเลือกคีย์ตามบทบาท) ปิดได้ที่หน้า ตั้งค่า
 
 ## Harness settings
-ตั้งค่าเพิ่มเติมใต้ `context` ใน `config.yaml` (ไม่ต้องแก้ไฟล์ — ค่าเริ่มต้นอยู่ในโค้ด)
+ตั้งค่าเพิ่มเติมใต้ `context`, `loop` และ `routing` ใน `config.yaml` (ไม่ต้องแก้ไฟล์ — ค่าเริ่มต้นอยู่ในโค้ด)
 - `context.repo_map` (ค่าเริ่มต้น `true`) — แนบโครงสร้างโค้ด Python (ชื่อฟังก์ชัน/คลาสและ signature) ลงใน prompt; ตั้งเป็น `false` เพื่อปิด
 - `context.repo_map_chars` (ค่าเริ่มต้น `6000`) — จำนวนตัวอักษรสูงสุดของ repo map
 - `loop.require_test_for_bugfix` (ค่าเริ่มต้น `true`) — งานแก้บั๊ก (issue ที่มีคำว่า bug/fix) ที่ไม่ได้แก้ไฟล์เทสต์เลย จะได้เอเจนต์เพิ่มเทสต์ regression อีก 1 รอบก่อนประเมินผล; ตั้งเป็น `false` เพื่อปิด

@@ -97,7 +97,7 @@ python -m auto_dev_crew --scan-todos OkayOkay101/cyberpunk-pomodoro
 | `--transport` | `stdio` (เท่านั้น) | ใช้ JSON-RPC 2.0 ผ่าน stdin/stdout |
 | `--config <path>` | `config.yaml` | ไฟล์ตั้งค่าทางเลือก |
 
-เซิร์ฟเวอร์นี้เปิด tool แบบอ่านอย่างเดียวสำหรับ MCP client เช่น สถานะ daemon, สถานะช่องทำงาน, `merge_mode` และสุขภาพของ engine (F6) ตัวอย่างหนึ่งคือสรุป PR ที่ merge แล้วข้ามคืน
+เซิร์ฟเวอร์นี้เปิด tool แบบอ่านอย่างเดียวสำหรับ MCP client เช่น สถานะ daemon, สถานะช่องทำงาน, `merge_mode` และสุขภาพของ engine (F6) ตัวอย่างหนึ่งคือสรุป PR ที่ merge แล้วข้ามคืนพร้อมคำขออนุมัติที่ค้าง ตั้งค่า MCP client ตามเอกสารของ client นั้น
 
 ---
 

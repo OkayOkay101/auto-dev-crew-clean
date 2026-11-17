@@ -80,7 +80,7 @@ The merge level for a plan can be set when it is created (per-repository `merge_
 - Branch names: `ai/issue-<number>-<timestamp>` for issues, or `ai/<persona>-<timestamp>` for personas.
 - Label: `ai-generated`.
 - Titles carry an icon that depends on the job type (`ICONS` in the code).
-- The body is built by `pr_body.py`.
+- The body is built by `pr_body.py` (the full list of what it includes has not been traced line by line).
 
 Reviewers should check:
 - Whether the diff matches the issue.

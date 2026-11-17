@@ -43,7 +43,7 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 ### คีย์และ engine
 | path | ความหมาย |
 |---|---|
-| `/api/keys` | รายการคีย์และสถานะ (ตรวจในโค้ดว่าแต่ละฟิลด์คืออะไร) |
+| `/api/keys` | รายการคีย์และสถานะ |
 | `/api/key-roles` | การจับคู่บทบาทของคีย์ |
 | `/api/engines` | รายการ engine |
 | `/api/engine` | ข้อมูล engine เดี่ยว |
@@ -58,8 +58,7 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 | `/api/byop/pool` | พูลคีย์ (ต้องมี token) |
 
 ### GitHub
-| path | ความหมาย |
-|---|---|
+ไม่มี endpoint ของ GitHub เหลือแล้ว (`/api/github/*` ถูกลบเมื่อ 2026-11-18)
 
 ### repo และงาน
 | path | ความหมาย |
@@ -100,7 +99,7 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 |---|---|
 | `/api/repos/add` | เพิ่ม repo |
 | `/api/repos/remove` | เอา repo ออกจาก config |
-| `/api/repos/delete` | ลบ repo (ตรวจสอบก่อนที่ GUI ส่งมา) |
+| `/api/repos/delete` | เอา repo ออกจากระบบ AI (ไม่ลบโค้ดบน GitHub; หน้าเว็บถามยืนยันก่อน) |
 | `/api/repos/toggle` | เปิดหรือปิด repo |
 | `/api/repos/scan` | สแกน repo |
 | `/api/repos/bootstrap-ci` | ติดตั้ง CI ให้ repo |
@@ -163,9 +162,8 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 | `/api/mcp/preview` | ดูตัวอย่างข้อมูลของ MCP |
 | `/api/playground/reset` | รีเซ็ต playground |
 
-### GitHub (endpoint ที่ UI ไม่ได้ใช้ รอการตัดสินใจ)
-| path | ความหมาย |
-|---|---|
+### GitHub
+ไม่มี endpoint ของ GitHub เหลือแล้ว (`/api/github/*` ถูกลบเมื่อ 2026-11-18)
 
 ### ระบบ
 | path | ความหมาย |
@@ -192,5 +190,5 @@ curl -X POST http://127.0.0.1:8765/api/stop -H "X-Token: <ค่าจากห�
 ## 5. ข้อควรระวัง
 
 - endpoint ที่สั่งงานจริงอาจใช้โควตาหรือเปลี่ยน GitHub ได้ ให้ใช้ `--dry-run` หรือหน้าจอ GUI เมื่อยังไม่แน่ใจ
-- ลบ repo และลบคีย์ไม่มีการกู้คืน
+- การลบคีย์ไม่มีการกู้คืน `/api/repos/delete` เอา repo ออกจากระบบ AI เท่านั้น ไม่ลบโค้ดบน GitHub
 - ห้ามเปิดเซิร์ฟเวอร์ให้เครือข่ายภายนอกโดยไม่มีการป้องกันเพิ่ม

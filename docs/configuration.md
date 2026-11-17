@@ -59,7 +59,7 @@
 | คีย์ | ค่าในไฟล์ | ความหมาย |
 |---|---|---|
 | `enabled` | `true` | เปิดการจัดประเภท issue |
-| `use_llm_fallback` | `false` | เมื่อจัดประเภทด้วยป้ายไม่ได้ ให้ใช้ LLM ช่วยตัดสินหรือไม่ ค่าปิดหมายถึงใช้เฉพาะกฎป้าย |
+| `use_llm_fallback` | `false` | เมื่อจัดประเภทด้วยป้ายไม่ได้ ให้ใช้ LLM ช่วยตัดสินหรือไม่ ค่าปิดหมายถึงใช้เฉพาะป้ายและ heuristic |
 | `fast_labels` | `quick-fix, typo, docs, documentation, minor, small, lint` | ป้ายที่ถือว่าเป็นงานเล็ก เร็ว |
 | `heavy_labels` | `feature, architecture, refactor, breaking, complex, security` | ป้ายที่ถือว่าเป็นงานใหญ่ (เส้นทาง `heavy`) งาน persona `sentinel` ถูกจัดเป็น heavy เสมอ |
 
@@ -111,7 +111,7 @@ engine ที่เปิดใช้อยู่ในไฟล์ตอนน�
 | คีย์ | ค่า | ความหมาย |
 |---|---|---|
 | `task` | `ai-task` | ป้ายงานที่ให้เอเจนต์หยิบ |
-| `pause` | `ai-pause` | ถ้ามี issue ที่เปิดอยู่ติดป้ายนี้ อีกบางรายการ runner จะหยุดทำงานใหม่ |
+| `pause` | `ai-pause` | ถ้ามี issue ที่เปิดอยู่ติดป้ายนี้ runner จะไม่เริ่มงานใหม่ในรีโปนั้น |
 | `working` | `ai-working` | ติดระหว่างที่เอเจนต์กำลังทำงานนั้น |
 | `failed` | `ai-failed` | ติดเมื่อทำงานไม่สำเร็จ |
 | `pr` | `ai-generated` | ป้ายที่ติดบน PR ที่เอเจนต์เปิด |
@@ -164,7 +164,7 @@ repo ที่มีในไฟล์ตอนนี้: `OkayOkay101/cyberpunk
 
 | ส่วน | คีย์ | ค่าในไฟล์ | ความหมาย |
 |---|---|---|---|
-| `autonomous` | `max_turns_per_session` | `40` | จำนวนรอบสูงสุดของโหมด autonomous ต่อหนึ่งเซสชัน (ใช้โดย `scripts/autonomous_common.py`) |
+| `autonomous` | `max_turns_per_session` | `40` | จำนวนรอบสูงสุดของโหมด autonomous ใน Claude Code ต่อหนึ่งเซสชัน (ใช้โดย `scripts/autonomous_common.py`) |
 | `todo_scan` | `max_issues_per_run` | `5` | จำนวน issue สูงสุดที่สร้างจากแท็ก `[AI-TODO]` ต่อการรันหนึ่งครั้ง |
 | `todo_scan` | `schedule_minutes` | `0` | สแกนซ้ำทุกกี่นาที `0` หรือไม่ตั้ง = ไม่สแกนตามเวลา |
 | `auto_issue` | `enabled` | `false` | สร้าง issue จากผล deep-scan อัตโนมัติหรือไม่ |

@@ -71,7 +71,7 @@ python scripts/autonomous_ctl.py status
 ```bash
 python -m pytest -q -p no:cacheprovider
 ```
-ผลที่บันทึกล่าสุด (2026-11-18): **1442 passed, 6 skipped** (ดู `STATE.md`)
+ผลที่บันทึกล่าสุด (2026-11-18): **1401 passed, 6 skipped** (ดู `STATE.md`)
 
 โฟลเดอร์ `tests/` มีไฟล์ประมาณ 170 รายการ รวมไฟล์เทสต์และไฟล์สนับสนุนบางตัว
 

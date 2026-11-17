@@ -58,8 +58,7 @@ A missing or wrong token is refused (checked in `gui_patches.verify_request_secu
 | `/api/byop/pool` | Key pool (needs token). |
 
 ### GitHub
-| Path | Meaning |
-|---|---|
+No GitHub endpoints remain (`/api/github/*` was removed on 2026-11-18).
 
 ### Repositories and jobs
 | Path | Meaning |
@@ -100,7 +99,7 @@ Every POST needs `X-Token`. The table below groups endpoints by purpose. The sys
 |---|---|
 | `/api/repos/add` | Add a repository. |
 | `/api/repos/remove` | Remove a repository from the config. |
-| `/api/repos/delete` | Delete a repository entry (the page asks first). |
+| `/api/repos/delete` | Remove a repository from the AI system (does not delete code on GitHub; the page asks first). |
 | `/api/repos/toggle` | Enable or disable a repository. |
 | `/api/repos/scan` | Scan a repository. |
 | `/api/repos/bootstrap-ci` | Install CI in a repository. |
@@ -163,9 +162,8 @@ Every POST needs `X-Token`. The table below groups endpoints by purpose. The sys
 | `/api/mcp/preview` | Preview MCP data. |
 | `/api/playground/reset` | Reset the playground. |
 
-### GitHub (the UI does not use these; decision pending)
-| Path | Meaning |
-|---|---|
+### GitHub
+No GitHub endpoints remain (`/api/github/*` was removed on 2026-11-18).
 
 ### System
 | Path | Meaning |
@@ -192,5 +190,5 @@ curl -X POST http://127.0.0.1:8765/api/stop -H "X-Token: <value from the page>" 
 ## 5. Cautions
 
 - Endpoints that start real work can use quota or change GitHub. When unsure, use `--dry-run` or the GUI.
-- Deleting a repository or a key cannot be undone.
+- Deleting a key cannot be undone. `/api/repos/delete` only removes a repository from the AI system; it does not delete code on GitHub.
 - Do not expose the server to an external network without additional protection.
