@@ -1,7 +1,7 @@
 # เกี่ยวกับ Auto Dev Crew
 
 เอกสารนี้อธิบายว่าโปรแกรมทำงานอย่างไร ใช้ AI ตรงไหนบ้าง และตอนนี้ GUI ยังไม่สมบูรณ์ในเรื่องใด
-รายละเอียดการติดตั้งและคำสั่งอยู่ใน [README.th.md](../README.th.md) (ฉบับภาษาอังกฤษ: [README.md](../README.md)) ข้อกำหนดอยู่ใน [REQUIREMENTS.md](../REQUIREMENTS.md)
+รายละเอียดการติดตั้งและคำสั่งอยู่ใน [README_TH.md](../README_TH.md) (ฉบับภาษาอังกฤษ: [README.md](../README.md)) ข้อกำหนดอยู่ใน [REQUIREMENTS.md](../REQUIREMENTS.md)
 
 > สถานะ: **โครงการทดลอง / ยังไม่ production** รีโพนี้เป็น private
 
