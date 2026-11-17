@@ -15,7 +15,7 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - [x] B6 endpoint `/api/github/*` และ `github_login.py` ที่ UI ไม่ใช้: ลบแล้ว 2026-11-18 (อนุมัติโดยผู้ใช้)
 - [x] B7 ลบ route `/classic` แล้ว 2026-11-18 (อนุมัติโดยผู้ใช้) — ไฟล์ `static/index.html` ยังอยู่เพราะ test_gui_layout และ test_api_crud ยังอ่านไฟล์นี้ (ไม่ถูกเสิร์ฟ)
 - [x] B8 ลบ `deploy/oracle/` และ config.yaml ที่ผูกกับ Oracle ออกจาก git (commit `6d9e186`); เหลือ `config.example.yaml` เป็นไฟล์ tracked
-- [x] B9 ทำเอกสารให้ตรงกับโค้ด: README หลักเป็นภาษาอังกฤษ, ภาษาไทยอยู่ทั้งใน README.md (ส่วนท้าย) และ `README.th.md`; GitHub description เป็นภาษาอังกฤษ (2026-11-18)
+- [x] B9 ทำเอกสารให้ตรงกับโค้ด: README หลักเป็นภาษาอังกฤษ, README.md เป็นอังกฤษอย่างเดียว ภาษาไทยอยู่ใน `README_TH.md` (`README.th.md` ถูกลบแล้ว `f32b0e2`); GitHub description เป็นภาษาอังกฤษ (2026-11-18)
 - [ ] B10 ให้คนที่อ่านภาษาอังกฤษได้ตรวจ `docs/en/` และ README.md ส่วนอังกฤษ (ยังไม่ได้ทำ; ผู้ช่วยทำเองไม่ได้)
 - [ ] B11 เทียบเอกสารไทย/อังกฤษทีละประโยค (ตรวจแล้วแค่ส่วนที่มีความต่างชัดเจนและ token ในโค้ด)
 
@@ -32,7 +32,7 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 ## Files
 - Core: `auto_dev_crew/i18n.py`, `i18n_routes.py`, `locales/en.json`, `static/i18n.js`
 - gui.py: `_inject_adc_init`, `set_config_path`, route `/api/i18n`, `/api/settings/language`
-- README: `README.md` (อังกฤษ + ไทย), `README.th.md` (ไทย)
+- README: `README.md` (อังกฤษ), `README_TH.md` (ไทย)
 - Handoff: `docs/HANDOFF.md`
 - Plan: `docs/superpowers/plans/2026-11-18-bilingual-th-en.md`; spec: `docs/superpowers/specs/2026-11-18-bilingual-th-en-design.md`
 
