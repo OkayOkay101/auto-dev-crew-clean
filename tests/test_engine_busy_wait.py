@@ -19,8 +19,22 @@ def _single_engine_cfg(max_wait_minutes: float = 15, retry_seconds: float = 30) 
 
 @pytest.fixture
 def fake_sleep(monkeypatch):
+    # time.sleep เป็นของโมดูล time ทั้งตัว (global) จึงบันทึกเฉพาะ sleep ของเทรดหลัก
+    # เทรดพื้นหลังจากเทสต์ก่อนหน้าจะได้ sleep จริง ไม่ปนเข้าลิสต์
+    import threading
+    import time as _time
+
     sleeps: list[float] = []
-    monkeypatch.setattr(runner.time, "sleep", lambda s: sleeps.append(s))
+    real_sleep = _time.sleep
+    main_thread = threading.main_thread()
+
+    def _sleep(seconds):
+        if threading.current_thread() is main_thread:
+            sleeps.append(seconds)
+        else:
+            real_sleep(seconds)
+
+    monkeypatch.setattr(runner.time, "sleep", _sleep)
     return sleeps
 
 
@@ -84,3 +98,24 @@ def test_real_job_error_still_recorded(monkeypatch):
     job = runner.Job("issue", "6", "title", "body")
     runner._handle_job_exception(RuntimeError("boom"), job, {"labels": {"failed": "f"}}, "o/r", False, slot_id=1)
     assert appended and appended[0]["state"] == "ERROR"
+
+
+def test_fake_sleep_ignores_sleeps_from_background_threads(fake_sleep):
+    # regression: an earlier test's background thread calling time.sleep must not leak into this list
+    import threading
+    import time
+
+    stop = threading.Event()
+
+    def _ticker():
+        while not stop.is_set():
+            time.sleep(0.001)
+
+    t = threading.Thread(target=_ticker, daemon=True)
+    t.start()
+    try:
+        time.sleep(0.05)  # ตัวจริงของเทสต์ ต้องถูกบันทึก
+    finally:
+        stop.set()
+        t.join(timeout=2)
+    assert fake_sleep == [0.05]
