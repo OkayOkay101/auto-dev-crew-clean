@@ -1,45 +1,45 @@
 # STATE: auto-dev-crew-clean
 
-Updated 2026-11-18. Folder: `C:\Users\Smart\Documents\auto-dev-crew-clean` (no git remote). Nothing committed or pushed.
+ID: B
+Updated 2026-11-18. Folder: `C:\Users\Smart\Documents\auto-dev-crew-clean` (no git remote). Nothing pushed.
 
 ## Goal
-Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner for AI engines. Thai and English for web UI and backend.
+Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI (Thai default).
 
 ## Open
-- [ ] Wire `gui.py` for language: inject `window.ADC_INIT` in `/`, `/classic`, login; routes `GET /api/i18n`, `POST /api/settings/language` (logic in `i18n_routes.py`); translate ~146 Thai strings there. Needs approval (login work uncommitted in same file). — user · needs-decision
-- [ ] Commit login work (`gui.py`, `auth.py`, `public_view.py`, `login.html`, `deploy/`, `tests/test_auth.py`) — user · needs-decision
-- [ ] Login page and `auth.py` still Thai (login work, untouched) — user
-- [ ] Revoke Pollinations key at enter.pollinations.ai — user
-- [ ] Upload to GitHub: private or public; no git remote yet — user · needs-decision
-- [ ] GitHub connect endpoints (`/api/github/*`, `github_login.py`) unused by UI: keep or delete — user · needs-decision
+- [ ] B1 ขออนุมัติแปลหน้า login (`static/login.html`), ข้อความ `auth.py`, และฝัง ADC_INIT ในหน้า login — user · P2 · needs-approval
+- [x] B2 แปลข้อความ UI ใน gui.py (30 จุด, ไม่แตะ log/PR body/print) — เสร็จ 2026-11-18 (tests/test_gui_user_messages_i18n.py)
+- [x] B3 แปลข้อความ "token ไม่ถูกต้อง" ใน `gui_patches.py` — เสร็จ 2026-11-18 (เทสต์ใหม่ใน test_mission_control_and_security.py)
+- [x] B4 เพิกถอน Pollinations key ที่ enter.pollinations.ai — user ทำแล้ว 2026-11-18
+- [x] B5 อัปโหลด GitHub แบบ private — สร้าง repo private และ push 2026-11-18 (ตรวจ secret ใน working tree และ history แล้ว: ไม่พบ key จริง)
+- [ ] B6 endpoint `/api/github/*` และ `github_login.py` ที่ UI ไม่ใช้: เก็บหรือลบ — user · P3 · needs-approval
+- [ ] B7 เก็บ `/classic` หรือลบ — user · P3 · needs-approval
 
 ## In progress
-- Bilingual: tests pass; web UI checked in browser. Server on 8765 runs OLD code.
+- ไม่มี งานที่ค้างอยู่ระหว่างทำ
 
 ## Done (verified)
-- Bilingual core in place (`i18n.py`, `locales/en.json` 1,588 keys, `static/i18n.js`). Old dictionary removed.
-- Backend messages wrapped in ~20 modules (not gui/auth/github_login/quality_gates/pr_body).
-- Full pytest: 1436 passed, 6 skipped.
-- Browser checked via test proxy (no gui.py change): switch works both ways. Leftover Thai = user content and gui.py messages.
-- Design: `docs/superpowers/specs/2026-11-18-bilingual-th-en-design.md` (sec. 13-14). Plan: `docs/superpowers/plans/2026-11-18-bilingual-th-en.md`.
+- Commits: `60f941c` (login + ฐาน i18n), `badfc44` (ADC_INIT, /api/i18n, /api/settings/language, แปล 46 ข้อความ error ฝั่ง backend), `890be71` (แก้ flaky test fake_sleep)
+- pytest เต็มชุด: 1442 passed, 6 skipped
+- ทดสอบเบราว์เซอร์พอร์ต 8766 แล้ว: UI และ error backend เป็นอังกฤษ, config จริงไม่ถูกแก้
+- Restart GUI พอร์ต 8765 แล้ว (PID 15456, โค้ดใหม่, ADC_INIT และ /api/i18n ตอบปกติ)
 
 ## Files
-- New: `auto_dev_crew/i18n.py`, `i18n_routes.py`, `locales/en.json`, `tests/test_i18n_*.py`, `tests/test_locales_parity.py`
-- Changed: `static/i18n.js`, `index_sidebar.html`, `index.html`, `mission_control.js`, backend modules, 3 test files
-- Deleted: `static/i18n_en.js`
+- Core: `auto_dev_crew/i18n.py`, `i18n_routes.py`, `locales/en.json`, `static/i18n.js`
+- gui.py: `_inject_adc_init`, `set_config_path`, route `/api/i18n`, `/api/settings/language`
+- Plan: `docs/superpowers/plans/2026-11-18-bilingual-th-en.md`; spec: `docs/superpowers/specs/2026-11-18-bilingual-th-en-design.md`
 
 ## How to check
-- `python -m pytest -q` (expect 1436 passed, 6 skipped)
-- `python -m auto_dev_crew.gui --port 8765`, open http://127.0.0.1:8765/, switch language in Settings.
-- Restart 8765 after the gui.py step (Ctrl-C, then start again).
+- `python -m pytest -q -p no:cacheprovider` (expect 1442 passed, 6 skipped)
+- เปิดเว็บ http://127.0.0.1:8765/ แล้วสลับภาษาใน Settings (`#langSel`)
+- restart: python -m auto_dev_crew.gui --port 8765
 
 ## Decisions (2026-11-18, user)
 - Oracle Cloud dropped; use VPS or home PC + Cloudflare Tunnel.
 - Simple mode (โหมดง่าย) removed completely.
 - Pollinations is only an AI model provider here, not a hosting platform.
-- Bilingual approach B. Defaults: language in `config.yaml` key `ui_language` (default `th`); AI prompts, logs, PR bodies stay Thai.
+- Bilingual approach B: key = ข้อความไทย, `ui_language` ใน config.yaml (default `th`).
+- AI prompts, logs, PR bodies stay Thai.
 
 ## Summary
-- ระบบสองภาษาทำงานในหน้าเว็บและ backend ยกเว้น gui.py และหน้า login
-- รอผู้ใช้อนุมัติแก้ gui.py และ commit งานล็อกอิน
-- เทสผ่าน 1436 และทดสอบเบราว์เซอร์แล้วทั้งสองภาษา
+- สองภาษาใช้งานได้; เหลือ B1 (หน้า login), B6, B7 รอผู้ใช้ตัดสิน

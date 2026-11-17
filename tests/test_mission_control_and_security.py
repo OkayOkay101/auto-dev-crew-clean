@@ -51,6 +51,15 @@ class TestGuiSecurityPatches(unittest.TestCase):
         )
         self.assertTrue(ok_good)
 
+    def test_invalid_token_message_follows_ui_language(self):
+        bad = {"Sec-Fetch-Site": "same-origin", "X-Token": "wrong"}
+        with mock.patch("auto_dev_crew.i18n.current_lang", return_value="en"):
+            _, msg_en = gui_patches.verify_request_security(bad, "tok123", require_token=True)
+        self.assertEqual(msg_en, "Invalid token")
+        with mock.patch("auto_dev_crew.i18n.current_lang", return_value="th"):
+            _, msg_th = gui_patches.verify_request_security(bad, "tok123", require_token=True)
+        self.assertEqual(msg_th, "token ไม่ถูกต้อง")
+
     def test_resolve_safe_worktree_path_blocks_outside_and_secret_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             work_root = Path(tmp) / "work"

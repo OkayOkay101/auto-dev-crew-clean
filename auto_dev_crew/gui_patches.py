@@ -87,7 +87,7 @@ def verify_request_security(
             supplied.encode("utf-8"),
             expected_token.encode("utf-8"),
         ):
-            return False, "token ไม่ถูกต้อง"
+            return False, _i18n.t("token ไม่ถูกต้อง")
     return True, ""
 
 

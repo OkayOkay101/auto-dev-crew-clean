@@ -503,8 +503,8 @@ def system_activity_summary(cfg: dict, slots: dict, repos: list[dict], history: 
         return {
             "state": "working",
             "is_all_done": False,
-            "title": f"กำลังทำงาน ({active_count} ช่อง)",
-            "message": f"มีงานกำลังประมวลผลอยู่ในขณะนี้ {active_count} ช่อง",
+            "title": _i18n.t("กำลังทำงาน ({p0} ช่อง)", p0=active_count),
+            "message": _i18n.t("มีงานกำลังประมวลผลอยู่ในขณะนี้ {p0} ช่อง", p0=active_count),
             "persona_resting": False,
             "rest_remaining_minutes": 0,
             "rest_time_str": "",
@@ -514,7 +514,7 @@ def system_activity_summary(cfg: dict, slots: dict, repos: list[dict], history: 
     elif persona_resting and queued_issues == 0:
         hours = rest_remaining_minutes // 60
         mins = rest_remaining_minutes % 60
-        time_str = f"{hours} ชม. {mins} นาที" if hours > 0 else f"{mins} นาที"
+        time_str = _i18n.t("{p0} ชม. {p1} นาที", p0=hours, p1=mins) if hours > 0 else _i18n.t("{p0} นาที", p0=mins)
         return {
             "state": "all_done",
             "is_all_done": True,
@@ -833,7 +833,7 @@ def _api_deep_scan(body: dict, cfg: dict) -> dict:
     try:  # feature plans (ai-plan) are on by default; a failure must not hide the scan result
         result["feature_plans"] = _feature_cycle(repo, cfg, repo_dir, budget, engine)
     except Exception as exc:  # noqa: BLE001
-        result["feature_plans"] = {"ran": True, "errors": [redact_secrets(f"สร้างแผนฟีเจอร์ไม่สำเร็จ: {exc}")]}
+        result["feature_plans"] = {"ran": True, "errors": [redact_secrets(_i18n.t("สร้างแผนฟีเจอร์ไม่สำเร็จ: {p0}", p0=exc))]}
     label = (cfg.get("labels") or {}).get("task", "ai-task")
 
     def verify(f):  # ด่าน 4: ตรวจซ้ำกับไฟล์จริงก่อนสร้าง issue (ดู docs/draft-quality-gates.md)
@@ -844,7 +844,7 @@ def _api_deep_scan(body: dict, cfg: dict) -> dict:
             repo, cfg, runner.STATE, result.get("findings", []), label=label, verify=verify)
     except Exception as exc:
         result["auto_issue"] = {"ran": True, "created": 0, "skipped": 0,
-                                "errors": [redact_secrets(f"auto-issue ล้มเหลว: {exc}")]}
+                                "errors": [redact_secrets(_i18n.t("auto-issue ล้มเหลว: {p0}", p0=exc))]}
     result["calls_used"] = budget.used  # after feature plans and verify, so it counts every call of the run
     return result
 
@@ -857,7 +857,7 @@ def _deep_scan_view(repo: str, cfg: dict, data: dict | None) -> dict | None:
     try:
         index = deep_scan.cached_issue_index(repo, label)
     except Exception as exc:  # noqa: BLE001 — the panel must still load when GitHub is down
-        data["issue_state_error"] = redact_secrets(f"อ่านสถานะ issue ไม่สำเร็จ: {exc}")
+        data["issue_state_error"] = redact_secrets(_i18n.t("อ่านสถานะ issue ไม่สำเร็จ: {p0}", p0=exc))
         return data
     return deep_scan.with_issue_state(data, index)
 
@@ -876,7 +876,7 @@ def _feature_cycle(repo: str, cfg: dict, repo_dir: Path, budget: deep_scan.CallB
         proposals = feature_gen.propose(repo, cfg, repo_dir, call_repo, gaps=gaps, roadmap=roadmap)
     except Exception as exc:  # noqa: BLE001 — bad model output is reported, not hidden as "0 plans"
         result = {"ran": True, "proposed": 0, "created": 0, "skipped": 0, "urls": [],
-                  "errors": [redact_secrets(f"เสนอฟีเจอร์ไม่สำเร็จ: {exc}")]}
+                  "errors": [redact_secrets(_i18n.t("เสนอฟีเจอร์ไม่สำเร็จ: {p0}", p0=exc))]}
         feature_gen.save_last(runner.STATE, repo, result)
         return result
     auto_n = s["auto_approve_max"] if s["approval_mode"] == "auto" else 0
@@ -898,7 +898,7 @@ def _api_feature_gen_propose(body: dict, cfg: dict) -> dict:
     try:
         return {"ok": True, **_feature_cycle(repo, cfg, repo_dir, budget, engine), "calls_used": budget.used}
     except Exception as exc:  # noqa: BLE001
-        return {"ok": False, "error": redact_secrets(f"เสนอฟีเจอร์ไม่สำเร็จ: {exc}")}
+        return {"ok": False, "error": redact_secrets(_i18n.t("เสนอฟีเจอร์ไม่สำเร็จ: {p0}", p0=exc))}
 
 
 def _api_feature_gen_view(repo: str, cfg: dict) -> dict:
@@ -911,7 +911,7 @@ def _api_feature_gen_view(repo: str, cfg: dict) -> dict:
                                      "--state", "open", "--limit", "100", "--json", "number,title,url") or "[]")
         approved = {i.get("number") for i in feature_gen.approved_plan_issues(repo)}
     except Exception as exc:  # noqa: BLE001
-        view["error"] = redact_secrets(f"อ่านแผนจาก GitHub ไม่สำเร็จ: {exc}")
+        view["error"] = redact_secrets(_i18n.t("อ่านแผนจาก GitHub ไม่สำเร็จ: {p0}", p0=exc))
         return view
     view["plans"] = [{**p, "approved": p.get("number") in approved} for p in plans]
     return view
@@ -939,12 +939,12 @@ def _api_feature_gen_settings(body: dict, cfg: dict) -> dict:
     for key in ("enabled", "whole_repo", "roadmap", "scan_gaps"):
         if key in body:
             if not isinstance(body[key], bool):
-                raise ValueError(f"{key} ต้องเป็น true หรือ false")
+                raise ValueError(_i18n.t("{p0} ต้องเป็น true หรือ false", p0=key))
             flags[key] = body[key]
     if "max_proposals" in body:
         mp = body["max_proposals"]
         if isinstance(mp, bool) or not isinstance(mp, int) or not 1 <= mp <= feature_gen.MAX_PROPOSALS_PER_REPO:
-            raise ValueError(f"max_proposals ต้องเป็นจำนวนเต็ม 1–{feature_gen.MAX_PROPOSALS_PER_REPO}")
+            raise ValueError(_i18n.t("max_proposals ต้องเป็นจำนวนเต็ม 1–{p0}", p0=feature_gen.MAX_PROPOSALS_PER_REPO))
         flags["max_proposals"] = mp
     if "approval_mode" in body:
         if body["approval_mode"] not in feature_gen.APPROVAL_MODES:
@@ -953,7 +953,7 @@ def _api_feature_gen_settings(body: dict, cfg: dict) -> dict:
     if "auto_approve_max" in body:
         am = body["auto_approve_max"]
         if isinstance(am, bool) or not isinstance(am, int) or not 1 <= am <= feature_gen.MAX_PROPOSALS_PER_REPO:
-            raise ValueError(f"auto_approve_max ต้องเป็นจำนวนเต็ม 1–{feature_gen.MAX_PROPOSALS_PER_REPO}")
+            raise ValueError(_i18n.t("auto_approve_max ต้องเป็นจำนวนเต็ม 1–{p0}", p0=feature_gen.MAX_PROPOSALS_PER_REPO))
         flags["auto_approve_max"] = am
     updates: dict = {}
     if flags:
@@ -980,7 +980,7 @@ def _api_feature_gen_approve(body: dict, cfg: dict) -> dict:
     runner.gh("issue", "edit", str(number), "-R", repo, "--add-label", feature_gen.APPROVED_LABEL)
     summary = feature_gen.enqueue_approved(repo, cfg)
     return {"ok": True, "number": number, "enqueue": summary,
-            "message": f"อนุมัติ issue #{number} แล้ว: สร้างงาน {summary.get('enqueued', 0)} รายการ"}
+            "message": _i18n.t("อนุมัติ issue #{p0} แล้ว: สร้างงาน {p1} รายการ", p0=number, p1=summary.get("enqueued", 0))}
 
 
 def _api_deep_scan_file(body: dict, cfg: dict) -> dict:
@@ -997,7 +997,7 @@ def _api_deep_scan_file(body: dict, cfg: dict) -> dict:
         bodies = deep_scan.fetch_issue_bodies(repo, label)  # fresh on every click; open + closed (no re-file)
         url = deep_scan.create_finding_issue(repo, finding, bodies, label=label)
     except Exception as exc:
-        return {"ok": False, "error": redact_secrets(f"สร้าง issue ไม่สำเร็จ: {exc}")}
+        return {"ok": False, "error": redact_secrets(_i18n.t("สร้าง issue ไม่สำเร็จ: {p0}", p0=exc))}
     try:
         deep_scan.forget_issue_index(repo, label)
         deep_scan.set_status(runner.STATE, repo, fid, "filed", issue_url=url)
@@ -1209,7 +1209,7 @@ def _api_engine_update(body: dict, cfg: dict) -> dict:
         raise ValueError(_i18n.t("updates ต้องเป็น object"))
     unknown = sorted(set(updates) - _ENGINE_UPDATE_FIELDS)
     if unknown:
-        raise ValueError(f"ไม่อนุญาตให้แก้ฟิลด์: {', '.join(unknown)}")
+        raise ValueError(_i18n.t("ไม่อนุญาตให้แก้ฟิลด์: {p0}", p0=", ".join(unknown)))
     ok = keys.update_engine(name, updates, **_engine_cfg_kw())
     return {"ok": ok, "name": name}
 
@@ -1249,8 +1249,8 @@ def _api_parallel_active_slot(body: dict, cfg: dict) -> dict:
         parallel_cfg = raw.setdefault("parallel", {})
         parallel_cfg["active_slot"] = new_value
         keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
-    msg = (f"ตั้งโหมดทีละช่อง: รันเฉพาะ Slot {new_value}" if new_value
-           else "ตั้งกลับเป็นรันทุกช่องแบบขนาน")
+    msg = (_i18n.t("ตั้งโหมดทีละช่อง: รันเฉพาะ Slot {p0}", p0=new_value) if new_value
+           else _i18n.t("ตั้งกลับเป็นรันทุกช่องแบบขนาน"))
     return {"ok": True, "active_slot": new_value, "message": msg}
 
 
@@ -1261,7 +1261,7 @@ def _api_keys_ping(body: dict, cfg: dict) -> dict:
         raise ValueError("ต้องระบุ engine")
     eng = next((e for e in runner.get_engines(cfg) if runner.key_engine_name(e) == engine_name), None)
     if eng is None:
-        raise ValueError(f"ไม่พบ engine: {engine_name}")
+        raise ValueError(_i18n.t("ไม่พบ engine: {p0}", p0=engine_name))
     only_key = str(body.get("key_id") or "").strip() or None
     timeout = int(body.get("timeout", key_ping.DEFAULT_PING_TIMEOUT))
     results = key_ping.ping_engine_keys(eng, only_key_id=only_key, timeout=timeout)
@@ -1269,7 +1269,7 @@ def _api_keys_ping(body: dict, cfg: dict) -> dict:
         raise ValueError("ไม่พบคีย์นี้ใน engine (หรือคีย์ยังไม่ได้ตั้งค่า)")
     ok_count = sum(1 for r in results if r["ok"])
     return {"ok": True, "engine": engine_name, "results": results,
-            "message": f"ปิงแล้ว {len(results)} คีย์ — ใช้ได้ {ok_count}, ใช้ไม่ได้ {len(results) - ok_count}"}
+            "message": _i18n.t("ปิงแล้ว {p0} คีย์ — ใช้ได้ {p1}, ใช้ไม่ได้ {p2}", p0=len(results), p1=ok_count, p2=len(results) - ok_count)}
 
 
 def _api_wake_personas(body: dict, cfg: dict) -> dict:
@@ -1281,7 +1281,7 @@ def _api_wake_personas(body: dict, cfg: dict) -> dict:
     if removed > 0:
         runner.save_history(raw_history)
     _cache.clear()
-    return {"ok": True, "message": f"ปลุก Persona สำเร็จ (ล้างสถานะพัก {removed} รายการ) ระบบจะเริ่มงานในรอบถัดไป"}
+    return {"ok": True, "message": _i18n.t("ปลุก Persona สำเร็จ (ล้างสถานะพัก {p0} รายการ) ระบบจะเริ่มงานในรอบถัดไป", p0=removed)}
 
 
 def _api_repo_run_command(body: dict, cfg: dict) -> dict:
@@ -1411,7 +1411,7 @@ def _api_evaluation_toggle(body: dict, cfg: dict) -> dict:
         return {
             "ok": True,
             "enabled": new_state,
-            "message": f"{'เปิด' if new_state else 'ปิด'}ระบบประเมินผล (Agentic Evaluation) เรียบร้อยแล้ว",
+            "message": _i18n.t("เปิดระบบประเมินผล (Agentic Evaluation) เรียบร้อยแล้ว") if new_state else _i18n.t("ปิดระบบประเมินผล (Agentic Evaluation) เรียบร้อยแล้ว"),
         }
 
 
@@ -1430,14 +1430,14 @@ def _api_ci_toggle(body: dict, cfg: dict) -> dict:
             repos = raw.setdefault("repos", [])
             matched = next((r for r in repos if r.get("name") == repo_name), None)
             if not matched:
-                raise ValueError(f"ไม่พบ repo {repo_name} ในการตั้งค่า")
+                raise ValueError(_i18n.t("ไม่พบ repo {p0} ในการตั้งค่า", p0=repo_name))
             r_ci = matched.setdefault("ci", {})
             current = r_ci.get("allow_no_ci", raw.get("ci", {}).get("allow_no_ci", True))
             new_state = bool(body["allow_no_ci"]) if "allow_no_ci" in body else not current
             r_ci["allow_no_ci"] = new_state
             keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
             _forget_repo_status(repo_name)
-            msg = f"{'เปิดให้ทำงานแม้ไม่มี CI (allow_no_ci=true)' if new_state else 'บังคับต้องมี CI เท่านั้น (allow_no_ci=false)'} สำหรับ {repo_name}"
+            msg = _i18n.t("{p0} สำหรับ {p1}", p0=_i18n.t("เปิดให้ทำงานแม้ไม่มี CI (allow_no_ci=true)") if new_state else _i18n.t("บังคับต้องมี CI เท่านั้น (allow_no_ci=false)"), p1=repo_name)
             return {"ok": True, "allow_no_ci": new_state, "repo": repo_name, "message": msg}
         else:
             global_ci = raw.setdefault("ci", {})
@@ -1445,7 +1445,7 @@ def _api_ci_toggle(body: dict, cfg: dict) -> dict:
             new_state = bool(body["allow_no_ci"]) if "allow_no_ci" in body else not current
             global_ci["allow_no_ci"] = new_state
             keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
-            msg = f"{'เปิดให้ทำงานแม้ไม่มี CI (allow_no_ci=true)' if new_state else 'บังคับต้องมี CI checks เท่านั้น (allow_no_ci=false)'} (Global)"
+            msg = _i18n.t("{p0} (Global)", p0=_i18n.t("เปิดให้ทำงานแม้ไม่มี CI (allow_no_ci=true)") if new_state else _i18n.t("บังคับต้องมี CI checks เท่านั้น (allow_no_ci=false)"))
             return {"ok": True, "allow_no_ci": new_state, "message": msg}
 
 
@@ -1462,13 +1462,13 @@ def _api_ci_bootstrap_toggle(body: dict, cfg: dict) -> dict:
         repos = raw.setdefault("repos", [])
         matched = next((r for r in repos if r.get("name") == repo_name), None)
         if not matched:
-            raise ValueError(f"ไม่พบ repo {repo_name} ในการตั้งค่า")
+            raise ValueError(_i18n.t("ไม่พบ repo {p0} ในการตั้งค่า", p0=repo_name))
         new_state = bool(body["auto_bootstrap_ci"])
         matched.setdefault("ci", {})["auto_bootstrap_ci"] = new_state
         keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
         _forget_repo_status(repo_name)
-    msg = (f"เปิดการเปิด PR CI อัตโนมัติสำหรับ {repo_name} แล้ว" if new_state
-           else f"ปิดการเปิด PR CI อัตโนมัติสำหรับ {repo_name} แล้ว")
+    msg = (_i18n.t("เปิดการเปิด PR CI อัตโนมัติสำหรับ {p0} แล้ว", p0=repo_name) if new_state
+           else _i18n.t("ปิดการเปิด PR CI อัตโนมัติสำหรับ {p0} แล้ว", p0=repo_name))
     return {"ok": True, "auto_bootstrap_ci": new_state, "repo": repo_name, "message": msg}
 
 
@@ -1490,7 +1490,7 @@ def _api_merge_mode(body: dict, cfg: dict) -> dict:
         raw["merge_mode"] = mode
         keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
     return {"ok": True, "merge_mode": mode, "previous": previous,
-            "message": f"ตั้ง merge_mode = {mode}: {MERGE_MODES[mode]}"}
+            "message": _i18n.t("ตั้ง merge_mode = {p0}: {p1}", p0=mode, p1=MERGE_MODES[mode])}
 
 
 def _auto_issue_view(cfg: dict) -> dict:
@@ -1529,7 +1529,7 @@ def _api_auto_issue_set(body: dict, cfg: dict) -> dict:
         raw["auto_issue"] = section
         keys.atomic_write_text(cfg_path, yaml_io.dump_text(raw), encoding="utf-8")
     view = _auto_issue_view({"auto_issue": section})
-    return {**view, "message": f"{'เปิด' if view['enabled'] else 'ปิด'}การสร้าง issue อัตโนมัติหลังสแกนลึก (ความรุนแรงขั้นต่ำ: {view['min_severity']})"}
+    return {**view, "message": (_i18n.t("เปิดการสร้าง issue อัตโนมัติหลังสแกนลึก (ความรุนแรงขั้นต่ำ: {p0})", p0=view['min_severity']) if view['enabled'] else _i18n.t("ปิดการสร้าง issue อัตโนมัติหลังสแกนลึก (ความรุนแรงขั้นต่ำ: {p0})", p0=view['min_severity']))}
 
 
 def _api_slots_assign(body: dict, cfg: dict) -> dict:
@@ -1566,7 +1566,7 @@ def _api_slots_assign(body: dict, cfg: dict) -> dict:
         return {
             "ok": True,
             "assignments": assignments,
-            "message": f"อัปเดตการมอบหมายงาน Slot {slot_id} เรียบร้อยแล้ว",
+            "message": _i18n.t("อัปเดตการมอบหมายงาน Slot {p0} เรียบร้อยแล้ว", p0=slot_id),
         }
 
 
@@ -1856,7 +1856,7 @@ class Handler(BaseHTTPRequestHandler):
             if url.path == "/api/metrics":
                 group_by = q.get("by", "engine")
                 if group_by not in metrics.GROUP_FIELDS:
-                    return self._send(400, {"ok": False, "error": f"by ต้องเป็นหนึ่งใน {metrics.GROUP_FIELDS}"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("by ต้องเป็นหนึ่งใน {p0}", p0=metrics.GROUP_FIELDS)})
                 return self._send(200, {"ok": True, "by": group_by, "groups": metrics.summarize(runner.load_history(), by=group_by)})
             if url.path == "/api/keys":
                 return self._send(200, keys.get_keys_catalog(load_cfg()))
