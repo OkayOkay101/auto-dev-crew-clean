@@ -154,7 +154,7 @@ engine ที่เปิดใช้อยู่ในไฟล์ตอนน�
 | `scanners` | ชื่อตัวละคร → ลิสต์คำสั่งสแกนที่รันให้ตัวละครนั้นใน repo นี้ |
 | `ci` | ค่า override ของ `ci` ระดับ repo เช่น `auto_bootstrap_ci` |
 | `enabled` | `false` = ข้าม repo นี้ |
-| `merge_level` | (ไม่มีในไฟล์) ระดับ merge ต่อ repo ตั้งได้จากแผนฟีเจอร์ใน GUI ถ้าไม่ตั้งใช้ `merge_mode` กลาง |
+| `merge_level` | (ไม่มีในไฟล์) ระดับ merge ต่อ repo ตั้งได้จากแผนฟีเจอร์ใน GUI: 1 = คนรีวิว, 2 = merge เองเมื่อ CI ผ่านและไม่มีไฟล์เสี่ยง, 3 = merge เองเมื่อ CI ผ่าน (ดู [architecture](architecture.md#8-การตัดสิน-merge)) ถ้าไม่ตั้งใช้ `merge_mode` กลาง |
 
 repo ที่มีในไฟล์ตอนนี้: `OkayOkay101/cyberpunk-pomodoro` (base `main`, test `node test-runner.js`)
 

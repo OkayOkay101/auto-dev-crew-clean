@@ -154,7 +154,7 @@ Each entry in the list has these keys:
 | `scanners` | Map from persona name to the list of scan commands run for that persona in this repository. |
 | `ci` | Per-repository override of `ci` settings, such as `auto_bootstrap_ci`. |
 | `enabled` | `false` = skip this repository. |
-| `merge_level` | (not in file) Per-repository merge level, set from a feature plan in the GUI. If unset, the global `merge_mode` applies. |
+| `merge_level` | (not in file) Per-repository merge level, set from a feature plan in the GUI: 1 = human reviews, 2 = auto-merge once CI passes and no risky files, 3 = auto-merge once CI passes. If unset, the global `merge_mode` applies (see [architecture](architecture.md#8-merge-decisions)). |
 
 Repository currently in the file: `OkayOkay101/cyberpunk-pomodoro` (base `main`, test `node test-runner.js`).
 

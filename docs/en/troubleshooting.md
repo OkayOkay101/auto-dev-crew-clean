@@ -85,11 +85,12 @@ Checked against the code as of 2026-11-18.
 | 8 | Default for `max_fix_attempts` differs from the config | Code uses 2 when unset; the config sets 3. | The config value applies |
 | 9 | The guard hook does not single out force-push | In autonomous mode it blocks all `git push`. | Intentional or not, not yet decided |
 | 10 | Some README wording about branch `self/*` | Agents create branches named `ai/...`. `self/*` is used only in revert plans. | Documentation fixed in the Thai README; English docs follow the code |
-| 11 | `merge_level` values 1, 2, 3 | Not yet traced to confirm which mode each number maps to. | Needs checking |
+| 11 | `merge_level` values 1, 2, 3 | Traced: 1 = human reviews, 2 = auto-merge once CI passes and no risky files, 3 = auto-merge once CI passes. | See architecture §8.1 |
 | 12 | The GUI is not tested in every browser or screen size | Tested in a local browser only. | Testing limit |
-| 13 | Gates 1–4 | The wording in the GUI and README has not been traced for every gate line by line. | Needs checking |
+| 13 | Gates 1–4 | Traced against the code (see architecture §6). Gate 3 applies to every issue run, and the per-finding create button skips gate 4. | See row 16 |
 | 14 | `trains_on_data` | Informational only; the system does not enforce it. | By design |
 | 15 | Quota shown is the system's own count | It may differ from the provider's real balance. | Limit of the counting method |
+| 16 | The gate wording in the GUI differs from the code in two places: gate 3 says "repair round" (the code applies it to every issue run), and gate 4 says a finding that passes can be created "yourself" (the per-finding button skips gate 4). | Fixed (2026-11-18): gate 3 and gate 4 text in the GUI now match the code (`tests/test_gate_wording_gui.py`) |
 
 Note: an older statement said `check_convergence` was never called. That is no longer true. The function runs in the repair loop when `plateau_stop` is enabled (the default).
 

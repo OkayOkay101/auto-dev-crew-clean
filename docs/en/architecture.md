@@ -89,14 +89,14 @@ Checks are run by `_evaluate_guarded` (around line 2487) and `evaluator.py`.
 
 If no other engine is available to judge, the coder's engine judges, and the log records it (stored as `judge_same_as_coder`).
 
-### Gates 1–4 as described in the GUI
-The GUI and README describe the gates this way:
-- **Gate 1:** the judge confirms a bug is real before it is fixed.
-- **Gate 2:** the judge sees the whole file after the fix.
-- **Gate 3:** a repair round must touch the file the issue names.
-- **Gate 4:** deep-scan re-checks a finding before an issue is created.
+### Gates 1–4 (checked against the code, 2026-11-18)
+The GUI describes the gates this way. The code does the following:
+- **Gate 1 (confirm the bug before the fix):** `runner._confirm_bug_exists` asks the judge only when the issue names an existing production file. If the issue names no file, or the judge cannot answer, the gate is skipped and work continues. A "no bug" verdict sets `ai-needs-human` and stops the repair loop. It does not run in dry run or when evaluation is off.
+- **Gate 2 (judge sees the whole file after the fix):** `evaluator.py` sends the full changed production files to the judge (`full_files_block`), not only the diff.
+- **Gate 3 (the change must touch a file the issue names):** `quality_gates.repair_gate_violation` applies to **every issue run**, not only repair rounds. If the issue names an existing production file and the diff touches none of them, the run is blocked before the judge sees it. If the issue names no file, nothing is blocked.
+- **Gate 4 (deep-scan re-checks before an issue is created):** applies only to the **automatic** path (`file_findings_automatically` when `auto_issue.enabled` is on). The per-finding create button (`/api/deep-scan/file`) skips this re-check.
 
-Note: this wording comes from the GUI and README. The code has not yet been traced for every gate line by line. To verify, search the code for `gate` or `ด่าน`.
+Note: the GUI wording for gates 3 and 4 now matches the code (fixed 2026-11-18; see [troubleshooting](troubleshooting.md) row 16).
 
 ---
 
@@ -116,6 +116,14 @@ Handled by `try_merge` (around line 1752) and `_local_rebase_and_merge` (line 17
 ### 8.1 Merge level
 1. If the repository has its own `merge_level`, that level is used.
 2. Otherwise the global `merge_mode` is used.
+
+Valid `merge_level` values are 1, 2, 3 (`feature_gen.MERGE_LEVELS`). When it is unset (`null`), the global `merge_mode` applies as in the next table.
+
+| Level | Behaviour |
+|---|---|
+| 1 | A human always merges (`try_merge` returns "waiting for review"). |
+| 2 | Merges automatically once CI passes, unless `feature_gen.pr_risk` finds risky files (CI/workflow, config/key, dependency, migration, or a very large change). Then a human must approve. If the file list cannot be read, the PR counts as risky. |
+| 3 | Merges automatically once CI passes, without the file-risk check. |
 
 | Mode | Behaviour |
 |---|---|
