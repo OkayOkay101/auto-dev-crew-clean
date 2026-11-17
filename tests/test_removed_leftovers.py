@@ -20,6 +20,15 @@ class TestRemovedLeftovers(unittest.TestCase):
     def test_oracle_deploy_folder_deleted(self):
         self.assertFalse((ROOT / "deploy" / "oracle").exists())
 
+    def test_config_example_is_tracked_template_without_personal_repo(self):
+        example = ROOT / "config.example.yaml"
+        self.assertTrue(example.exists(), "config.example.yaml must exist: config.yaml is untracked")
+        self.assertNotIn("OkayOkay101", example.read_text(encoding="utf-8"))
+
+    def test_ci_copies_config_example_before_tests_and_ui(self):
+        ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+        self.assertGreaterEqual(ci.count("config.example.yaml config.yaml"), 2)
+
     def test_reserve_for_issues_not_in_local_config(self):
         cfg = ROOT / "config.yaml"
         if not cfg.exists():
