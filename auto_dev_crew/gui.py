@@ -30,6 +30,7 @@ from . import autonomous_upgrades, context_slicer, doctor, gui_patches, mcp_serv
 from .redact import redact_secrets
 from . import keys, key_ping, providers, byop, byop_store, github_login
 from . import auth
+from . import i18n as _i18n, i18n_routes
 from http.cookies import SimpleCookie
 from .multi_repo import add_repo_to_config
 # หมายเหตุ: mcp_server import gui กลับ จึง import แบบ lazy ใน _api_mcp_call_preview เพื่อกัน circular import
@@ -44,9 +45,28 @@ def config_path() -> Path:
     return _CONFIG_OVERRIDE or runner.ROOT / "config.yaml"
 
 
+_I18N_DEFAULT_CONFIG = _i18n.CONFIG_PATH
+
+
 def set_config_path(path) -> None:
     global _CONFIG_OVERRIDE
     _CONFIG_OVERRIDE = Path(path) if path else None
+    # ข้อความ Backend (_i18n.t) ต้องอ่าน ui_language จากไฟล์เดียวกับที่ GUI ใช้ (รองรับ --config)
+    _i18n.CONFIG_PATH = _CONFIG_OVERRIDE or _I18N_DEFAULT_CONFIG
+
+
+def _inject_adc_init(html: str) -> str:
+    """ฝัง window.ADC_INIT = {lang, dict} ก่อน i18n.js เพื่อให้หน้าแสดงภาษาที่ถูกต้องตั้งแต่โหลดครั้งแรก"""
+    if "<script>window.ADC_INIT = " in html:  # กันการฝังซ้ำ (ไม่ใช่ข้อความคอมเมนต์ที่เอ่ยชื่อ)
+        return html
+    lang = _i18n.current_lang(config_path())
+    dict_ = _i18n.load_locale("en") if lang == "en" else {}
+    payload = json.dumps({"lang": lang, "dict": dict_}, ensure_ascii=False).replace("</", "<\\/")
+    tag = f"<script>window.ADC_INIT = {payload};</script>\n"
+    marker = '<script src="/static/i18n.js"></script>'
+    if marker in html:
+        return html.replace(marker, tag + marker, 1)
+    return html.replace("</head>", tag + "</head>", 1) if "</head>" in html else tag + html
 
 
 TOKEN = secrets.token_urlsafe(24)   # required on every POST (blocks drive-by requests from other sites)
@@ -154,7 +174,7 @@ class Agent:
             if self.external_pids():
                 raise RuntimeError("มี runner เปิดอยู่นอก GUI แล้ว — กดหยุดก่อนค่อยเริ่มใหม่")
             if self.running:
-                raise RuntimeError("เอเจนต์กำลังทำงานอยู่แล้ว")
+                raise RuntimeError(_i18n.t("เอเจนต์กำลังทำงานอยู่แล้ว"))
             if _CONFIG_OVERRIDE is not None and "--config" not in args:
                 # The runner must read the same file the GUI edits (F-9).
                 args = [*args, "--config", str(_CONFIG_OVERRIDE)]
@@ -498,7 +518,7 @@ def system_activity_summary(cfg: dict, slots: dict, repos: list[dict], history: 
         return {
             "state": "all_done",
             "is_all_done": True,
-            "title": "ไม่มีอะไรทำงานแล้ว — ทุกช่องสแตนด์บายสมบูรณ์",
+            "title": _i18n.t("ไม่มีอะไรทำงานแล้ว — ทุกช่องสแตนด์บายสมบูรณ์"),
             "message": (
                 "ไม่มี Issue ค้างใน GitHub และตัวละคร Persona ทั้งหมด (Bolt, Sentinel, Palette, Quality) "
                 "สแกนโค้ดครบถ้วนแล้วและไม่พบสิ่งที่ต้องแก้ไข (NO_ACTION) จึงพักผ่อนเพื่อประหยัดโควตา API"
@@ -513,8 +533,8 @@ def system_activity_summary(cfg: dict, slots: dict, repos: list[dict], history: 
         return {
             "state": "idle",
             "is_all_done": (queued_issues == 0),
-            "title": "ทุกช่องว่าง (สแตนด์บาย)",
-            "message": "พร้อมรับงาน Issue ทันที หรือรอรอบการหมุนเวียนตรวจจับงาน",
+            "title": _i18n.t("ทุกช่องว่าง (สแตนด์บาย)"),
+            "message": _i18n.t("พร้อมรับงาน Issue ทันที หรือรอรอบการหมุนเวียนตรวจจับงาน"),
             "persona_resting": persona_resting,
             "rest_remaining_minutes": rest_remaining_minutes,
             "rest_time_str": "",
@@ -566,7 +586,7 @@ def diff_for(q: dict) -> str:
         repo = _require_repo(q.get("repo"), load_cfg())
         pr_num = str(q["pr"]).strip()
         if not pr_num.isdigit():
-            raise ValueError("หมายเลข PR ไม่ถูกต้อง")
+            raise ValueError(_i18n.t("หมายเลข PR ไม่ถูกต้อง"))
         return redact_secrets(runner.gh("pr", "diff", pr_num, "-R", repo, check=False))
     work = gui_patches.resolve_safe_worktree_path(q["workdir"], runner.WORK)
     if not work.exists():
@@ -584,7 +604,7 @@ def _api_run(body: dict, cfg: dict) -> dict:
         args.append("--dry-run")
     if body.get("persona"):
         if body["persona"] not in cfg["personas"]["enabled"]:
-            raise ValueError("ไม่รู้จักตัวละครนี้")
+            raise ValueError(_i18n.t("ไม่รู้จักตัวละครนี้"))
         args += ["--persona", body["persona"]]
     if body.get("repo"):
         repo_val = _require_repo(body["repo"], cfg)
@@ -618,13 +638,13 @@ def _api_restart(body: dict, cfg: dict) -> dict:
             args.append("--dry-run")
         if body.get("persona"):
             if body["persona"] not in cfg["personas"]["enabled"]:
-                raise ValueError("ไม่รู้จักตัวละครนี้")
+                raise ValueError(_i18n.t("ไม่รู้จักตัวละครนี้"))
             args += ["--persona", body["persona"]]
         if body.get("repo"):
             repo_val = _require_repo(body["repo"], cfg)
             args += ["--repo", repo_val]
         if not args:
-            raise ValueError("ยังไม่ได้เลือกโหมดหรือ repo — ไม่รีสตาร์ทเป็นโหมดจริงทุก repo โดยไม่ตั้งใจ")
+            raise ValueError(_i18n.t("ยังไม่ได้เลือกโหมดหรือ repo — ไม่รีสตาร์ทเป็นโหมดจริงทุก repo โดยไม่ตั้งใจ"))
     elif body.get("resume_checkpoint"):
         saved = autonomous_upgrades.load_session_checkpoint(runner.STATE)
         if not saved:
@@ -632,7 +652,7 @@ def _api_restart(body: dict, cfg: dict) -> dict:
         args = list(saved)
     else:
         if not AGENT.args:
-            raise ValueError("ไม่มีค่าเดิมของรอบล่าสุดให้คงไว้ — เริ่มงานด้วยปุ่มเริ่มก่อน แล้วค่อยรีสตาร์ท")
+            raise ValueError(_i18n.t("ไม่มีค่าเดิมของรอบล่าสุดให้คงไว้ — เริ่มงานด้วยปุ่มเริ่มก่อน แล้วค่อยรีสตาร์ท"))
         args = list(AGENT.args)
 
     autonomous_upgrades.clear_graceful_drain(runner.STATE)  # a restart must not start already draining
@@ -640,14 +660,14 @@ def _api_restart(body: dict, cfg: dict) -> dict:
     # Restart never turns AutoPilot on; a non-loop restart turns it off.
     if "--loop" not in final_args or "--dry-run" in final_args or "--persona" in final_args:
         AUTO.disable()
-    return {"ok": True, "args": final_args, "message": "รีสตาร์ทเอเจนต์สำเร็จแล้ว"}
+    return {"ok": True, "args": final_args, "message": _i18n.t("รีสตาร์ทเอเจนต์สำเร็จแล้ว")}
 
 
 def _api_task(body: dict, cfg: dict) -> dict:
     repo = gui_patches.require_registered_repo(body.get("repo"), cfg)
     title = (body.get("title") or "").strip()
     if not title:
-        raise ValueError("ต้องเลือก repo และใส่ชื่องาน")
+        raise ValueError(_i18n.t("ต้องเลือก repo และใส่ชื่องาน"))
     runner.ensure_labels(repo, cfg)
     now_str = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     body_content = (body.get("body") or "(สร้างจาก Auto Dev Crew GUI)").strip()
@@ -732,7 +752,7 @@ def _api_repos_add(body: dict, cfg: dict) -> dict:
 def _api_repos_toggle(body: dict, cfg: dict) -> dict:
     name = (body.get("name") or body.get("repo") or "").strip()
     if not name:
-        raise ValueError("ต้องระบุชื่อ repo")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ repo"))
     enabled = bool(body.get("enabled", True))
     ok = multi_repo.toggle_repo_in_config(config_path(), name, enabled)
     _cache.clear()
@@ -742,7 +762,7 @@ def _api_repos_toggle(body: dict, cfg: dict) -> dict:
 def _api_repos_delete(body: dict, cfg: dict) -> dict:
     name = (body.get("name") or body.get("repo") or "").strip()
     if not name:
-        raise ValueError("ต้องระบุชื่อ repo")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ repo"))
     ok = multi_repo.delete_repo_from_config(config_path(), name)
     _cache.clear()
     return {"ok": ok, "deleted": name}
@@ -846,11 +866,11 @@ def _feature_cycle(repo: str, cfg: dict, repo_dir: Path, budget: deep_scan.CallB
     """Propose features and file them as ai-plan issues. The agent always runs in the repo clone here."""
     s = feature_gen.settings_for(cfg, repo)
     if not s["enabled"]:
-        return {"ran": False, "reason": "ปิดอยู่: เปิดสวิตช์ 'เปิดใช้' ของ repo นี้ในแผงแผนฟีเจอร์ก่อน"}
+        return {"ran": False, "reason": _i18n.t("ปิดอยู่: เปิดสวิตช์ 'เปิดใช้' ของ repo นี้ในแผงแผนฟีเจอร์ก่อน")}
     gaps = feature_gen.gap_lines(deep_scan.load_run(runner.STATE, repo)) if s["scan_gaps"] else []
     roadmap = feature_gen.read_roadmap(repo_dir) if s["roadmap"] else ""
     if not (s["whole_repo"] or gaps or roadmap):
-        return {"ran": False, "reason": "ไม่มีแหล่งไอเดียที่เปิดอยู่"}
+        return {"ran": False, "reason": _i18n.t("ไม่มีแหล่งไอเดียที่เปิดอยู่")}
     call_repo = budget.wrap(lambda prompt: _scan_agent_call(prompt, cfg, engine, repo_dir))
     try:
         proposals = feature_gen.propose(repo, cfg, repo_dir, call_repo, gaps=gaps, roadmap=roadmap)
@@ -944,7 +964,7 @@ def _api_feature_gen_settings(body: dict, cfg: dict) -> dict:
             raise ValueError("merge_level ต้องเป็น 1, 2, 3 หรือ null")
         updates["merge_level"] = level
     if not updates:
-        raise ValueError("ไม่มีค่าที่จะบันทึก")
+        raise ValueError(_i18n.t("ไม่มีค่าที่จะบันทึก"))
     _update_repo_entry(repo, updates)
     fresh = load_cfg()
     return {"ok": True, "repo": repo, "settings": feature_gen.settings_for(fresh, repo),
@@ -983,7 +1003,7 @@ def _api_deep_scan_file(body: dict, cfg: dict) -> dict:
         deep_scan.set_status(runner.STATE, repo, fid, "filed", issue_url=url)
     except Exception:  # M14: KeyError หรือ I/O error ระหว่างบันทึก — issue ถูกสร้างแล้ว
         return {"ok": True, "url": url, "status": "new",
-                "warning": "สร้าง issue แล้วแต่บันทึกสถานะไม่สำเร็จ"}
+                "warning": _i18n.t("สร้าง issue แล้วแต่บันทึกสถานะไม่สำเร็จ")}
     if url is None:
         return {"ok": True, "skipped": True}
     return {"ok": True, "url": url, "status": "filed"}
@@ -1014,7 +1034,7 @@ def _bootstrap_result_payload(res) -> dict:
 def _api_repos_bootstrap_ci(body: dict, cfg: dict) -> dict:
     name = (body.get("name") or body.get("repo") or "").strip()
     if not name:
-        raise ValueError("ต้องระบุชื่อ repo")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ repo"))
     name = _require_repo(name, cfg)
     rcfg = multi_repo.ensure_repo_config(cfg, name)
     res = ci_bootstrap.bootstrap_ci(name, rcfg, cfg)
@@ -1026,7 +1046,7 @@ def _api_repos_bootstrap_ci_plan(body: dict, cfg: dict) -> dict:
     """Draft only: runs the preflight and generates the workflow, but pushes and opens nothing."""
     name = (body.get("name") or body.get("repo") or "").strip()
     if not name:
-        raise ValueError("ต้องระบุชื่อ repo")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ repo"))
     name = _require_repo(name, cfg)
     rcfg = multi_repo.ensure_repo_config(cfg, name)
     return _bootstrap_result_payload(ci_bootstrap.plan_ci_bootstrap(name, rcfg, cfg))
@@ -1035,7 +1055,7 @@ def _api_repos_bootstrap_ci_plan(body: dict, cfg: dict) -> dict:
 def _api_keys(body: dict, cfg: dict) -> dict:
     keys_data = body.get("keys", {})
     if not isinstance(keys_data, dict):
-        raise ValueError("รูปแบบข้อมูล keys ไม่ถูกต้อง (ต้องเป็น object)")
+        raise ValueError(_i18n.t("รูปแบบข้อมูล keys ไม่ถูกต้อง (ต้องเป็น object)"))
     updated = keys.save_dotenv(keys_data)
     return {"ok": True, "updated": updated}
 
@@ -1052,7 +1072,7 @@ def _api_key_reset(body: dict, cfg: dict) -> dict:
 def _api_key_delete(body: dict, cfg: dict) -> dict:
     key = body.get("key")
     if not key:
-        raise ValueError("ต้องระบุ key ที่ต้องการลบ")
+        raise ValueError(_i18n.t("ต้องระบุ key ที่ต้องการลบ"))
     deleted = keys.delete_dotenv_key(key)
     return {"ok": True, "deleted": key, "found": deleted}
 
@@ -1086,7 +1106,7 @@ def _api_key_roles(body: dict, cfg: dict) -> dict:
     key = body.get("key")
     roles = body.get("roles")
     if not key or not isinstance(roles, list):
-        raise ValueError("ต้องระบุชื่อ key และ roles (list)")
+        raise ValueError(_i18n.t("ต้องระบุชื่อ key และ roles (list)"))
     updated_roles = keys.set_key_roles(key, roles)
     return {"ok": True, "key": key, "roles": updated_roles}
 
@@ -1186,7 +1206,7 @@ def _api_engine_update(body: dict, cfg: dict) -> dict:
     if not name:
         raise ValueError("ต้องระบุชื่อ engine ที่ต้องการแก้ไข")
     if not isinstance(updates, dict):
-        raise ValueError("updates ต้องเป็น object")
+        raise ValueError(_i18n.t("updates ต้องเป็น object"))
     unknown = sorted(set(updates) - _ENGINE_UPDATE_FIELDS)
     if unknown:
         raise ValueError(f"ไม่อนุญาตให้แก้ฟิลด์: {', '.join(unknown)}")
@@ -1311,18 +1331,18 @@ def _api_context_slicer_preview(body: dict, cfg: dict) -> dict:
     """
     rel = str(body.get("path") or "").strip().replace("\\", "/")
     if not rel or rel.startswith("/") or ":" in rel or ".." in rel.split("/"):
-        raise ValueError("path ต้องเป็นพาธสัมพัทธ์ภายในโปรเจกต์")
+        raise ValueError(_i18n.t("path ต้องเป็นพาธสัมพัทธ์ภายในโปรเจกต์"))
     root = runner.ROOT.resolve()
     target = (root / rel).resolve()
     if not target.is_relative_to(root) or not target.is_file():
-        raise ValueError("ไม่พบไฟล์ หรือไฟล์อยู่นอกโปรเจกต์")
+        raise ValueError(_i18n.t("ไม่พบไฟล์ หรือไฟล์อยู่นอกโปรเจกต์"))
     parts = target.relative_to(root).parts
     if target.name.startswith(".env") or parts[0] in {"state", ".git"}:
-        raise ValueError("ไฟล์นี้ไม่อนุญาตให้ดูตัวอย่าง")
+        raise ValueError(_i18n.t("ไฟล์นี้ไม่อนุญาตให้ดูตัวอย่าง"))
     if target.suffix.lower() not in _SLICER_PREVIEW_SUFFIXES:
-        raise ValueError("รองรับเฉพาะไฟล์ข้อความของโค้ด/เอกสาร")
+        raise ValueError(_i18n.t("รองรับเฉพาะไฟล์ข้อความของโค้ด/เอกสาร"))
     if target.stat().st_size > 2_000_000:
-        raise ValueError("ไฟล์ใหญ่เกิน 2 MB")
+        raise ValueError(_i18n.t("ไฟล์ใหญ่เกิน 2 MB"))
     reference = str(body.get("reference") or "")[:20_000]
     content = target.read_text(encoding="utf-8", errors="replace")
     total = len(content.splitlines())
@@ -1433,9 +1453,9 @@ def _api_ci_bootstrap_toggle(body: dict, cfg: dict) -> dict:
     """เปิด/ปิด auto_bootstrap_ci ของรีโปหนึ่ง (ค่าเริ่มต้นปิด). ไม่มี repo ใน body = ปฏิเสธ."""
     repo_name = body.get("repo")
     if not repo_name:
-        raise ValueError("ต้องระบุ repo")
+        raise ValueError(_i18n.t("ต้องระบุ repo"))
     if "auto_bootstrap_ci" not in body:
-        raise ValueError("ต้องระบุ auto_bootstrap_ci เป็น true หรือ false")
+        raise ValueError(_i18n.t("ต้องระบุ auto_bootstrap_ci เป็น true หรือ false"))
     cfg_path = config_path()
     with keys.cfg_file_lock(cfg_path):
         raw = yaml_io.load_text(cfg_path.read_text(encoding="utf-8")) or {}
@@ -1757,14 +1777,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"ok": False, "error": "Content-Length ไม่ถูกต้อง"})
         if length < 0 or length > MAX_BODY_BYTES:
             self.close_connection = True
-            return self._send(413, {"ok": False, "error": "ข้อมูลที่ส่งมาใหญ่เกินไป"})
+            return self._send(413, {"ok": False, "error": _i18n.t("ข้อมูลที่ส่งมาใหญ่เกินไป")})
         try:
             body = json.loads(self.rfile.read(length) or b"{}")
         except ValueError:
-            return self._send(400, {"ok": False, "error": "รูปแบบข้อมูลไม่ถูกต้อง"})
+            return self._send(400, {"ok": False, "error": _i18n.t("รูปแบบข้อมูลไม่ถูกต้อง")})
         key = self.client_address[0]
         if LOGIN_LIMITER.is_locked(key):
-            return self._send(429, {"ok": False, "error": "พยายามผิดหลายครั้ง รอสักครู่แล้วลองใหม่"})
+            return self._send(429, {"ok": False, "error": _i18n.t("พยายามผิดหลายครั้ง รอสักครู่แล้วลองใหม่")})
         try:
             stored = auth.load_password_hash(AUTH_FILE) if AUTH_FILE else None
         except (OSError, ValueError):
@@ -1776,11 +1796,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, {"ok": True},
                               extra_headers={"Set-Cookie": _session_cookie_header(token, auth.SESSION_TTL_SECONDS)})
         LOGIN_LIMITER.record_failure(key)
-        return self._send(401, {"ok": False, "error": "รหัสผ่านไม่ถูกต้อง"})
+        return self._send(401, {"ok": False, "error": _i18n.t("รหัสผ่านไม่ถูกต้อง")})
 
     def do_GET(self) -> None:
         if not self._host_ok():
-            return self._send(403, {"error": "Host ไม่ถูกต้อง"})
+            return self._send(403, {"error": _i18n.t("Host ไม่ถูกต้อง")})
         url = urlparse(self.path)
         if url.path == "/api/byop/callback":
             # redirect กลับจาก enter.pollinations.ai เป็น cross-site จึงข้ามการเช็ก Sec-Fetch-Site ได้เฉพาะ path นี้
@@ -1792,7 +1812,7 @@ class Handler(BaseHTTPRequestHandler):
         if REQUIRE_LOGIN and not self._logged_in():
             if url.path == "/":
                 return self._redirect("/login")
-            return self._send(401, {"ok": False, "error": "ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน"})
+            return self._send(401, {"ok": False, "error": _i18n.t("ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน")})
         # endpoint ที่อ่านข้อมูลจาก repo ต้องมี token ด้วย (กันการอ่านจากสคริปต์ในเครื่องเดียวกันที่ไม่ใช่หน้า UI)
         needs_token = url.path in _GET_TOKEN_PATHS
         ok_sec, sec_err = gui_patches.verify_request_security(self.headers, TOKEN, require_token=needs_token)
@@ -1804,12 +1824,15 @@ class Handler(BaseHTTPRequestHandler):
                 html = (STATIC / "index_sidebar.html").read_text(encoding="utf-8").replace("{{TOKEN}}", TOKEN)
                 if "/static/mission_control.js" not in html:
                     html = html.replace("</body>", '<script src="/static/mission_control.js"></script>\n</body>', 1)
-                return self._send(200, html, "text/html; charset=utf-8")
+                return self._send(200, _inject_adc_init(html), "text/html; charset=utf-8")
             if url.path == "/classic":  # UI เดิม A เก็บไว้เผื่อย้อนกลับ
                 html = (STATIC / "index.html").read_text(encoding="utf-8").replace("{{TOKEN}}", TOKEN)
                 if "/static/mission_control.js" not in html:
                     html = html.replace("</body>", '<script src="/static/mission_control.js"></script>\n</body>', 1)
-                return self._send(200, html, "text/html; charset=utf-8")
+                return self._send(200, _inject_adc_init(html), "text/html; charset=utf-8")
+            if url.path == "/api/i18n":  # พจนานุกรมภาษา (ไม่มีความลับ) ใช้โดยหน้า UI ตอนสลับภาษา
+                status_code, payload = i18n_routes.handle_get(url.path, config_path())
+                return self._send(status_code, payload)
             if url.path.startswith("/static/"):  # เสิร์ฟเฉพาะ .js/.css และกัน path traversal
                 asset = (STATIC / url.path[len("/static/"):]).resolve()
                 ctype = {".js": "application/javascript; charset=utf-8", ".css": "text/css; charset=utf-8"}.get(asset.suffix)
@@ -1868,15 +1891,15 @@ class Handler(BaseHTTPRequestHandler):
                     # API key ห้ามอยู่ใน query string (จะไปค้างใน history/log) ให้ใช้ POST /api/models แทน
                     return self._send(400, {"ok": False, "error": "ห้ามส่ง key ผ่าน query string ให้ใช้ POST /api/models"})
                 if not provider:
-                    return self._send(400, {"ok": False, "error": "ต้องระบุชื่อ provider"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("ต้องระบุชื่อ provider")})
                 fetch_id, api_key = gui_patches.resolve_provider_and_key_for_models(provider, None, load_cfg())
                 models = keys.fetch_provider_models(fetch_id, api_key=api_key)
                 return self._send(200, {"ok": True, "provider": provider, "models": models})
             if url.path == "/api/diff":
                 if "pr" in q and not q.get("repo"):
-                    return self._send(400, {"ok": False, "error": "ต้องระบุ repo เมื่อใช้ pr"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("ต้องระบุ repo เมื่อใช้ pr")})
                 if "pr" not in q and not q.get("workdir"):
-                    return self._send(400, {"ok": False, "error": "ต้องระบุ pr หรือ workdir"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("ต้องระบุ pr หรือ workdir")})
                 try:
                     return self._send(200, diff_for(q), "text/plain; charset=utf-8")
                 except PermissionError as exc:
@@ -1887,7 +1910,7 @@ class Handler(BaseHTTPRequestHandler):
             if url.path == "/api/repo/workspace":
                 repo = q.get("repo", "")
                 if not repo:
-                    return self._send(400, {"ok": False, "error": "ต้องระบุชื่อ repo"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("ต้องระบุชื่อ repo")})
                 cfg = load_cfg()
                 repo = _require_repo(repo, cfg)
                 return self._send(200, multi_repo.get_repo_workspace_info(repo, cfg))
@@ -1896,11 +1919,11 @@ class Handler(BaseHTTPRequestHandler):
                 fpath = q.get("path", "")
                 mode = q.get("mode", "full")
                 if not repo or not fpath:
-                    return self._send(400, {"ok": False, "error": "ต้องระบุ repo และ path"})
+                    return self._send(400, {"ok": False, "error": _i18n.t("ต้องระบุ repo และ path")})
                 cfg = load_cfg()
                 repo = _require_repo(repo, cfg)
                 if gui_patches.is_forbidden_read_path(fpath):
-                    return self._send(403, {"ok": False, "error": "ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว"})
+                    return self._send(403, {"ok": False, "error": _i18n.t("ไม่อนุญาตให้อ่านไฟล์ความลับหรือไฟล์ตั้งค่าส่วนตัว")})
                 res = multi_repo.get_repo_file_content(repo, fpath, mode=mode, cfg=cfg)
                 if isinstance(res.get("content"), str):
                     res["content"] = redact_secrets(res["content"])
@@ -1961,7 +1984,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         if not self._host_ok():
             self._drain_small_body()
-            return self._send(403, {"error": "Host ไม่ถูกต้อง"})
+            return self._send(403, {"error": _i18n.t("Host ไม่ถูกต้อง")})
         if not self._origin_ok():
             self._drain_small_body()
             return self._send(403, {"error": "Origin ไม่ถูกต้อง"})
@@ -1970,7 +1993,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._auth_post(post_path)
         if REQUIRE_LOGIN and not self._logged_in():
             self._drain_small_body()
-            return self._send(401, {"ok": False, "error": "ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน"})
+            return self._send(401, {"ok": False, "error": _i18n.t("ต้องเข้าสู่ระบบด้วยรหัสผ่านก่อน")})
         ok_sec, sec_err = gui_patches.verify_request_security(self.headers, TOKEN, require_token=True)
         if not ok_sec:
             self._drain_small_body()
@@ -1983,7 +2006,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "Content-Length ไม่ถูกต้อง"})
         if length > MAX_BODY_BYTES:
             self.close_connection = True
-            return self._send(413, {"error": "ข้อมูลที่ส่งมาใหญ่เกินไป (สูงสุด 1 MB)"})
+            return self._send(413, {"error": _i18n.t("ข้อมูลที่ส่งมาใหญ่เกินไป (สูงสุด 1 MB)")})
         try:
             body = json.loads(self.rfile.read(length) or b"{}")
             if urlparse(self.path).path == "/api/byop/start":
@@ -1995,9 +2018,13 @@ class Handler(BaseHTTPRequestHandler):
                 # ปิดทั้ง GUI server: หยุดเอเจนต์และการรีสตาร์ทอัตโนมัติ แล้วปิด HTTP server
                 AUTO.disable()
                 AGENT.stop()
-                self._send(200, {"ok": True, "message": "ปิด GUI server แล้ว"})
+                self._send(200, {"ok": True, "message": _i18n.t("ปิด GUI server แล้ว")})
                 threading.Thread(target=self.server.shutdown, daemon=True).start()
                 return
+            if urlparse(self.path).path == "/api/settings/language":
+                # token ตรวจแล้วด้านบน (verify_request_security) จึงเรียก handler ได้เลย
+                status_code, payload = i18n_routes.handle_post(urlparse(self.path).path, body, config_path())
+                return self._send(status_code, payload)
             self._send(200, act(urlparse(self.path).path, body))
         except LookupError:
             self._send(404, {"error": "not found"})

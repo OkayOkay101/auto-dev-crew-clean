@@ -1586,5 +1586,21 @@
   "🧪 โหมดทดลองใน Sandbox": "🧪 Sandbox trial mode",
   "🧰 เครื่องมือระบบ": "🧰 System tools",
   "🩺 ตรวจระบบ (Doctor)": "🩺 System check (Doctor)",
-  "🩺 ตรวจสุขภาพระบบ": "🩺 System health check"
+  "🩺 ตรวจสุขภาพระบบ": "🩺 System health check",
+  "เอเจนต์กำลังทำงานอยู่แล้ว": "The agent is already running",
+  "ไม่รู้จักตัวละครนี้": "Unknown persona",
+  "ยังไม่ได้เลือกโหมดหรือ repo — ไม่รีสตาร์ทเป็นโหมดจริงทุก repo โดยไม่ตั้งใจ": "No mode or repo is selected — will not restart in real mode on every repo by accident",
+  "ไม่มีค่าเดิมของรอบล่าสุดให้คงไว้ — เริ่มงานด้วยปุ่มเริ่มก่อน แล้วค่อยรีสตาร์ท": "No previous settings from the last run to keep — start a run with the Start button first, then restart",
+  "ต้องเลือก repo และใส่ชื่องาน": "Select a repo and enter a task name",
+  "ไม่มีค่าที่จะบันทึก": "No value to save",
+  "ต้องระบุ key ที่ต้องการลบ": "Specify the key to delete",
+  "ต้องระบุชื่อ key และ roles (list)": "Key name and roles (list) are required",
+  "updates ต้องเป็น object": "updates must be an object",
+  "path ต้องเป็นพาธสัมพัทธ์ภายในโปรเจกต์": "path must be a relative path inside the project",
+  "ไม่พบไฟล์ หรือไฟล์อยู่นอกโปรเจกต์": "File not found, or it is outside the project",
+  "ไฟล์นี้ไม่อนุญาตให้ดูตัวอย่าง": "This file is not allowed to be previewed",
+  "รองรับเฉพาะไฟล์ข้อความของโค้ด/เอกสาร": "Only text files of code/docs are supported",
+  "ไฟล์ใหญ่เกิน 2 MB": "File is larger than 2 MB",
+  "ต้องระบุ repo": "Repo is required",
+  "ต้องระบุ auto_bootstrap_ci เป็น true หรือ false": "auto_bootstrap_ci must be true or false"
 }
