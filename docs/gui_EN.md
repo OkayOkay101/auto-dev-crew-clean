@@ -34,8 +34,8 @@ Before restarting or stopping, check whether slots are idle. If a job is running
 - Ask the AI to change code in a selected repository.
 - Review the resulting diff.
 - Find `[AI-TODO]` tags and create issues from them.
-- Run a deep scan. See [architecture.md](architecture.md#10-deep-scan).
-- Feature plans (`ai-plan`). See [github-workflow.md](github-workflow.md#4-feature-plans-ai-plan).
+- Run a deep scan. See [architecture.md](architecture_EN.md#10-deep-scan).
+- Feature plans (`ai-plan`). See [github-workflow.md](github-workflow_EN.md#4-feature-plans-ai-plan).
 
 ### 2.4 Keys (AI keys)
 - View and add provider keys.
@@ -43,7 +43,7 @@ Before restarting or stopping, check whether slots are idle. If a job is running
 - Set the failover order of engines.
 - See today's usage per engine (from `state/usage.jsonl`).
 
-Details: [providers-and-keys.md](providers-and-keys.md).
+Details: [providers-and-keys.md](providers-and-keys_EN.md).
 
 ### 2.5 Settings
 - Merge mode (`review-all`, `small-only`, `merge-all`).
@@ -59,7 +59,7 @@ Details: [providers-and-keys.md](providers-and-keys.md).
 |---|---|
 | Slot | One worker. Up to three can run in parallel. |
 | Judge | The AI that scores code before a PR. Needs a key with the judge role. |
-| Gates 1–4 | Checks before a PR is opened. See [architecture.md](architecture.md#6-quality-gates). |
+| Gates 1–4 | Checks before a PR is opened. See [architecture.md](architecture_EN.md#6-quality-gates). |
 | Key role | `coder` (writes the main code), `judge` (scores), `scan` (looks for problems). |
 | F6 failover | Move to the next provider when a quota runs out. |
 | `ai-task` | An issue the agent will pick up. |
@@ -81,8 +81,8 @@ If you run `python -m auto_dev_crew --loop` from a terminal, the GUI sees that r
 - `python scripts/gui_smoke.py`: read-only check that the page loads with no JavaScript errors. The GUI must be running and slots must be idle.
 - `python scripts/gui_e2e.py --repo OWNER/NAME`: presses the run button in a dry run. Use a test repository only, and run only when slots are idle.
 
-Details: [tools-and-scripts.md](tools-and-scripts.md).
+Details: [tools-and-scripts.md](tools-and-scripts_EN.md).
 
 ## 7. Known limitations
 
-See [troubleshooting.md](troubleshooting.md#2-known-limitations).
+See [troubleshooting.md](troubleshooting_EN.md#2-known-limitations).

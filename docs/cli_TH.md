@@ -3,9 +3,9 @@
 ระบบมีสองจุดเข้าใช้งานจาก terminal:
 
 1. **runner** `python -m auto_dev_crew` (ตัวทำงานหลัก อ่านคิวและเปิด PR)
-2. **GUI** `python -m auto_dev_crew.gui` (หน้าเว็บควบคุม ดู [gui.md](gui.md))
+2. **GUI** `python -m auto_dev_crew.gui` (หน้าเว็บควบคุม ดู [gui.md](gui_TH.md))
 
-และมีเครื่องมือเสริม `python -m auto_dev_crew.mcp_server` และ `scripts/` (ดู [tools-and-scripts.md](tools-and-scripts.md))
+และมีเครื่องมือเสริม `python -m auto_dev_crew.mcp_server` และ `scripts/` (ดู [tools-and-scripts.md](tools-and-scripts_TH.md))
 
 ทุกคำสั่งรันจากรากโปรเจกต์ เพราะ `config.yaml` และ `.env` อ้างจากตำแหน่งนั้น
 
@@ -86,7 +86,7 @@ python -m auto_dev_crew --scan-todos OkayOkay101/cyberpunk-pomodoro
 
 พิมพ์รายการ `[AI-TODO]` ที่พบในรูปแบบ `path:line ข้อความ` แล้วจบ ไม่สร้าง issue (`create=False`)
 
-การสร้าง issue จริงทำได้จาก GUI (หน้า **สตูดิโอ**) หรือเปิดการสแกนตามเวลาด้วย `todo_scan.schedule_minutes` ดู [configuration.md](configuration.md)
+การสร้าง issue จริงทำได้จาก GUI (หน้า **สตูดิโอ**) หรือเปิดการสแกนตามเวลาด้วย `todo_scan.schedule_minutes` ดู [configuration.md](configuration_TH.md)
 
 ---
 

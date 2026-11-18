@@ -4,7 +4,7 @@
 
 **หลักการอ่านค่า:** ถ้าคีย์ไม่มีในไฟล์ โค้ดจะใช้ค่าเริ่มต้นที่ระบุไว้ในคอลัมน์ "ค่าเริ่มต้นในโค้ด" บางคีย์ค่าในไฟล์ต่างจากค่าเริ่มต้นในโค้ด ระบบใช้ค่าในไฟล์เสมอ
 
-**การแก้ไข:** แก้ด้วยมือได้ หรือผ่านหน้า GUI ที่เขียนค่าลงไฟล์ให้เอง หลังแก้ไฟล์ด้วยมือ ให้รีสตาร์ทเอเจนต์เพื่อให้มีผลแน่นอน (ดู [gui.md](gui.md))
+**การแก้ไข:** แก้ด้วยมือได้ หรือผ่านหน้า GUI ที่เขียนค่าลงไฟล์ให้เอง หลังแก้ไฟล์ด้วยมือ ให้รีสตาร์ทเอเจนต์เพื่อให้มีผลแน่นอน (ดู [gui.md](gui_TH.md))
 
 ---
 
@@ -13,7 +13,7 @@
 | คีย์ | ชนิด | ค่าในไฟล์ | ค่าเริ่มต้นในโค้ด | ความหมาย |
 |---|---|---|---|---|
 | `owner` | สตริง | `example-owner` | (ไม่มี) | ชื่อบัญชี GitHub ของเจ้าของ งานจาก issue จะถูกหยิบเฉพาะถ้าผู้เขียนตรงกับค่านี้ (ไม่สนตัวพิมพ์ใหญ่เล็ก) ค่าที่ไม่ตั้งทำให้เอเจนต์ไม่หยิบงานใด |
-| `merge_mode` | สตริง | `review-all` | `review-all` | โหมดการ merge กลางของระบบ ค่าที่ใช้ได้: `review-all`, `small-only`, `merge-all` รายละเอียดที่ [architecture.md](architecture.md#8-การตัดสิน-merge) |
+| `merge_mode` | สตริง | `review-all` | `review-all` | โหมดการ merge กลางของระบบ ค่าที่ใช้ได้: `review-all`, `small-only`, `merge-all` รายละเอียดที่ [architecture.md](architecture_TH.md#8-การตัดสิน-merge) |
 | `max_fix_attempts` | จำนวนเต็ม | `3` | `2` | จำนวนรอบแก้ซ้ำสูงสุดเมื่อเทสต์ไม่ผ่านหรือ coder ไม่ได้แก้อะไร ค่าในไฟล์ (3) มีผลจริง |
 | `engine_timeout_cooldown_minutes` | จำนวน | `20` | `20` | เมื่อ engine เกิด timeout จะพักการใช้ engine นั้นเป็นเวลาเท่านี้ก่อนลองอีก |
 | `ui_language` | สตริง | (ไม่มีในไฟล์ปัจจุบัน) | `th` | ภาษาของ UI และข้อความ backend ค่าที่ใช้ได้: `th` หรือ `en` ค่าอื่นหรืออ่านไม่ได้ให้ใช้ `th` ตั้งได้จากหน้า **ตั้งค่า** หรือ `POST /api/settings/language` |
@@ -102,7 +102,7 @@
 
 engine ที่เปิดใช้อยู่ในไฟล์ตอนนี้: `opencode-pollinations` (เท่านั้น) ตัวอื่นตั้งเป็น `enabled: false` ไว้
 
-รายละเอียดคีย์และบทบาทอยู่ที่ [providers-and-keys.md](providers-and-keys.md)
+รายละเอียดคีย์และบทบาทอยู่ที่ [providers-and-keys.md](providers-and-keys_TH.md)
 
 ---
 
@@ -116,7 +116,7 @@ engine ที่เปิดใช้อยู่ในไฟล์ตอนน�
 | `failed` | `ai-failed` | ติดเมื่อทำงานไม่สำเร็จ |
 | `pr` | `ai-generated` | ป้ายที่ติดบน PR ที่เอเจนต์เปิด |
 
-วงจรชีวิตของป้ายอยู่ที่ [github-workflow.md](github-workflow.md)
+วงจรชีวิตของป้ายอยู่ที่ [github-workflow.md](github-workflow_TH.md)
 
 ---
 
@@ -154,7 +154,7 @@ engine ที่เปิดใช้อยู่ในไฟล์ตอนน�
 | `scanners` | ชื่อตัวละคร → ลิสต์คำสั่งสแกนที่รันให้ตัวละครนั้นใน repo นี้ |
 | `ci` | ค่า override ของ `ci` ระดับ repo เช่น `auto_bootstrap_ci` |
 | `enabled` | `false` = ข้าม repo นี้ |
-| `merge_level` | (ไม่มีในไฟล์) ระดับ merge ต่อ repo ตั้งได้จากแผนฟีเจอร์ใน GUI: 1 = คนรีวิว, 2 = merge เองเมื่อ CI ผ่านและไม่มีไฟล์เสี่ยง, 3 = merge เองเมื่อ CI ผ่าน (ดู [architecture](architecture.md#8-การตัดสิน-merge)) ถ้าไม่ตั้งใช้ `merge_mode` กลาง |
+| `merge_level` | (ไม่มีในไฟล์) ระดับ merge ต่อ repo ตั้งได้จากแผนฟีเจอร์ใน GUI: 1 = คนรีวิว, 2 = merge เองเมื่อ CI ผ่านและไม่มีไฟล์เสี่ยง, 3 = merge เองเมื่อ CI ผ่าน (ดู [architecture](architecture_TH.md#8-การตัดสิน-merge)) ถ้าไม่ตั้งใช้ `merge_mode` กลาง |
 
 repo ที่มีในไฟล์ตอนนี้: `OkayOkay101/cyberpunk-pomodoro` (base `main`, test `node test-runner.js`)
 

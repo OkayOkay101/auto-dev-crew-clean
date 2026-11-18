@@ -43,7 +43,7 @@ The system uses the coder's engine as the judge and records `judge_same_as_coder
 ### 1.5 The GUI will not start, or the port is busy
 
 - Stop the old process using port 8765, or start with `--port`.
-- If the GUI freezes, restart it (see [gui.md](gui.md)).
+- If the GUI freezes, restart it (see [gui.md](gui_EN.md)).
 
 ### 1.6 Changes to `config.yaml` have no effect
 

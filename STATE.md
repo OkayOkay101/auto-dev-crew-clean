@@ -16,14 +16,14 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - [x] B7 ลบ route `/classic` แล้ว 2026-11-18 (อนุมัติโดยผู้ใช้) — ไฟล์ `static/index.html` ยังอยู่เพราะ test_gui_layout และ test_api_crud ยังอ่านไฟล์นี้ (ไม่ถูกเสิร์ฟ)
 - [x] B8 ลบ `deploy/oracle/` และ config.yaml ที่ผูกกับ Oracle ออกจาก git (commit `6d9e186`); เหลือ `config.example.yaml` เป็นไฟล์ tracked
 - [x] B9 ทำเอกสารให้ตรงกับโค้ด: README หลักเป็นภาษาอังกฤษ, README.md เป็นอังกฤษอย่างเดียว ภาษาไทยอยู่ใน `README_TH.md` (`README.th.md` ถูกลบแล้ว `f32b0e2`); GitHub description เป็นภาษาอังกฤษ (2026-11-18)
-- [ ] B10 ให้คนที่อ่านภาษาอังกฤษได้ตรวจ `docs/en/` และ README.md ส่วนอังกฤษ (ยังไม่ได้ทำ; ผู้ช่วยทำเองไม่ได้)
+- [ ] B10 ให้คนที่อ่านภาษาอังกฤษได้ตรวจ `docs/*_EN.md` และ README.md ส่วนอังกฤษ (ยังไม่ได้ทำ; ผู้ช่วยทำเองไม่ได้)
 - [ ] B11 เทียบเอกสารไทย/อังกฤษทีละประโยค (ตรวจแล้วแค่ส่วนที่มีความต่างชัดเจนและ token ในโค้ด)
 
 ## In progress
-- Task: จัดหมวด README ตามหมวด Diátaxis (หมวดที่คุณอนุมัติแล้ว) โดยรอรายการลิงก์ที่คุณค้นมา ยังไม่ได้เริ่มแก้โครง README
-- Next step: (1) ให้คุณวางรายการลิงก์อีกครั้ง (ข้อความก่อนหน้าไม่มี URL) (2) เสนอ outline ใหม่ให้อนุมัติตามขั้นตอนสกิล (3) เขียน README.md และ README_TH.md ให้หัวข้อและลิงก์ตรงกัน (4) รัน 4 เช็ก
+- Task: github-docs pass on this repo (user approved outline 2026-11-18: pairs NAME_EN/NAME_TH, whole set in one round, release notes skipped). Done in working tree; not committed.
+- Next step: user decides commit branch and PR (not done). Then B10 native-speaker review, B11 sentence-by-sentence sync.
 - Files: `C:\Users\Smart\Documents\auto-dev-crew-clean\README.md`, `...\README_TH.md`, `...\docs\ABOUT.md`
-- Watch out: `check_bilingual` ยังไม่ผ่านโดยตั้งใจ (ลิงก์ฉบับไทยชี้ `docs/` ฉบับอังกฤษชี้ `docs/en/`) ต้องให้ผู้ใช้ตัดสิน. สกิล `github-docs` อยู่นอก git (`C:\Users\Smart\.claude\skills\github-docs`) การแก้ล่าสุดยังไม่ได้ commit ที่ไหนเลย. About บน GitHub ตั้งค่าแล้ว (ยืนยันจาก gh repo view)
+- Watch out (2026-11-18, after rename): README pair passes check_bilingual. Pairs are `NAME_EN.md` / `NAME_TH.md` in `docs/`; anchors differ by language, so per-page check_bilingual flags anchor text (checker limitation). Not committed yet.
 
 ## Done (verified)
 - Commits: `60f941c` (login + ฐาน i18n), `badfc44` (ADC_INIT, /api/i18n, /api/settings/language, แปล 46 ข้อความ error ฝั่ง backend), `890be71` (แก้ flaky test fake_sleep), `6d9e186` (ลบ Oracle/GitHub login), `e054139`, `eedfc7d` (sync เอกสาร และ gate 3/4 wording), `fed6d2b` (README อังกฤษหลัก), `dab0da5` (handoff)

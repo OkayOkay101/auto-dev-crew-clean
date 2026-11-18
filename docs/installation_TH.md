@@ -53,9 +53,9 @@ python -m playwright install chromium
 2. `repos` เป็นรายชื่อ repo เป้าหมาย รูปแบบ `owner/name`
 3. `engines` เปิดใช้ engine ที่มีคีย์หรือไฟล์จริง (`enabled: true`)
 
-รายละเอียดทุกคีย์อยู่ที่ [configuration.md](configuration.md)
+รายละเอียดทุกคีย์อยู่ที่ [configuration.md](configuration_TH.md)
 
-**ข้อควรระวัง:** `config.yaml` ไม่ได้ถูก track ใน git แล้ว (ลบออกจากดัชนีใน `6d9e186`) ใช้ `config.example.yaml` เป็นต้นแบบและเก็บค่าเฉพาะของเจ้าของไว้ในเครื่อง ดู [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว)
+**ข้อควรระวัง:** `config.yaml` ไม่ได้ถูก track ใน git แล้ว (ลบออกจากดัชนีใน `6d9e186`) ใช้ `config.example.yaml` เป็นต้นแบบและเก็บค่าเฉพาะของเจ้าของไว้ในเครื่อง ดู [troubleshooting.md](troubleshooting_TH.md#2-ข้อจำกัดที่ทราบแล้ว)
 
 ## 5. ตั้งคีย์ API
 
@@ -87,7 +87,7 @@ python -m auto_dev_crew --dry-run
 python -m auto_dev_crew.gui
 ```
 
-เปิด `http://127.0.0.1:8765/` อัตโนมัติ ดูรายละเอียดที่ [gui.md](gui.md)
+เปิด `http://127.0.0.1:8765/` อัตโนมัติ ดูรายละเอียดที่ [gui.md](gui_TH.md)
 
 บน Windows ดับเบิลคลิก `start-auto-dev-crew.bat` ก็ได้ สคริปต์จะเปิด GUI ในหน้าต่างย่อ และถ้า server ทำงานอยู่แล้วจะเปิดเฉพาะหน้าเว็บ
 

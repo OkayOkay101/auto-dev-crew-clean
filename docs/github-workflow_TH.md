@@ -69,7 +69,7 @@
 3. ระบบสร้าง issue `ai-task` สำหรับแต่ละขั้นของแผน
 4. ผลดำเนินต่อไปตามวงจรของ issue ที่ผู้ใช้สั่ง
 
-รายละเอียดการ propose และ approve ผ่าน `/api/feature-gen/propose` และ `/api/feature-gen/approve` (ดู [api.md](api.md))
+รายละเอียดการ propose และ approve ผ่าน `/api/feature-gen/propose` และ `/api/feature-gen/approve` (ดู [api.md](api_TH.md))
 
 ระดับ merge ของแผนตั้งได้ตอนสร้าง (ค่า `merge_level` ต่อ repo)
 
@@ -92,7 +92,7 @@
 ## 6. ข้อควรรู้เรื่องสิทธิ์และ token
 
 - บัญชี GitHub ที่ `gh` ใช้ ต้องมีสิทธิ์เขียน repo เป้าหมาย เพื่อ push branch, เปิด PR, สร้างป้าย และคอมเมนต์
-- ระบบไม่ force-push ตามข้อกำหนดในเอกสาร (รายละเอียดข้อจำกัดอยู่ที่ [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว))
+- ระบบไม่ force-push ตามข้อกำหนดในเอกสาร (รายละเอียดข้อจำกัดอยู่ที่ [troubleshooting.md](troubleshooting_TH.md#2-ข้อจำกัดที่ทราบแล้ว))
 - ห้ามใส่ token ลงใน issue หรือคอมเมนต์ ระบบจะซ่อนค่าที่รู้จัก (`redact.py`) ก่อนแสดงหรือบันทึก แต่ไม่ได้รับประกันว่าทุกรูปแบบจะถูกจับได้
 
 ---

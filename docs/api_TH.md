@@ -121,7 +121,7 @@ GUI เปิด HTTP API ที่ `http://127.0.0.1:<port>` สำหรับ
 | `/api/key/reset` | รีเซ็ตสถานะคีย์ |
 | `/api/key/favorite` | ปักหมุดคีย์ |
 | `/api/key/roles` | กำหนดบทบาทของคีย์ |
-| `/api/provider/add` | เพิ่มผู้ให้บริการ (ดู [providers-and-keys.md](providers-and-keys.md)) |
+| `/api/provider/add` | เพิ่มผู้ให้บริการ (ดู [providers-and-keys.md](providers-and-keys_TH.md)) |
 | `/api/engine/create` | เพิ่ม engine |
 | `/api/engine/update` | แก้ไข engine |
 | `/api/engine/delete` | ลบ engine |

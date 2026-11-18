@@ -1,6 +1,6 @@
 # About Auto Dev Crew
 
-This document explains what the program does, how it works, where AI is used (both to build it and at runtime), and which parts of the GUI are still incomplete. Installation steps and commands are in the [README](../../README.md). Requirements are in [REQUIREMENTS.md](../../REQUIREMENTS.md), which is an early draft (see [the index](README.md)).
+This document explains what the program does, how it works, where AI is used (both to build it and at runtime), and which parts of the GUI are still incomplete. Installation steps and commands are in the [README](../README.md). Requirements are in [REQUIREMENTS.md](../REQUIREMENTS.md), which is an early draft (see [the index](README_EN.md)).
 
 > Status: **experimental project, not production-ready.** The repository is private.
 
@@ -56,7 +56,7 @@ GitHub issue (ai-task)  or  deep-scan / persona
 
 - **Slots:** up to three jobs run at the same time. Slot 1 handles issues you request. Slots 2 and 3 handle personas or extra issues.
 - **F6 failover:** when one provider's quota is used up, the agent moves to the next engine in the configured order.
-- **Quality gates 1–4:** gate 1, the judge confirms a bug is real before a fix (only when the issue names an existing file); gate 2, the judge reviews the whole file after the fix; gate 3, the change must touch a file the issue names (applies to every issue run); gate 4, deep-scan re-checks findings before an automatic issue is created. See [architecture](architecture.md#6-quality-gates) for the code details and [troubleshooting](troubleshooting.md) row 16 for the GUI wording mismatch.
+- **Quality gates 1–4:** gate 1, the judge confirms a bug is real before a fix (only when the issue names an existing file); gate 2, the judge reviews the whole file after the fix; gate 3, the change must touch a file the issue names (applies to every issue run); gate 4, deep-scan re-checks findings before an automatic issue is created. See [architecture](architecture_EN.md#6-quality-gates) for the code details and [troubleshooting](troubleshooting_EN.md) row 16 for the GUI wording mismatch.
 - **ai-plan:** a proposed feature waiting for approval. When approved, the system creates `ai-task` issues for it.
 - **ai-pause:** add this label to any issue to stop new work in that repository.
 - **Memory:** `state/history.json` records what was already proposed and how it turned out. It is not committed.

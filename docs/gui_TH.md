@@ -34,8 +34,8 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 - สั่ง AI แก้โค้ดใน repo ที่เลือก
 - ดู diff ที่ได้
 - หา `[AI-TODO]` และสร้าง issue จากผล
-- สแกนลึก (deep-scan) ดู [architecture.md](architecture.md#10-deep-scan)
-- แผนฟีเจอร์ (`ai-plan`) ดู [github-workflow.md](github-workflow.md#4-แผนฟีเจอร์-ai-plan)
+- สแกนลึก (deep-scan) ดู [architecture.md](architecture_TH.md#10-deep-scan)
+- แผนฟีเจอร์ (`ai-plan`) ดู [github-workflow.md](github-workflow_TH.md#4-แผนฟีเจอร์-ai-plan)
 
 ### 2.4 คีย์ AI (Keys)
 - ดูและเพิ่มคีย์ของผู้ให้บริการ
@@ -43,7 +43,7 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 - ลำดับสำรอง (failover) ของ engine
 - ประวัติการใช้งานล่าสุดต่อวัน (จาก `state/usage.jsonl`)
 
-รายละเอียดที่ [providers-and-keys.md](providers-and-keys.md)
+รายละเอียดที่ [providers-and-keys.md](providers-and-keys_TH.md)
 
 ### 2.5 ตั้งค่า (Settings)
 - โหมด merge (`review-all`, `small-only`, `merge-all`)
@@ -59,7 +59,7 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 |---|---|
 | ช่อง (slot) | ตัวทำงานหนึ่งตัว ทำงานพร้อมกันได้ 3 ช่อง |
 | judge | AI ที่ให้คะแนนโค้ดก่อนเปิด PR ต้องใช้คีย์บทบาท judge |
-| ด่านตรวจ 1–4 | ขั้นตรวจก่อนเปิด PR ดู [architecture.md](architecture.md#6-ด่านตรวจ) |
+| ด่านตรวจ 1–4 | ขั้นตรวจก่อนเปิด PR ดู [architecture.md](architecture_TH.md#6-ด่านตรวจ) |
 | key role | บทบาทของคีย์: `coder` (เขียนโค้ดหลัก), `judge` (ให้คะแนน), `scan` (สแกนหาปัญหา) |
 | F6 failover | สลับไปผู้ให้บริการตัวถัดไปเมื่อโควตาหมด |
 | ai-task | issue ที่เอเจนต์จะหยิบไปทำ |
@@ -81,8 +81,8 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 - `python scripts/gui_smoke.py`: อ่านอย่างเดียว ตรวจว่าหน้าโหลดได้โดยไม่มี JS error (ต้องเปิด GUI อยู่และช่องว่าง)
 - `python scripts/gui_e2e.py --repo OWNER/NAME`: กดปุ่มทำงานแบบ dry-run จริง ใช้ repo ทดสอบเท่านั้น และรันเมื่อช่องว่าง
 
-รายละเอียดที่ [tools-and-scripts.md](tools-and-scripts.md)
+รายละเอียดที่ [tools-and-scripts.md](tools-and-scripts_TH.md)
 
 ## 7. ข้อจำกัดที่ทราบแล้ว
 
-ดู [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว)
+ดู [troubleshooting.md](troubleshooting_TH.md#2-ข้อจำกัดที่ทราบแล้ว)

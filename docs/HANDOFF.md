@@ -52,7 +52,7 @@ Updated: 2026-11-18. Read this first when starting a new chat. Then read `STATE.
 
 ## 5. Open items
 
-- **Native-speaker review of `docs/en/` and `README.md`**: not done. It needs a person who reads English well. Nobody on the assistant side can do this.
+- **Native-speaker review of `docs/*_EN.md` and `README.md`**: not done. It needs a person who reads English well. Nobody on the assistant side can do this.
 - **Thai/English docs sync**: only the flagged differences were fixed. A sentence-by-sentence comparison of all ~3000 lines has not been done.
 - **Test count**: 1401 now, versus 1442 recorded earlier. The likely cause is the GitHub login tests removed in `6d9e186`. Not confirmed by a line-by-line count.
 - **Old doc text in `static/index.html`**: updated, but the file is not served.

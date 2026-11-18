@@ -96,7 +96,7 @@
 - **ด่าน 3 (การแก้ต้องแตะไฟล์ที่ issue ระบุ):** `quality_gates.repair_gate_violation` ใช้กับ **ทุกการทำงานของ issue** ไม่ใช่เฉพาะรอบซ่อม ถ้า issue ระบุไฟล์ production ที่มีอยู่จริงและ diff ไม่แตะไฟล์นั้นเลย งานจะถูกบล็อกก่อนส่งให้ judge ถ้า issue ไม่ได้ระบุไฟล์ จะไม่บล็อก
 - **ด่าน 4 (deep-scan ตรวจซ้ำก่อนสร้าง issue):** ใช้เฉพาะเส้นทาง **สร้าง issue อัตโนมัติ** (`file_findings_automatically` เมื่อ `auto_issue.enabled`) ปุ่มสร้าง issue ทีละรายการ (`/api/deep-scan/file`) ไม่ผ่านการตรวจซ้ำนี้
 
-หมายเหตุ: ข้อความใน GUI ด่าน 3 และด่าน 4 ตรงกับโค้ดแล้ว (แก้ 2026-11-18 ดู [troubleshooting](troubleshooting.md) แถว 16)
+หมายเหตุ: ข้อความใน GUI ด่าน 3 และด่าน 4 ตรงกับโค้ดแล้ว (แก้ 2026-11-18 ดู [troubleshooting](troubleshooting_TH.md) แถว 16)
 
 ---
 

@@ -121,7 +121,7 @@ Every POST needs `X-Token`. The table below groups endpoints by purpose. The sys
 | `/api/key/reset` | Reset a key's status. |
 | `/api/key/favorite` | Pin a key. |
 | `/api/key/roles` | Set a key's roles. |
-| `/api/provider/add` | Add a provider (see [providers-and-keys.md](providers-and-keys.md)). |
+| `/api/provider/add` | Add a provider (see [providers-and-keys.md](providers-and-keys_EN.md)). |
 | `/api/engine/create` | Add an engine. |
 | `/api/engine/update` | Change an engine. |
 | `/api/engine/delete` | Delete an engine. |
