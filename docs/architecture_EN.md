@@ -96,7 +96,7 @@ The GUI describes the gates this way. The code does the following:
 - **Gate 3 (the change must touch a file the issue names):** `quality_gates.repair_gate_violation` applies to **every issue run**, not only repair rounds. If the issue names an existing production file and the diff touches none of them, the run is blocked before the judge sees it. If the issue names no file, nothing is blocked.
 - **Gate 4 (deep-scan re-checks before an issue is created):** applies only to the **automatic** path (`file_findings_automatically` when `auto_issue.enabled` is on). The per-finding create button (`/api/deep-scan/file`) skips this re-check.
 
-Note: the GUI wording for gates 3 and 4 now matches the code (fixed 2026-11-18; see [troubleshooting](troubleshooting.md) row 16).
+Note: the GUI wording for gates 3 and 4 now matches the code (fixed 2026-11-18; see [troubleshooting](troubleshooting_EN.md) row 16).
 
 ---
 

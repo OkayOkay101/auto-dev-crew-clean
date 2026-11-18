@@ -25,12 +25,12 @@ Updated: 2026-11-18. Read this first when starting a new chat. Then read `STATE.
 | `merge_level` 1/2/3 | (traced) | Matches `runner.py`; documented in `docs/architecture.md` section 8.1. |
 | GUI gate 3 and gate 4 wording | `eedfc7d` | Fixed in `static/index_sidebar.html`, `static/index.html`, `locales/en.json`. Guarded by `tests/test_gate_wording_gui.py`. |
 | Docs sync (Thai vs English) | `e054139` | Guard-hook list, config.yaml tracking statements, and English README note fixed. Checked by structure and inline code tokens only, not sentence by sentence. |
-| Main README in English | `fed6d2b` | `README.md` is English. Thai text moved to `README.th.md`. Both link to each other. |
+| Main README in English | `fed6d2b` | `README.md` is English. Thai text moved to `README.th.md`. Both link to each other. Later, `README.md` was made English only and the Thai file became `README_TH.md` (`6b22e13`); `README.th.md` was removed (`f32b0e2`). |
 
 ## 3. Working rules from the user (apply in the next chat)
 
 - Reply in Thai.
-- Documentation: write in English first, Thai afterward. The main `README.md` is English; `README.th.md` is the Thai version.
+- Documentation: write in English first, Thai afterward. The main `README.md` is English; `README_TH.md` is the Thai version.
 - Use the Library Router search once per chat.
 - Do not spawn subagents unless the user asks.
 - Commit or push only when the user asks. Push was requested on 2026-11-18.
@@ -52,7 +52,7 @@ Updated: 2026-11-18. Read this first when starting a new chat. Then read `STATE.
 
 ## 5. Open items
 
-- **Native-speaker review of `docs/en/` and `README.md`**: not done. It needs a person who reads English well. Nobody on the assistant side can do this.
+- **Native-speaker review of `docs/*_EN.md` and `README.md`**: not done. It needs a person who reads English well. Nobody on the assistant side can do this.
 - **Thai/English docs sync**: only the flagged differences were fixed. A sentence-by-sentence comparison of all ~3000 lines has not been done.
 - **Test count**: 1401 now, versus 1442 recorded earlier. The likely cause is the GitHub login tests removed in `6d9e186`. Not confirmed by a line-by-line count.
 - **Old doc text in `static/index.html`**: updated, but the file is not served.

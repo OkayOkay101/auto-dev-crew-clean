@@ -53,9 +53,9 @@ The file lives in the project root and has defaults that work out of the box, bu
 2. `repos`: the target repositories, in `owner/name` form.
 3. `engines`: enable only the engines you have keys or executables for (`enabled: true`).
 
-Every key is explained in [configuration.md](configuration.md).
+Every key is explained in [configuration.md](configuration_EN.md).
 
-**Caution:** `config.yaml` is no longer tracked by git (removed from the index in `6d9e186`). Use `config.example.yaml` as the template and keep owner-specific values on your machine only. See [troubleshooting.md](troubleshooting.md#2-known-limitations).
+**Caution:** `config.yaml` is no longer tracked by git (removed from the index in `6d9e186`). Use `config.example.yaml` as the template and keep owner-specific values on your machine only. See [troubleshooting.md](troubleshooting_EN.md#2-known-limitations).
 
 ## 5. Set API keys
 
@@ -87,7 +87,7 @@ Then check system health from the GUI (`/api/doctor`) or the **Settings** page.
 python -m auto_dev_crew.gui
 ```
 
-This opens `http://127.0.0.1:8765/` automatically. See [gui.md](gui.md).
+This opens `http://127.0.0.1:8765/` automatically. See [gui.md](gui_EN.md).
 
 On Windows you can also double-click `start-auto-dev-crew.bat`. It starts the GUI in a minimized window. If the server is already running, it just opens the page.
 
