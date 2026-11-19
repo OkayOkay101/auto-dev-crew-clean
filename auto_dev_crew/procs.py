@@ -6,7 +6,6 @@ running. These helpers start the child in its own process group and kill the
 entire tree with ``taskkill /T`` (Windows) or ``os.killpg`` (POSIX).
 """
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import os
 import shutil
@@ -29,7 +28,7 @@ def resolve_cli_exe(command: str, path: str | None = None) -> str:
     """
     candidate = os.path.expanduser(path) if path else shutil.which(command)
     if not candidate or not Path(candidate).exists():
-        raise RuntimeError(_i18n.t("ไม่พบ {p0} — ติดตั้งหรือแก้ engine.path ใน config.yaml", p0=command))
+        raise RuntimeError(f"ไม่พบ {command} — ติดตั้งหรือแก้ engine.path ใน config.yaml")
     if candidate.lower().endswith((".cmd", ".bat")):
         native = Path(candidate).parent / "node_modules" / f"{command}-ai" / "bin" / f"{command}.exe"
         if not native.exists():

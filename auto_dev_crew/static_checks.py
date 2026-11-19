@@ -4,7 +4,6 @@
 กฎที่ blocking=True จะทำให้ diff ไม่ผ่านทันที โดยไม่เสียโควตา judge; กฎที่เป็นคำเตือนจะส่งให้ judge เป็นข้อมูลประกอบ.
 """
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import re
 from dataclasses import dataclass
@@ -43,8 +42,8 @@ _TODO = re.compile(r"\b(?:TODO|FIXME)\b")
 _ISSUE_REF = re.compile(r"#\d+|/issues/\d+")
 
 RULE_HINTS = {
-    "broad-except-swallow": _i18n.t("จับ exception กว้างแล้วกลืนทิ้ง (except: pass) ให้จับเฉพาะชนิดที่คาดไว้ หรือ log/raise ใหม่"),
-    "js-empty-catch": _i18n.t("catch ว่างกลืน error ให้จัดการ แสดงผล หรือส่งต่อ"),
+    "broad-except-swallow": "จับ exception กว้างแล้วกลืนทิ้ง (except: pass) ให้จับเฉพาะชนิดที่คาดไว้ หรือ log/raise ใหม่",
+    "js-empty-catch": "catch ว่างกลืน error ให้จัดการ แสดงผล หรือส่งต่อ",
     "debug-artifact": "มีโค้ดดีบักหลงเหลือ (debugger / breakpoint / pdb / .only)",
     "hardcoded-secret": "ฝังค่าความลับไว้ในโค้ด ให้อ่านจาก environment หรือไฟล์ .env ที่ไม่ commit",
     "todo-without-issue": "TODO/FIXME ไม่ได้อ้าง issue (เช่น #123)",

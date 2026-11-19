@@ -7,7 +7,6 @@
 """
 
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import hashlib
@@ -83,6 +82,116 @@ PROVIDERS_CATALOG: dict[str, dict] = {
         "keyless": False,
         "default_keys": ["CLOUDFLARE_API_KEY_1", "CLOUDFLARE_ACCOUNT_ID"],
     },
+    "opencode-zhipu": {
+        "display_name": "Zhipu AI (GLM-4-Flash)",
+        "tier": "standby",
+        "description": "โมเดล GLM-4-Flash ฟรีถาวร 100% ไม่จำกัดจำนวนวัน",
+        "portal_url": "https://open.bigmodel.cn",
+        "quota_label": "ฟรีถาวร 100%",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["ZHIPU_API_KEY_1"],
+    },
+    "opencode-baidu": {
+        "display_name": "Baidu Qianfan (ERNIE-Speed)",
+        "tier": "standby",
+        "description": "ERNIE-Speed 128k บริการฟรีถาวรโดย Baidu Cloud",
+        "portal_url": "https://qianfan.cloud.baidu.com",
+        "quota_label": "ฟรีถาวร 100%",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["BAIDU_API_KEY_1"],
+    },
+    "opencode-siliconflow": {
+        "display_name": "SiliconFlow Free Pool",
+        "tier": "standby",
+        "description": "พูลโมเดล Open Source ฟรีถาวร เช่น Qwen-2.5-Coder",
+        "portal_url": "https://siliconflow.cn",
+        "quota_label": "ฟรีโมเดล Open Source",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["SILICONFLOW_API_KEY_1"],
+    },
+    "opencode-iflytek": {
+        "display_name": "iFlytek Spark Lite",
+        "tier": "standby",
+        "description": "Spark Lite เปิดให้ใช้ฟรีตลอดชีพ ไม่มีวันหมดอายุ",
+        "portal_url": "https://www.xfyun.cn",
+        "quota_label": "ฟรีตลอดชีพ",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["IFLYTEK_API_KEY_1"],
+    },
+    "opencode-hunyuan": {
+        "display_name": "Tencent Hunyuan Lite",
+        "tier": "standby",
+        "description": "Hunyuan-Lite จาก Tencent เปิดให้ใช้งานฟรีตลอดชีพ",
+        "portal_url": "https://hunyuan.tencent.com",
+        "quota_label": "ฟรีตลอดชีพ",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["HUNYUAN_API_KEY_1"],
+    },
+    "opencode-modelscope": {
+        "display_name": "ModelScope (Alibaba)",
+        "tier": "standby",
+        "description": "Serverless Inference โควตาฟรีรายวัน ไม่นำข้อมูลไปเทรน",
+        "portal_url": "https://modelscope.cn",
+        "quota_label": "โควตารายวันฟรี",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["MODELSCOPE_API_KEY_1"],
+    },
+    "opencode-cohere": {
+        "display_name": "Cohere Trial",
+        "tier": "standby",
+        "description": "Trial Key 1,000 calls/เดือน รีเซ็ตใหม่ทุกเดือน",
+        "portal_url": "https://dashboard.cohere.com",
+        "quota_label": "1,000 calls/เดือน",
+        "rate_limit": "5 RPM",
+        "keyless": False,
+        "default_keys": ["COHERE_API_KEY_1"],
+    },
+    "opencode-aion": {
+        "display_name": "Aion Labs",
+        "tier": "standby",
+        "description": "Serverless Endpoint 15 RPM / 20k tokens/วัน",
+        "portal_url": "https://aionlabs.ai",
+        "quota_label": "20,000 tokens/วัน",
+        "rate_limit": "15 RPM",
+        "keyless": False,
+        "default_keys": ["AION_API_KEY_1"],
+    },
+    "opencode-kilo": {
+        "display_name": "Kilo Code",
+        "tier": "standby",
+        "description": "kilo-auto/free โมเดลฟรีถาวรสำหรับเขียนโค้ด",
+        "portal_url": "https://kilo.ai",
+        "quota_label": "ฟรีถาวร",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["KILO_API_KEY_1"],
+    },
+    "opencode-llm7": {
+        "display_name": "LLM7.io",
+        "tier": "standby",
+        "description": "Serverless Free Token รีเซ็ตโควตาทุก 24 ชั่วโมง",
+        "portal_url": "https://llm7.io",
+        "quota_label": "รีเซ็ตโควตาทุกวัน",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["LLM7_API_KEY_1"],
+    },
+    "opencode-kluster": {
+        "display_name": "Kluster.ai",
+        "tier": "standby",
+        "description": "Serverless Token ฟรีรีเซ็ตทุกวัน ไม่เก็บข้อมูลไปเทรน",
+        "portal_url": "https://kluster.ai",
+        "quota_label": "รีเซ็ตโควตาทุกวัน",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["KLUSTER_API_KEY_1"],
+    },
     "opencode-pollinations": {
         "display_name": "Pollinations.ai",
         "tier": "standby",
@@ -92,6 +201,96 @@ PROVIDERS_CATALOG: dict[str, dict] = {
         "rate_limit": "30 RPM",
         "keyless": False,
         "default_keys": ["POLLINATIONS_API_KEY_1"],
+    },
+    "opencode-shuttleai": {
+        "display_name": "ShuttleAI",
+        "tier": "standby",
+        "description": "แพ็กเกจฟรีถาวร $0/เดือน สำหรับนักพัฒนา",
+        "portal_url": "https://shuttleai.com",
+        "quota_label": "ฟรี $0/เดือน",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["SHUTTLEAI_API_KEY_1"],
+    },
+    "opencode-gonka": {
+        "display_name": "Gonka Broker",
+        "tier": "standby",
+        "description": "ฟรี 1,000,000 โทเคน/เดือน รีเซ็ตใหม่ทุกเดือน",
+        "portal_url": "https://gonka.ai",
+        "quota_label": "1,000,000 tokens/เดือน",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["GONKA_API_KEY_1"],
+    },
+    "opencode-glhf": {
+        "display_name": "Glhf.chat",
+        "tier": "standby",
+        "description": "Daily Free Tokens รีเซ็ตรายวัน ไม่นำข้อมูลไปเทรน",
+        "portal_url": "https://glhf.chat",
+        "quota_label": "รีเซ็ตโควตารายวัน",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["GLHF_API_KEY_1"],
+    },
+    "opencode-huggingface": {
+        "display_name": "Hugging Face",
+        "tier": "standby",
+        "description": "User Access Token ฟรีสำหรับ Serverless Inference API",
+        "portal_url": "https://huggingface.co/settings/tokens",
+        "quota_label": "ฟรี Serverless Inference",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["HUGGINGFACE_API_KEY_1"],
+    },
+    "opencode-nim-eval": {
+        "display_name": "NVIDIA NIM Dedicated Eval",
+        "tier": "standby",
+        "description": "Engine แยกสำหรับ Pre-PR Agentic Evaluation ไม่แย่งโควตา Coder",
+        "portal_url": "https://build.nvidia.com",
+        "quota_label": "1,000 เครดิต (แชร์กับ NVIDIA)",
+        "rate_limit": "40 RPM",
+        "keyless": False,
+        "default_keys": ["NVIDIA_API_KEY_1"],
+    },
+    "opencode-voyage": {
+        "display_name": "Voyage AI",
+        "tier": "standby",
+        "description": "โควตา 50,000,000 โทเคนฟรี สำหรับ Code Embedding",
+        "portal_url": "https://voyageai.com",
+        "quota_label": "50M tokens ฟรีตลอดไป",
+        "rate_limit": "10 RPM",
+        "keyless": False,
+        "default_keys": ["VOYAGE_API_KEY_1"],
+    },
+    "opencode-vercel": {
+        "display_name": "Vercel AI Gateway",
+        "tier": "standby",
+        "description": "100,000 requests ต่อเดือน ฟรีถาวร",
+        "portal_url": "https://vercel.com",
+        "quota_label": "100,000 req/เดือน",
+        "rate_limit": "20 RPM",
+        "keyless": False,
+        "default_keys": ["VERCEL_AI_KEY_1"],
+    },
+    "opencode-mistral": {
+        "display_name": "Mistral Experimentation",
+        "tier": "standby",
+        "description": "Codestral สำหรับ Free Experimentation Tier",
+        "portal_url": "https://console.mistral.ai",
+        "quota_label": "Free Tier",
+        "rate_limit": "1 req/sec",
+        "keyless": False,
+        "default_keys": ["MISTRAL_API_KEY_1"],
+    },
+    "opencode-ollama-local": {
+        "display_name": "Ollama Local Engine",
+        "tier": "standby",
+        "description": "รันบนฮาร์ดแวร์ในเครื่องคุณ 100% งบ 0 บาทตลอดกาล ออฟไลน์ได้",
+        "portal_url": "https://ollama.com",
+        "quota_label": "ไม่จำกัด (รันในเครื่อง)",
+        "rate_limit": "ไม่จำกัด",
+        "keyless": True,
+        "default_keys": [],
     },
     "agy-ai-pro": {
         "display_name": "Google AI Pro (CLI)",
@@ -109,7 +308,7 @@ PROVIDERS_CATALOG: dict[str, dict] = {
 def _open_https(req: urllib.request.Request, timeout: float):
     """เปิด URL เฉพาะ https เท่านั้น — กัน scheme แปลก (file:, ftp:) ถ้า URL ถูกแก้โดยไม่ตั้งใจ"""
     if urllib.parse.urlsplit(req.full_url).scheme != "https":
-        raise ValueError(_i18n.t("อนุญาตเฉพาะการเชื่อมต่อ https"))
+        raise ValueError("อนุญาตเฉพาะการเชื่อมต่อ https")
     return urllib.request.urlopen(req, timeout=timeout)  # nosec B310 - scheme ถูกตรวจด้านบนแล้ว
 
 def mask_key(val: str) -> str:
@@ -175,7 +374,7 @@ def validate_dotenv_key_name(name: str) -> str:
     """
     name = name.strip()
     if _is_denied_env_name(name):
-        raise ValueError(_i18n.t("ไม่อนุญาตให้ตั้งค่าตัวแปร {p0} ผ่าน GUI", p0=repr(name)))
+        raise ValueError(f"ไม่อนุญาตให้ตั้งค่าตัวแปร {name!r} ผ่าน GUI")
     if name in _catalog_env_names():
         return name
     if _DOTENV_KEY_RE.match(name):
@@ -183,14 +382,14 @@ def validate_dotenv_key_name(name: str) -> str:
     base = _DOTENV_ROLE_SUFFIX_RE.sub("", name)
     if base != name and _DOTENV_KEY_RE.match(base):
         return name
-    raise ValueError(_i18n.t("ชื่อ key {p0} ไม่ถูกต้อง (ต้องลงท้ายด้วย _API_KEY, _KEY, _TOKEN หรือ _ACCOUNT_ID)", p0=repr(name)))
+    raise ValueError(f"ชื่อ key {name!r} ไม่ถูกต้อง (ต้องลงท้ายด้วย _API_KEY, _KEY, _TOKEN หรือ _ACCOUNT_ID)")
 
 
 def _validate_dotenv_delete_name(name: str) -> str:
     """Deleting only removes a line, so the shape check is looser; reserved names are still refused."""
     name = name.strip()
     if not _DOTENV_SHAPE_RE.match(name) or _is_denied_env_name(name):
-        raise ValueError(_i18n.t("ไม่อนุญาตให้ลบตัวแปร {p0}", p0=repr(name)))
+        raise ValueError(f"ไม่อนุญาตให้ลบตัวแปร {name!r}")
     return name
 
 
@@ -209,7 +408,7 @@ def save_dotenv(updates: dict[str, str], path: Path | None = None) -> list[str]:
             continue
         validate_dotenv_key_name(str(raw_name))
         if "\r" in str(raw_value) or "\n" in str(raw_value):
-            raise ValueError(_i18n.t("ค่าของ {p0} ต้องไม่มีการขึ้นบรรทัดใหม่", p0=str(raw_name).strip()))
+            raise ValueError(f"ค่าของ {str(raw_name).strip()} ต้องไม่มีการขึ้นบรรทัดใหม่")
 
     with cfg_file_lock(path):
         existing_content = ""
@@ -616,7 +815,7 @@ def _check_engine_command(command: str, path: str | None) -> None:
     path is given, its file name must be the same command (with .exe/.cmd optional).
     """
     if command not in ALLOWED_ENGINE_COMMANDS:
-        raise ValueError(_i18n.t("command ไม่ได้รับอนุญาต: {p0} (ใช้ได้: {p1})", p0=repr(command), p1=', '.join(ALLOWED_ENGINE_COMMANDS)))
+        raise ValueError(f"command ไม่ได้รับอนุญาต: {command!r} (ใช้ได้: {', '.join(ALLOWED_ENGINE_COMMANDS)})")
     if path:
         base = re.split(r"[\\/]", path.strip())[-1].lower()
         for suffix in (".exe", ".cmd"):
@@ -624,7 +823,7 @@ def _check_engine_command(command: str, path: str | None) -> None:
                 base = base[: -len(suffix)]
                 break
         if base != command:
-            raise ValueError(_i18n.t("path {p0} ไม่ตรงกับ command {p1}", p0=repr(path), p1=repr(command)))
+            raise ValueError(f"path {path!r} ไม่ตรงกับ command {command!r}")
 
 
 def _check_engine_model(command: str, model: str) -> None:
@@ -634,7 +833,7 @@ def _check_engine_model(command: str, model: str) -> None:
     """
     model = (model or "").strip()
     if command == "opencode" and "/" not in model:
-        raise ValueError(_i18n.t("model {p0} ของ opencode ต้องอยู่ในรูป provider/model เช่น opencode/{p1}", p0=repr(model), p1=model))
+        raise ValueError(f"model {model!r} ของ opencode ต้องอยู่ในรูป provider/model เช่น opencode/{model}")
 
 
 def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
@@ -648,7 +847,7 @@ def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
         command = str(engine_data.get("command", "")).strip()
         model = str(engine_data.get("model", "")).strip()
         if not name or not command or not model:
-            raise ValueError(_i18n.t("ข้อมูลไม่ครบถ้วน: ต้องระบุ name, command, และ model"))
+            raise ValueError("ข้อมูลไม่ครบถ้วน: ต้องระบุ name, command, และ model")
         _check_engine_command(command, str(engine_data.get("path") or "").strip())
         _check_engine_model(command, model)
 
@@ -660,7 +859,7 @@ def add_engine(engine_data: dict, cfg_path: Path | None = None) -> bool:
             raw["engines"] = engines
 
         if any(e.get("name") == name for e in engines):
-            raise ValueError(_i18n.t("มี Engine ชื่อ '{p0}' อยู่ในระบบแล้ว", p0=name))
+            raise ValueError(f"มี Engine ชื่อ '{name}' อยู่ในระบบแล้ว")
 
         new_engine = {
             "name": name,
@@ -745,7 +944,7 @@ def update_engine(engine_name: str, updates: dict, cfg_path: Path | None = None)
         if new_name and new_name != engine_name:
             new_name_clean = str(new_name).strip()
             if any(e.get("name") == new_name_clean for e in engines):
-                raise ValueError(_i18n.t("มี Engine ชื่อ '{p0}' อยู่ในระบบแล้ว", p0=new_name_clean))
+                raise ValueError(f"มี Engine ชื่อ '{new_name_clean}' อยู่ในระบบแล้ว")
             target["name"] = new_name_clean
 
         for field in ("provider", "command", "model", "path"):
@@ -903,7 +1102,7 @@ def fetch_provider_models(provider_name: str, api_key: str | None = None) -> lis
             key = auth_map.get(prov_clean, "")
 
     if not key and req_type != "pollinations":
-        raise ValueError(_i18n.t("ไม่พบ API Key สำหรับ {p0} กรุณาระบุหรือบันทึกคีย์ก่อน", p0=provider_name))
+        raise ValueError(f"ไม่พบ API Key สำหรับ {provider_name} กรุณาระบุหรือบันทึกคีย์ก่อน")
 
     headers = {
         "User-Agent": "auto-dev-crew/1.0",
@@ -922,10 +1121,10 @@ def fetch_provider_models(provider_name: str, api_key: str | None = None) -> lis
             data = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as err:
         if err.code in (401, 403):
-            raise ValueError(_i18n.t("API Key ไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึง ({p0} Unauthorized)", p0=err.code))
-        raise ValueError(_i18n.t("เรียก API ไม่สำเร็จ ({p0}): {p1}", p0=err.code, p1=err.reason))
+            raise ValueError(f"API Key ไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึง ({err.code} Unauthorized)")
+        raise ValueError(f"เรียก API ไม่สำเร็จ ({err.code}): {err.reason}")
     except Exception as exc:
-        raise ValueError(_i18n.t("เกิดข้อผิดพลาดในการเชื่อมต่อ: {p0}", p0=exc))
+        raise ValueError(f"เกิดข้อผิดพลาดในการเชื่อมต่อ: {exc}")
 
     models = []
     if req_type == "pollinations":

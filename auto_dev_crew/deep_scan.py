@@ -1,6 +1,5 @@
 """Deep scan: validate and clean findings returned by a model."""
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import datetime as dt
 import hashlib
@@ -481,7 +480,7 @@ class CallBudget:
     def wrap(self, call_model: Callable[[str], str]) -> Callable[[str], str]:
         def guarded(prompt: str) -> str:
             if self.used >= self.limit:
-                raise BudgetExhausted(_i18n.t("ถึงเพดาน {p0} call ต่อรันแล้ว", p0=self.limit))
+                raise BudgetExhausted(f"ถึงเพดาน {self.limit} call ต่อรันแล้ว")
             self.used += 1
             return call_model(prompt)
         return guarded
@@ -541,9 +540,9 @@ def run_deep_scan(repo: str, cfg: dict, state_dir: Path, call_model: Callable[[s
                              encoding="utf-8", errors="replace", timeout=60,
                              env={**os.environ, "GIT_TERMINAL_PROMPT": "0"})
         if res.returncode != 0:
-            warnings.append(redact_secrets(_i18n.t("git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {p0}", p0=(res.stderr or res.stdout).strip()[:300])))
+            warnings.append(redact_secrets(f"git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {(res.stderr or res.stdout).strip()[:300]}"))
     except Exception as exc:
-        warnings.append(redact_secrets(_i18n.t("git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {p0}", p0=exc)))
+        warnings.append(redact_secrets(f"git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {exc}"))
     findings: list[Finding] = []
     agentic = scan_mode(cfg) == "agentic"
     for name, files in chunk_by_top_folder(root):
@@ -554,20 +553,20 @@ def run_deep_scan(repo: str, cfg: dict, state_dir: Path, call_model: Callable[[s
             if items is None:  # ผิดรูปแบบ (ไม่ใช่ [] ที่ตั้งใจ) → ลองซ้ำ 1 ครั้งด้วยพรอมพ์เดิม + คำสั่ง JSON
                 items = _parse_model_array(call_model(prompt + RETRY_NOTE))
             if items is None:
-                warnings.append(_i18n.t("กลุ่ม {p0} ตอบผิดรูปแบบ (ไม่พบ JSON) แม้ลองซ้ำแล้ว ผลกลุ่มนี้ไม่ถูกนับ", p0=name))
+                warnings.append(f"กลุ่ม {name} ตอบผิดรูปแบบ (ไม่พบ JSON) แม้ลองซ้ำแล้ว ผลกลุ่มนี้ไม่ถูกนับ")
                 continue
             findings.extend(validate_findings(items, root))
         except BudgetExhausted as exc:
-            warnings.append(redact_secrets(_i18n.t("หยุดสแกนที่กลุ่ม {p0}: {p1} (กลุ่มที่เหลือยังไม่ได้สแกน)", p0=name, p1=exc)))
+            warnings.append(redact_secrets(f"หยุดสแกนที่กลุ่ม {name}: {exc} (กลุ่มที่เหลือยังไม่ได้สแกน)"))
             break
         except Exception as exc:
-            warnings.append(redact_secrets(_i18n.t("สแกนกลุ่ม {p0} ล้มเหลว: {p1}", p0=name, p1=exc)))
+            warnings.append(redact_secrets(f"สแกนกลุ่ม {name} ล้มเหลว: {exc}"))
     rank = {s: i for i, s in enumerate(SEVERITIES)}
     findings.sort(key=lambda f: rank.get(f.severity, len(SEVERITIES)))  # stable: chunk order kept per rank
     dropped = max(len(findings) - cap, 0)
     findings = findings[:cap]
     if dropped:  # M11 ruling: scan every chunk (R9), but say when the cap hid findings
-        warnings.append(_i18n.t("พบ {p0} รายการเกินเพดาน {p1} จึงไม่ได้บันทึก (เรียงตามความรุนแรงแล้ว)", p0=dropped, p1=cap))
+        warnings.append(f"พบ {dropped} รายการเกินเพดาน {cap} จึงไม่ได้บันทึก (เรียงตามความรุนแรงแล้ว)")
     data = save_run(state_dir, repo, findings, run_id, warnings=warnings)
     return {"ok": True, "repo": repo, "run_id": run_id, "findings": data["findings"], "warnings": warnings}
 
