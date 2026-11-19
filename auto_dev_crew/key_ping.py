@@ -5,7 +5,6 @@
 ผลลัพธ์ที่ส่งกลับมีเฉพาะ key_id (ชื่อตัวแปร/แฮช), สถานะ, เวลาที่ใช้ และข้อความ error ที่ถูกปิดบังความลับแล้ว.
 """
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import os
 import re
@@ -100,7 +99,7 @@ def ping_key(eng: dict, spec: dict, timeout: int = DEFAULT_PING_TIMEOUT) -> dict
     masked = mask_key(spec["value"]) if spec["value"] else ""
     if eng.get("command") != "opencode":
         return {"key_id": key_id, "ok": False, "latency_ms": 0,
-                "message": _i18n.t("ปิงได้เฉพาะ engine ที่ใช้ opencode (engine นี้ใช้ {p0})", p0=eng.get('command'))}
+                "message": f"ปิงได้เฉพาะ engine ที่ใช้ opencode (engine นี้ใช้ {eng.get('command')})"}
     try:
         # ต้องส่ง path ของ engine: ไม่งั้น PATH จะเจอ shim opencode.CMD ของ npm แล้วถูกปฏิเสธทุกคีย์
         opencode_bin = resolve_cli_exe("opencode", eng.get("path") or None)
@@ -123,16 +122,16 @@ def ping_key(eng: dict, spec: dict, timeout: int = DEFAULT_PING_TIMEOUT) -> dict
         latency = int((time.monotonic() - started) * 1000)
         out = ((proc.stdout or "") + ("\n" + proc.stderr if proc.stderr else "")).strip()
         ok = proc.returncode == 0 and bool(out) and not re.search(r"error|unauthori[sz]ed|invalid|401|403", out, re.I)
-        message = _i18n.t("ใช้งานได้") if ok else redact_secrets(out[-300:]) or f"returncode={proc.returncode}"
+        message = "ใช้งานได้" if ok else redact_secrets(out[-300:]) or f"returncode={proc.returncode}"
         if ok:
-            message = _i18n.t("ใช้งานได้ (คีย์จาก opencode auth)") if from_auth_store else _i18n.t("ใช้งานได้ (คีย์ {p0})", p0=masked)
+            message = "ใช้งานได้ (คีย์จาก opencode auth)" if from_auth_store else f"ใช้งานได้ (คีย์ {masked})"
         return {"key_id": key_id, "ok": ok, "latency_ms": latency, "message": message}
     except subprocess.TimeoutExpired:
         return {"key_id": key_id, "ok": False, "latency_ms": int(timeout * 1000),
-                "message": _i18n.t("หมดเวลา ({p0} วินาที)", p0=timeout)}
+                "message": f"หมดเวลา ({timeout} วินาที)"}
     except Exception as exc:  # noqa: BLE001 — รายงานผลให้ UI ไม่ให้ล้มทั้ง request
         return {"key_id": key_id, "ok": False, "latency_ms": 0,
-                "message": redact_secrets(_i18n.t("เกิดข้อผิดพลาด: {p0}", p0=exc))}
+                "message": redact_secrets(f"เกิดข้อผิดพลาด: {exc}")}
 
 
 def ping_engine_keys(eng: dict, only_key_id: str | None = None,

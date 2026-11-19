@@ -12,7 +12,6 @@
 """
 
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import json
 import subprocess
@@ -34,7 +33,7 @@ PAGE_TIMEOUT_MS = 20000
 def _open_http(url: str, timeout: float):
     """เปิด URL เฉพาะ http/https เท่านั้น — กัน scheme แปลก (file:, ftp:)"""
     if urllib.parse.urlsplit(url).scheme not in ("http", "https"):
-        raise ValueError(_i18n.t("อนุญาตเฉพาะ http/https URL: {p0}", p0=repr(url)))
+        raise ValueError(f"อนุญาตเฉพาะ http/https URL: {url!r}")
     return urllib.request.urlopen(url, timeout=timeout)  # nosec B310 - scheme ถูกตรวจด้านบนแล้ว
 
 
@@ -60,7 +59,10 @@ def check_page(base: str, shot: Path) -> list[str]:
             lambda msg: problems.append(f"console.error: {msg.text}") if msg.type == "error" else None,
         )
         try:
-            page.goto(base + "/", wait_until="networkidle", timeout=PAGE_TIMEOUT_MS)
+            # "networkidle" never fires while the GUI keeps a long-poll request open,
+            # so wait for the load event, then give the page's scripts a moment to run.
+            page.goto(base + "/", wait_until="load", timeout=PAGE_TIMEOUT_MS)
+            page.wait_for_timeout(1500)
             shot.parent.mkdir(parents=True, exist_ok=True)
             page.screenshot(path=str(shot), full_page=True)
         except Exception as exc:  # noqa: BLE001

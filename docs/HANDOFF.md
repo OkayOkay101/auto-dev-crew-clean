@@ -22,7 +22,7 @@ Updated: 2026-11-18. Read this first when starting a new chat. Then read `STATE.
 | `/api/github/*`, `github_login.py`, `/classic` | `6d9e186` | Deleted. Guarded by `tests/test_removed_leftovers.py`. |
 | `REQUIREMENTS.md` | (banner, 2026-11-18) | Kept as history. Banner says it is not the current spec. |
 | `reserve_for_issues` | `e054139` | Removed from test fixtures. Config guard test stays. |
-| `merge_level` 1/2/3 | (traced) | Matches `runner.py`; documented in `docs/architecture.md` section 8.1. |
+| `merge_level` 1/2/3 | (traced) | Matches `runner.py`; documented in `docs/architecture_EN.md` section 8.1. |
 | GUI gate 3 and gate 4 wording | `eedfc7d` | Fixed in `static/index_sidebar.html`, `static/index.html`, `locales/en.json`. Guarded by `tests/test_gate_wording_gui.py`. |
 | Docs sync (Thai vs English) | `e054139` | Guard-hook list, config.yaml tracking statements, and English README note fixed. Checked by structure and inline code tokens only, not sentence by sentence. |
 | Main README in English | `fed6d2b` | `README.md` is English. Thai text moved to `README.th.md`. Both link to each other. Later, `README.md` was made English only and the Thai file became `README_TH.md` (`6b22e13`); `README.th.md` was removed (`f32b0e2`). |
