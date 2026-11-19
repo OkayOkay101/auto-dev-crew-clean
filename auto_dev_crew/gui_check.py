@@ -59,7 +59,10 @@ def check_page(base: str, shot: Path) -> list[str]:
             lambda msg: problems.append(f"console.error: {msg.text}") if msg.type == "error" else None,
         )
         try:
-            page.goto(base + "/", wait_until="networkidle", timeout=PAGE_TIMEOUT_MS)
+            # "networkidle" never fires while the GUI keeps a long-poll request open,
+            # so wait for the load event, then give the page's scripts a moment to run.
+            page.goto(base + "/", wait_until="load", timeout=PAGE_TIMEOUT_MS)
+            page.wait_for_timeout(1500)
             shot.parent.mkdir(parents=True, exist_ok=True)
             page.screenshot(path=str(shot), full_page=True)
         except Exception as exc:  # noqa: BLE001
