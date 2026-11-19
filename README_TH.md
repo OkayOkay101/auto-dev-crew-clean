@@ -29,6 +29,8 @@ python -m auto_dev_crew.gui
 ```
 ระบบจะเปิด http://127.0.0.1:8765 ในเบราว์เซอร์ ตัวเลือก: `--port`, `--no-browser`, `--auto`
 
+![หน้าหลักของ Auto Dev Crew](docs/images/gui_main.png)
+
 หรือใช้คำสั่ง:
 ```bash
 python -m auto_dev_crew --dry-run   # ทดลองในเครื่อง ไม่แตะ GitHub

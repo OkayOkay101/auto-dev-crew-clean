@@ -29,6 +29,8 @@ python -m auto_dev_crew.gui
 ```
 It opens http://127.0.0.1:8765 in your browser. Options: `--port`, `--no-browser`, `--auto`.
 
+![Auto Dev Crew main page](docs/images/gui_main.png)
+
 Or use the command line:
 ```bash
 python -m auto_dev_crew --dry-run   # try locally; does not touch GitHub
