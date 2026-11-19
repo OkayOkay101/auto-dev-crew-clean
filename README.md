@@ -4,7 +4,7 @@
 
 **Languages:** English (this file) · [ภาษาไทย](README_TH.md)
 
-> **Status:** experimental project, private repository.
+> **Status:** experimental project, public repository.
 
 ## Requirements
 - Python 3.12 (the version CI uses)
