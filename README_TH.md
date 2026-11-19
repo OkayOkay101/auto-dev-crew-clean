@@ -51,6 +51,16 @@ python -m pip install -r requirements.txt pytest
 python -m pytest -q
 ```
 
+## โครงสร้างโปรเจกต์
+- `auto_dev_crew/`: แพ็กเกจ Python `runner.py` รันคิวงาน `gui.py` คือ GUI บนเว็บในเครื่อง
+- `prompts/`: prompt ของงาน issue, การซ่อมเทสต์ และตัวละคร
+- `skills/`: โฟลเดอร์สกิล (แต่ละโฟลเดอร์มี `SKILL.md`) skill registry โหลดจากโฟลเดอร์นี้
+- `scripts/`: สคริปต์ช่วยงาน เช่น `gui_smoke.py` และ `gui_e2e.py`
+- `tests/`: ชุดเทสต์ pytest
+- `docs/`: เอกสาร แต่ละหน้ามีไฟล์ภาษาอังกฤษและไฟล์ภาษาไทยที่ชื่อเดียวกัน เช่น `glossary_EN.md` และ `glossary_TH.md`
+- `config.example.yaml`: ไฟล์ตัวอย่างการตั้งค่าที่อยู่ใน git คุณสร้าง `config.yaml` จากไฟล์นี้ในเครื่องของคุณเอง
+- `state/`: ประวัติงานในเครื่อง ไม่ถูก commit
+
 ## อ่านเพิ่มเติม
 - [คำศัพท์](docs/glossary_TH.md): คำนิยามสั้น ๆ ของศัพท์ในโครงการ
 - [ดัชนีเอกสาร](docs/README_TH.md): ทุกหน้า เริ่มจาก [หน้าเกี่ยวกับ](docs/ABOUT_TH.md)

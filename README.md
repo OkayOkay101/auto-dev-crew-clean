@@ -51,6 +51,16 @@ python -m pip install -r requirements.txt pytest
 python -m pytest -q
 ```
 
+## Project layout
+- `auto_dev_crew/`: the Python package. `runner.py` runs the job queue. `gui.py` is the local web GUI.
+- `prompts/`: prompts for issue work, test fixes, and the personas.
+- `skills/`: skill folders (each has a `SKILL.md`). The skill registry loads them from here.
+- `scripts/`: helper scripts, such as `gui_smoke.py` and `gui_e2e.py`.
+- `tests/`: the pytest suite.
+- `docs/`: documentation. Each page has an English file and a Thai file with the same name, for example `glossary_EN.md` and `glossary_TH.md`.
+- `config.example.yaml`: the tracked config template. You create `config.yaml` from it on your machine.
+- `state/`: local job history. It is not committed.
+
 ## Learn more
 - [Glossary](docs/glossary_EN.md): short definitions of project terms.
 - [Documentation index](docs/README_EN.md): every page. Start with the [About page](docs/ABOUT_EN.md).
