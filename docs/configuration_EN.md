@@ -16,7 +16,7 @@
 | `merge_mode` | string | `review-all` | `review-all` | Global merge policy: `review-all`, `small-only`, or `merge-all`. See [architecture.md](architecture_EN.md#8-merge-decisions). |
 | `max_fix_attempts` | integer | `3` | `2` | Maximum repair rounds when tests fail or the coder changes nothing. The file value (3) applies. |
 | `engine_timeout_cooldown_minutes` | number | `20` | `20` | After an engine times out, it is paused for this many minutes. |
-| `ui_language` | string | (not in file) | `th` | UI and backend message language: `th` or `en`. Any other or unreadable value falls back to `th`. Set from the **Settings** page or `POST /api/settings/language`. |
+| `ui_language` | string | (not in file) | `en` | UI and backend message language: `en` or `th`. Any other or unreadable value falls back to `en`. Set from the **Settings** page or `POST /api/settings/language`. |
 
 ---
 

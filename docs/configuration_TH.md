@@ -16,7 +16,7 @@
 | `merge_mode` | สตริง | `review-all` | `review-all` | โหมดการ merge กลางของระบบ ค่าที่ใช้ได้: `review-all`, `small-only`, `merge-all` รายละเอียดที่ [architecture.md](architecture_TH.md#8-การตัดสิน-merge) |
 | `max_fix_attempts` | จำนวนเต็ม | `3` | `2` | จำนวนรอบแก้ซ้ำสูงสุดเมื่อเทสต์ไม่ผ่านหรือ coder ไม่ได้แก้อะไร ค่าในไฟล์ (3) มีผลจริง |
 | `engine_timeout_cooldown_minutes` | จำนวน | `20` | `20` | เมื่อ engine เกิด timeout จะพักการใช้ engine นั้นเป็นเวลาเท่านี้ก่อนลองอีก |
-| `ui_language` | สตริง | (ไม่มีในไฟล์ปัจจุบัน) | `th` | ภาษาของ UI และข้อความ backend ค่าที่ใช้ได้: `th` หรือ `en` ค่าอื่นหรืออ่านไม่ได้ให้ใช้ `th` ตั้งได้จากหน้า **ตั้งค่า** หรือ `POST /api/settings/language` |
+| `ui_language` | สตริง | (ไม่มีในไฟล์ปัจจุบัน) | `en` | ภาษาของ UI และข้อความ backend ค่าที่ใช้ได้: `en` หรือ `th` ค่าอื่นหรืออ่านไม่ได้ให้ใช้ `en` ตั้งได้จากหน้า **ตั้งค่า** หรือ `POST /api/settings/language` |
 
 ---
 

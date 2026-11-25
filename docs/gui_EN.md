@@ -13,39 +13,61 @@ The GUI is a local web server built with Python's `http.server`. It uses no exte
 - **Confirmation:** buttons that scan or create issues ask for confirmation first (`confirm()`). Do not bypass this with JavaScript.
 - **Limits:** there is no password login in the GUI any more; the login system was removed. Remote access requires an SSH tunnel or another method set up by the administrator.
 
-## 2. The four main pages
+## 2. Simple Mode, Guided Tutorial, and the four main pages
 
-The left navigation rail collapses and expands on desktop (and turns into a bottom bar on mobile). The top bar shows the page title, active slot count, a single **+ New task** button, and the theme switcher (Auto / Light / Dark).
+By default, the GUI opens in **English** and **Simple Mode** (`adc_ui_mode = "simple"` in browser storage). On a first visit, a 4-step **Spotlight Guided Tutorial** opens automatically to walk through selecting a repository, creating a task, running one task, and switching modes. Click the **`?`** button in the top bar at any time to replay the tour.
+
+![Guided Tutorial Spotlight](images/gui_tour.png)
+
+The left navigation rail collapses and expands on desktop (and turns into a bottom bar on mobile). The top bar shows the page title, active slot count, the **Simple / Advanced Mode** toggle, the **`?`** tutorial button, the **+ New task** button, and the theme switcher (Auto / Light / Dark).
+
+- **Simple Mode (default):** shows **Overview** and **Settings** in the sidebar and keeps Overview focused on repository selection, **Run 1 task**, **Stop**, and **Waiting for your decision**.
+
+![Simple Mode Overview](images/gui_main.png)
+
+- **Advanced Mode:** click **Simple Mode** in the top bar (or switch in **Settings**) to unlock **Work & Logs**, **Studio**, continuous loop controls, KPI cards, and parallel slot assignments.
 
 ### 2.1 Overview
+
+![Advanced Mode Overview](images/gui_advanced.png)
+
 - **▶ Run 1 task:** do one piece of work, then stop automatically.
-- **⟳ Run loop:** start `--loop` mode; keep working until you press stop or work runs out.
+- **⟳ Run loop:** start `--loop` mode; keep working until you press stop or work runs out (Advanced Mode).
 - **■ Stop:** cancel the job in progress. You are asked to confirm.
-- **🔄 Restart:** icon button next to Stop. Cancels the job in progress and starts a new round with the same settings. Open PRs are not closed.
-- **Action Inbox (Needs attention):** lists PRs awaiting review and failed issues with direct **View diff** or **Manage →** buttons.
-- **3 work slots:** single-row strip showing slots 1–3, a run-mode selector dropdown, and a **Slots 2–3** toggle to assign a persona or repository.
+- **🔄 Restart:** icon button next to Stop. Cancels the job in progress and starts a new round with the same settings (Advanced Mode). Open PRs are not closed.
+- **Action Inbox (Waiting for your decision):** lists PRs awaiting review and failed issues with direct **View diff** or **Manage →** buttons.
+- **3 work slots:** single-row strip showing slots 1–3, a run-mode selector dropdown, and a **Slots 2–3** toggle to assign a persona or repository (Advanced Mode).
 - **Managed repositories:** compact expandable rows; expand a row to view its issue / PR tables and per-repo settings.
 
 Before restarting or stopping, check whether slots are idle. If a job is running, it will be cancelled.
 
 ### 2.2 Work & Logs
+
+![Work & Logs](images/gui_work.png)
+
 - **Queue & Attention:** unified filterable table of failed issues, queued/running tasks, and open PRs.
 - **Live log:** the runner's log, updated in real time with slot 1–3 filters.
 - **Task history:** past jobs. You can open the diff of each one.
 
 ### 2.3 Studio
+
+![Studio](images/gui_studio.png)
+
 - Two-column workspace: the left column handles AI edit prompts, quick checks (tests, syntax, security), and explorer tabs (**Files / Issues / Scan / Feature Plan**); the right column shows **Diff / File / Console** output.
 - Find `[AI-TODO]` tags and create issues from them.
 - Run a deep scan. See [architecture.md](architecture_EN.md#10-deep-scan).
 - Feature plans (`ai-plan`). See [github-workflow.md](github-workflow_EN.md#4-feature-plans-ai-plan).
 
 ### 2.4 Settings
+
+![Settings](images/gui_settings.png)
+
 Organized into five sub-tabs:
-- **General & Merge:** UI language (`th` / `en`), merge mode (`review-all`, `small-only`, `merge-all`), CI checks (`allow_no_ci`), AI quality check (`judge`), and **Shut down server**.
+- **General & Merge:** display language (`en` / `th`, defaults to `en`), UI Mode (`Simple Mode` / `Advanced Mode`), merge mode (`review-all`, `small-only`, `merge-all`), CI checks (`allow_no_ci`), AI quality check (`judge`), and **Shut down server**.
 - **AI Keys & Models:** manage Pollinations (BYOP), provider keys, `coder` / `judge` / `scan` roles, and the `⋯` overflow menu (test, promote, delete). Details: [providers-and-keys.md](providers-and-keys_EN.md).
 - **Failover:** set the failover order of engines.
 - **AI Usage:** today's call history and per-key outcomes (from `state/usage.jsonl`).
-- **System Tools:** Doctor, Playground, MCP Hub, Safety Quiz, Safe Revert Plan, and Terminology glossary.
+- **System Tools:** Doctor, Playground, MCP Hub, Safe Revert Plan, and Terminology glossary.
 
 ## 3. Terms you will see
 
