@@ -387,8 +387,10 @@ header.topbar {
   padding: 10px 24px;
   min-height: 56px;
 }
-header.topbar h1 { font-size: 16.5px; font-weight: 700; margin: 0; }
-.topbar-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+header.topbar h1 { font-size: 16.5px; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-title { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 1 auto; }
+header.topbar #topSlots { white-space: nowrap; flex-shrink: 0; }
+header.topbar .btn { flex-shrink: 0; white-space: nowrap; }
 .rail-toggle { width: 34px; height: 34px; min-height: 34px !important; padding: 0 !important; border-radius: 8px !important; border: 1px solid transparent !important; background: transparent !important; color: var(--muted) !important; }
 .rail-toggle:hover { background: var(--surface-hover) !important; color: var(--text) !important; }
 .shell > main { max-width: 1320px; margin: 0 auto; padding: 20px 24px 56px; }
@@ -639,28 +641,56 @@ body.simple-mode #restartBtn,
 body.simple-mode .adv-only,
 body.simple-mode #stats,
 body.simple-mode #slotsCard { display: none !important; }
+#modeToggleBtn {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+  font-weight: 600;
+}
+body:not(.simple-mode) #modeToggleBtn {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  color: var(--accent-text);
+}
+@media (max-width: 960px) {
+  header.topbar { padding: 10px 14px; gap: 6px; }
+  #modeToggleBtn #modeToggleLabel { display: none; }
+}
 /* Guided Tutorial Spotlight */
 .adc-tour-backdrop {
   position: fixed; inset: 0; z-index: 9000;
+  background: transparent;
   pointer-events: auto;
 }
 .adc-tour-spotlight {
-  position: fixed; z-index: 9001; border-radius: 10px;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.62), 0 0 0 3px var(--accent);
+  position: fixed; z-index: 9001; border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(11, 13, 17, 0.72), 0 0 0 2px var(--accent), 0 0 0 6px var(--accent-soft);
   pointer-events: none;
-  transition: top 260ms ease, left 260ms ease, width 260ms ease, height 260ms ease;
+  transition: top 260ms var(--motion), left 260ms var(--motion), width 260ms var(--motion), height 260ms var(--motion);
 }
 .adc-tour-card {
-  position: fixed; z-index: 9002; width: min(340px, calc(100vw - 24px));
-  background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-  transition: top 200ms ease, left 200ms ease, opacity 180ms ease;
+  position: fixed; z-index: 9002; width: min(360px, calc(100vw - 24px));
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-lg);
+  padding: 16px 18px; box-shadow: var(--shadow-lg);
+  transition: top 220ms var(--motion), left 220ms var(--motion), opacity 180ms var(--motion);
 }
-.adc-tour-card h3 { margin: 0 0 6px; font-size: 15px; }
-.adc-tour-card p { margin: 0 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.adc-tour-progress {
+  height: 3px; border-radius: 999px; background: var(--surface-2);
+  overflow: hidden; margin-bottom: 12px;
+}
+.adc-tour-progress > span {
+  display: block; height: 100%; background: var(--accent);
+  transition: width 240ms var(--motion);
+}
+.adc-tour-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.adc-tour-badge {
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent-text);
+}
+.adc-tour-card h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text); }
+.adc-tour-card p { margin: 0 0 14px; font-size: 13px; color: var(--muted); line-height: 1.5; }
 .adc-tour-foot { display: flex; align-items: center; gap: 8px; }
-.adc-tour-step { font-size: 12px; color: var(--muted); margin-right: auto; }
+.adc-tour-foot .spacer { flex: 1; }
 </style>
 </head>
 <body>
@@ -4067,9 +4097,13 @@ function closeGuidedTour(markDone = true) {
   if (markDone) { try { localStorage.setItem("adc_tutorial_done", "true"); } catch {} }
   document.querySelectorAll(".adc-tour-backdrop,.adc-tour-spotlight,.adc-tour-card").forEach(el => el.remove());
   document.removeEventListener("keydown", onTourKeyDown);
+  window.removeEventListener("resize", onTourResize);
 }
 function onTourKeyDown(e) {
   if (e.key === "Escape") closeGuidedTour(true);
+}
+function onTourResize() {
+  if (tourIdx >= 0) renderTourStep();
 }
 function renderTourStep() {
   document.querySelectorAll(".adc-tour-backdrop,.adc-tour-spotlight,.adc-tour-card").forEach(el => el.remove());
@@ -4087,31 +4121,38 @@ function renderTourStep() {
   spot.className = "adc-tour-spotlight";
   spot.style.top = Math.max(4, r.top - pad) + "px";
   spot.style.left = Math.max(4, r.left - pad) + "px";
-  spot.style.width = (r.width + pad * 2) + "px";
-  spot.style.height = (r.height + pad * 2) + "px";
+  spot.style.width = Math.max(24, r.width + pad * 2) + "px";
+  spot.style.height = Math.max(24, r.height + pad * 2) + "px";
   const card = document.createElement("div");
   card.className = "adc-tour-card";
   card.setAttribute("role", "dialog");
   card.setAttribute("aria-modal", "true");
   const isLast = tourIdx === TOUR_STEPS.length - 1;
+  const pct = Math.round(((tourIdx + 1) / TOUR_STEPS.length) * 100);
   card.innerHTML = `
-    <h3>${esc(i18n(step.title))}</h3>
+    <div class="adc-tour-progress" aria-hidden="true"><span style="width:${pct}%"></span></div>
+    <div class="adc-tour-head">
+      <span class="adc-tour-badge">${tourIdx + 1} / ${TOUR_STEPS.length}</span>
+      <h3>${esc(i18n(step.title))}</h3>
+    </div>
     <p>${esc(i18n(step.body))}</p>
     <div class="adc-tour-foot">
-      <span class="adc-tour-step">${tourIdx + 1} / ${TOUR_STEPS.length}</span>
       <button type="button" class="btn btn-sm ghost" id="tourSkipBtn">${esc(i18n("ข้าม"))}</button>
+      <span class="spacer"></span>
       ${tourIdx > 0 ? `<button type="button" class="btn btn-sm" id="tourPrevBtn">${esc(i18n("ย้อนกลับ"))}</button>` : ""}
       <button type="button" class="btn btn-sm primary" id="tourNextBtn">${esc(i18n(isLast ? "เสร็จสิ้น" : "ถัดไป"))}</button>
     </div>`;
   document.body.append(backdrop, spot, card);
   const cardRect = card.getBoundingClientRect();
-  const top = (r.bottom + 14 + cardRect.height <= window.innerHeight) ? (r.bottom + 14) : Math.max(12, r.top - cardRect.height - 14);
+  const spaceBelow = window.innerHeight - r.bottom - 14;
+  const top = (spaceBelow >= cardRect.height) ? (r.bottom + 14) : Math.max(12, Math.min(window.innerHeight - cardRect.height - 12, r.top - cardRect.height - 14));
   const left = Math.min(Math.max(12, r.left), Math.max(12, window.innerWidth - cardRect.width - 12));
   card.style.top = top + "px";
   card.style.left = left + "px";
   $("#tourSkipBtn").onclick = () => closeGuidedTour(true);
   if ($("#tourPrevBtn")) $("#tourPrevBtn").onclick = () => { tourIdx--; renderTourStep(); };
   $("#tourNextBtn").onclick = () => { if (isLast) closeGuidedTour(true); else { tourIdx++; renderTourStep(); } };
+  $("#tourNextBtn").focus();
 }
 function startGuidedTour(force = false) {
   if (!force) {
@@ -4120,6 +4161,7 @@ function startGuidedTour(force = false) {
   go("overview", null);
   tourIdx = 0;
   document.addEventListener("keydown", onTourKeyDown);
+  window.addEventListener("resize", onTourResize);
   renderTourStep();
 }
 if ($("#tourBtn")) $("#tourBtn").onclick = () => startGuidedTour(true);
