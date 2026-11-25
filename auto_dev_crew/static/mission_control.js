@@ -36,83 +36,7 @@
     } catch (_) {}
   }
 
-  // 2. Category 8 Rubric Safety Self-Quiz Gate (Protects Level 3 & merge-all)
-  const QUIZ_ITEMS = [
-    {
-      id: "q1",
-      ref: "Rubric 8.1",
-      q: "Which Git operation is Auto Dev Crew strictly forbidden from ever running?",
-      opts: [
-        "Pushing branch self/* and opening a PR",
-        "Force-pushing, pushing directly to main, or committing config.yaml / .env",
-        "Posting diagnostic comments on ai-task issues"
-      ],
-      ans: 1
-    },
-    {
-      id: "q2",
-      ref: "Rubric 8.2",
-      q: "What must happen if a test fails—or if the existing test itself looks wrong?",
-      opts: [
-        "Delete or skip the failing test",
-        "Modify the expected assertion value so CI turns green",
-        "Fix production code; if the test looks wrong, stop and ask the owner"
-      ],
-      ans: 2
-    },
-    {
-      id: "q3",
-      ref: "Rubric 5.1",
-      q: "How does Auto Dev Crew prevent an AI from grading its own code?",
-      opts: [
-        "pick_judge_pool excludes the Coder's engine and requires a cross-family Judge >= 0.75",
-        "Coder grades its own diff without tests",
-        "Judge is optional on protected files"
-      ],
-      ans: 0
-    },
-    {
-      id: "q4",
-      ref: "Rubric 6.4",
-      q: "If a PR passes CI and Judge (0.92) but touches runner.py or .github/workflows/, what happens?",
-      opts: [
-        "It auto-merges immediately",
-        "Protected paths never auto-merge—it pauses for human approval",
-        "It overwrites main directly"
-      ],
-      ans: 1
-    },
-    {
-      id: "q5",
-      ref: "Safe Rollback",
-      q: "What is the safest way to undo an autonomous PR merge?",
-      opts: [
-        "git push --force origin main",
-        "Use 1-Click Safe Revert PR to open a clean git revert branch",
-        "Delete the state directory"
-      ],
-      ans: 1
-    }
-  ];
-
-  function hasPassedSafetyQuiz() {
-    return storageGet("adc_safety_quiz_passed", "false") === "true";
-  }
-
-  function guardHighAutonomySelection(selectEl, fallbackVal, openQuizCallback) {
-    if (!selectEl) return true;
-    const isHigh = selectEl.value === "merge-all" || selectEl.value === "3";
-    if (isHigh && !hasPassedSafetyQuiz()) {
-      selectEl.value = fallbackVal;
-      if (window.confirm(i18n("โหมดอัตโนมัติระดับสูงสุด (merge-all / ระดับ 3) ต้องผ่านแบบทดสอบความปลอดภัย 5 ข้อในหน้าคู่มือก่อน ต้องการเปิดแบบทดสอบตอนนี้หรือไม่?"))) {
-        if (typeof openQuizCallback === "function") openQuizCallback();
-      }
-      return false;
-    }
-    return true;
-  }
-
-  // 3. Client-Side Input Validators (Matching Backend Security Guards)
+  // 2. Client-Side Input Validators (Matching Backend Security Guards)
   function validateClientRepo(repoStr) {
     return OWNER_REPO_RE.test(String(repoStr || "").trim());
   }
@@ -294,9 +218,6 @@
 
   window.AutoDevCrewMissionControl = {
     esc,
-    QUIZ_ITEMS,
-    hasPassedSafetyQuiz,
-    guardHighAutonomySelection,
     validateClientRepo,
     validateClientEnvKey
   };

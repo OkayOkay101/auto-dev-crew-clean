@@ -30,32 +30,32 @@ def locales(tmp_path, monkeypatch):
 def test_normalize_lang_accepts_only_th_and_en():
     assert i18n.normalize_lang("en") == "en"
     assert i18n.normalize_lang("th") == "th"
-    assert i18n.normalize_lang("fr") == "th"
-    assert i18n.normalize_lang("") == "th"
-    assert i18n.normalize_lang(None) == "th"
-    assert i18n.normalize_lang(123) == "th"
+    assert i18n.normalize_lang("fr") == "en"
+    assert i18n.normalize_lang("") == "en"
+    assert i18n.normalize_lang(None) == "en"
+    assert i18n.normalize_lang(123) == "en"
 
 
 def test_current_lang_reads_ui_language_from_config(tmp_path):
     cfg = tmp_path / "config.yaml"
-    cfg.write_text("# คอมเมนต์\nui_language: en\n", encoding="utf-8")
+    cfg.write_text("# คอมเมนต์\nui_language: th\n", encoding="utf-8")
+    assert i18n.current_lang(cfg) == "th"
+
+
+def test_current_lang_missing_file_is_english(tmp_path):
+    assert i18n.current_lang(tmp_path / "nope.yaml") == "en"
+
+
+def test_current_lang_broken_yaml_is_english(tmp_path):
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text("ui_language: [unclosed\n", encoding="utf-8")
     assert i18n.current_lang(cfg) == "en"
 
 
-def test_current_lang_missing_file_is_thai(tmp_path):
-    assert i18n.current_lang(tmp_path / "nope.yaml") == "th"
-
-
-def test_current_lang_broken_yaml_is_thai(tmp_path):
-    cfg = tmp_path / "config.yaml"
-    cfg.write_text("ui_language: [unclosed\n", encoding="utf-8")
-    assert i18n.current_lang(cfg) == "th"
-
-
-def test_current_lang_unknown_value_is_thai(tmp_path):
+def test_current_lang_unknown_value_is_english(tmp_path):
     cfg = tmp_path / "config.yaml"
     cfg.write_text("ui_language: fr\n", encoding="utf-8")
-    assert i18n.current_lang(cfg) == "th"
+    assert i18n.current_lang(cfg) == "en"
 
 
 def test_t_uses_given_language_and_substitutes_params(locales):

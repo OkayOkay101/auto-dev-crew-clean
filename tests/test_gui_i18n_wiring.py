@@ -20,13 +20,15 @@ def test_inject_adc_init_places_payload_before_i18n_script(tmp_path, monkeypatch
     assert data["dict"]  # พจนานุกรมอังกฤษต้องไม่ว่าง
 
 
-def test_inject_adc_init_defaults_to_thai_with_empty_dict(tmp_path, monkeypatch):
+def test_inject_adc_init_defaults_to_english_with_dict(tmp_path, monkeypatch):
     cfg = tmp_path / "config.yaml"
     cfg.write_text("{}\n", encoding="utf-8")
     monkeypatch.setattr(gui, "_CONFIG_OVERRIDE", cfg)
     out = gui._inject_adc_init('<body><script src="/static/i18n.js"></script></body>')
     payload = out.split("window.ADC_INIT = ", 1)[1].split(";</script>", 1)[0]
-    assert json.loads(payload) == {"lang": "th", "dict": {}}
+    data = json.loads(payload)
+    assert data["lang"] == "en"
+    assert data["dict"]  # English dictionary must be non-empty when defaulting to en
 
 
 def test_inject_adc_init_is_idempotent(tmp_path, monkeypatch):

@@ -8,7 +8,7 @@
  * ถ้าโหลดพจนานุกรมไม่ได้ ใช้ข้อความไทยเดิมทั้งหน้า */
 (function () {
   "use strict";
-  var lang = "th";
+  var lang = "en";
   var dict = {};
 
   function t(key, params) {
@@ -78,8 +78,8 @@
         window.adcLang = lang;
       })
       .catch(function (err) {
-        console.warn("โหลดพจนานุกรมไม่ได้ ใช้ภาษาไทย:", err);
-        lang = "th";
+        console.warn("Failed to load i18n dictionary, using English fallback:", err);
+        lang = "en";
         dict = {};
         window.adcLang = lang;
       });

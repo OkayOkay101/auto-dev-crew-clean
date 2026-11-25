@@ -93,15 +93,15 @@ class TestEnglishCoverage(unittest.TestCase):
     def test_english_values_have_no_thai(self):
         self.assertEqual([k for k, v in _en().items() if THAI.search(v)], [])
 
-    def test_default_language_is_thai_on_both_sides(self):
+    def test_default_language_is_english_on_both_sides(self):
         from auto_dev_crew import i18n
 
-        self.assertEqual(i18n.DEFAULT, "th")
-        self.assertEqual(i18n.normalize_lang(None), "th")
+        self.assertEqual(i18n.DEFAULT, "en")
+        self.assertEqual(i18n.normalize_lang(None), "en")
         sb = (STATIC / "index_sidebar.html").read_text(encoding="utf-8")
-        self.assertIn('const uiLang = window.adcLang || "th";', sb)
+        self.assertIn('const uiLang = window.adcLang || "en";', sb)
         js = (STATIC / "i18n.js").read_text(encoding="utf-8")
-        self.assertIn('var lang = "th";', js)
+        self.assertIn('var lang = "en";', js)
 
 
 if __name__ == "__main__":

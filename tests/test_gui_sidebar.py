@@ -47,6 +47,18 @@ class TestGuiSidebarVariant(unittest.TestCase):
         # ข้อกำหนดใน AGENTS.md: GUI ต้องมี confirm() ก่อนสแกน/สร้าง issue
         self.assertGreaterEqual(SIDEBAR.count("confirm("), 3)
 
+    def test_security_quiz_removed_and_merge_all_confirm_kept(self):
+        mc = (Path(__file__).resolve().parent.parent / "auto_dev_crew" / "static" / "mission_control.js").read_text(encoding="utf-8")
+        for token in ["quizBox", "renderSafetyQuiz", "gradeSafetyQuiz", "adc_safety_quiz_passed", "kpiQuiz"]:
+            self.assertNotIn(token, SIDEBAR, token)
+        for token in ["QUIZ_ITEMS", "hasPassedSafetyQuiz", "guardHighAutonomySelection", "adc_safety_quiz_passed"]:
+            self.assertNotIn(token, mc, token)
+        self.assertIn('mode === "merge-all" && !confirm(', SIDEBAR)
+
+    def test_simple_mode_and_guided_tutorial_present(self):
+        for token in ['id="modeToggleBtn"', 'id="uiModeSel"', "body.simple-mode", "adc_ui_mode", 'id="tourBtn"', "startGuidedTour", "adc_tutorial_done"]:
+            self.assertIn(token, SIDEBAR, token)
+
 
 if __name__ == "__main__":
     unittest.main()

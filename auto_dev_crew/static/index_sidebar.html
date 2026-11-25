@@ -631,6 +631,36 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+/* Simple Mode */
+body.simple-mode nav.side button[data-main="work"],
+body.simple-mode nav.side button[data-main="studio"],
+body.simple-mode #runLoop,
+body.simple-mode #restartBtn,
+body.simple-mode .adv-only,
+body.simple-mode #stats,
+body.simple-mode #slotsCard { display: none !important; }
+/* Guided Tutorial Spotlight */
+.adc-tour-backdrop {
+  position: fixed; inset: 0; z-index: 9000;
+  pointer-events: auto;
+}
+.adc-tour-spotlight {
+  position: fixed; z-index: 9001; border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.62), 0 0 0 3px var(--accent);
+  pointer-events: none;
+  transition: top 260ms ease, left 260ms ease, width 260ms ease, height 260ms ease;
+}
+.adc-tour-card {
+  position: fixed; z-index: 9002; width: min(340px, calc(100vw - 24px));
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  transition: top 200ms ease, left 200ms ease, opacity 180ms ease;
+}
+.adc-tour-card h3 { margin: 0 0 6px; font-size: 15px; }
+.adc-tour-card p { margin: 0 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.adc-tour-foot { display: flex; align-items: center; gap: 8px; }
+.adc-tour-step { font-size: 12px; color: var(--muted); margin-right: auto; }
 </style>
 </head>
 <body>
@@ -661,6 +691,8 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
     <span class="pill" id="topSlots" role="status" data-i18n>ว่าง</span>
   </div>
   <span class="spacer"></span>
+  <button class="btn" id="modeToggleBtn" type="button" title="สลับระหว่างโหมดง่ายและโหมดขั้นสูง" data-i18n-attr="title"><span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span><span id="modeToggleLabel" data-i18n>โหมดง่าย</span></button>
+  <button class="btn btn-icon" id="tourBtn" type="button" title="เปิดคู่มือแนะนำการใช้งาน" aria-label="เปิดคู่มือแนะนำการใช้งาน" data-i18n-attr="title aria-label"><span class="material-symbols-rounded" aria-hidden="true">help</span></button>
   <button class="btn primary" id="newTaskBtn" type="button" title="เขียนงานใหม่เป็น issue ให้เอเจนต์ทำ" data-i18n-attr="title"><span class="material-symbols-rounded" aria-hidden="true">add</span><span data-i18n>สั่งงาน</span></button>
   <button class="btn btn-icon" id="themeBtn" type="button" title="สลับธีม (อัตโนมัติ / สว่าง / มืด)" aria-label="สลับธีม (อัตโนมัติ / สว่าง / มืด)" data-i18n-attr="title aria-label"><span class="material-symbols-rounded" id="themeIcon" aria-hidden="true">contrast</span></button>
 </header>
@@ -689,13 +721,13 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
               <option value="" data-i18n>🌐 ทุก Repo ที่เปิดใช้งาน</option>
             </select>
           </div>
-          <div class="field">
+          <div class="field adv-only">
             <label for="persona"><span data-i18n>ประเภทงาน</span> <button class="tip-btn" type="button" aria-label="คำอธิบายประเภทงาน" data-tip="ตามคิว = ทำ issue ที่สั่งไว้ก่อน ถ้าไม่มีจะหาจุดปรับปรุงเอง" data-i18n-attr="aria-label data-tip">?</button></label>
             <select id="persona">
               <option value="" data-i18n>ตามคิว (issue ก่อน)</option>
             </select>
           </div>
-          <label class="check" style="padding-bottom:6px">
+          <label class="check adv-only" style="padding-bottom:6px">
             <input type="checkbox" id="dryRun">
             <span data-i18n>ทดลองรัน</span>
             <button class="tip-btn" type="button" aria-label="คำอธิบายทดลองรัน" data-tip="ทำงานจริงในเครื่องแต่ไม่สร้าง PR / issue บน GitHub" data-i18n-attr="aria-label data-tip">?</button>
@@ -1080,6 +1112,20 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
         </div>
       </div>
 
+      <div class="card" id="uiModeCard">
+        <div class="card-head">
+          <h2 data-i18n>โหมดหน้าจอ (Simple / Advanced)</h2>
+          <button class="tip-btn" type="button" aria-label="คำอธิบายโหมดหน้าจอ" data-tip="โหมดง่ายซ่อนเครื่องมือขั้นสูงเพื่อให้เริ่มใช้งานได้เร็ว สามารถสลับเป็นโหมดขั้นสูงได้ตลอด" data-i18n-attr="aria-label data-tip">?</button>
+        </div>
+        <div class="row">
+          <label for="uiModeSel" class="sr-only" data-i18n>โหมดหน้าจอ</label>
+          <select id="uiModeSel" style="width:auto; min-width:240px">
+            <option value="simple" data-i18n>โหมดง่าย (แนะนำสำหรับผู้เริ่มต้น)</option>
+            <option value="advanced" data-i18n>โหมดขั้นสูง (แสดงทุกเครื่องมือ)</option>
+          </select>
+        </div>
+      </div>
+
       <div class="card" id="mergeCard">
         <div class="card-head"><h2 data-i18n>การตรวจก่อน merge</h2></div>
         <div class="settings-grid">
@@ -1263,7 +1309,6 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
         <div class="kpi"><div class="n" id="kpiDoctor">—</div><div class="l" data-i18n>ผ่านการตรวจสุขภาพ</div></div>
         <div class="kpi"><div class="n" id="kpiPlayground">—</div><div class="l" data-i18n>สนามทดลอง</div></div>
         <div class="kpi"><div class="n" id="kpiMcp">—</div><div class="l" data-i18n>เครื่องมือ MCP ที่เปิดให้ใช้</div></div>
-        <div class="kpi"><div class="n" id="kpiQuiz">—</div><div class="l" data-i18n>แบบทดสอบความปลอดภัย</div></div>
       </div>
       <div class="adc-tools-grid">
         <div class="card" id="toolDoctor">
@@ -1282,12 +1327,6 @@ dialog header h1 { font-size: 15px; margin: 0; font-weight: 600; min-width: 0; o
           <div class="card-head"><h2>🔌 MCP Hub</h2><span class="spacer"></span><button class="btn btn-sm" id="mcpList" data-i18n>ดูรายการเครื่องมือ</button></div>
           <pre class="adc-code" style="margin-top:0">python -m auto_dev_crew.mcp_server --transport stdio</pre>
           <div id="mcpOut" class="adc-list" aria-live="polite"></div>
-        </div>
-
-        <div class="card" id="toolSafety">
-          <div class="card-head"><h2 data-i18n>🛡️ แบบทดสอบความปลอดภัย</h2></div>
-          <p class="muted" data-i18n>ต้องผ่านก่อนเปิดโหมด merge-all</p>
-          <div id="quizBox"></div>
         </div>
 
         <div class="card" id="toolRevert">
@@ -1940,7 +1979,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ---------- ภาษา (window.ADC_INIT ใน i18n.js)
-const uiLang = window.adcLang || "th";
+const uiLang = window.adcLang || "en";
 function switchLang(next) {
   if (next === uiLang) return;
   window.setLanguage(next, TOKEN).catch(e => alert(i18n("บันทึกภาษาไม่สำเร็จ: ") + e.message));
@@ -1973,6 +2012,10 @@ function go(main, sub, urlMode) {
   if (main === "keys") { main = "settings"; sub = sub || "apikeys"; }
   if (main === "tools") { main = "settings"; sub = "tools"; }
   if (!MAIN_SUBS.hasOwnProperty(main)) main = "overview";
+  if (document.body.classList.contains("simple-mode") && (main === "work" || main === "studio")) {
+    main = "overview";
+    sub = null;
+  }
   if (MAIN_SUBS[main].length && !MAIN_SUBS[main].includes(sub)) sub = DEFAULT_SUB[main];
 
   document.querySelectorAll("nav button[data-main]").forEach(b => {
@@ -3881,7 +3924,7 @@ function toolsKpi(id, text, cls) {
   el.style.color = cls === "ok" ? "var(--ok)" : cls === "warn" ? "var(--warn)" : cls === "bad" ? "var(--bad)" : "";
 }
 function loadTools() {
-  if (!toolsInited) { toolsInited = true; renderSafetyQuiz(); }
+  if (!toolsInited) { toolsInited = true; }
   loadDoctor();
 }
 async function loadDoctor() {
@@ -3917,35 +3960,6 @@ async function loadMcpTools() {
       return `<div class="adc-item"><span class="pill info">${esc(t.name)}</span><div><div class="muted">${esc(t.description || "")}</div>${needsConfirm ? i18n("<div class=\"muted\">ต้องส่ง confirm=true ก่อนทำงานจริง</div>") : ""}</div></div>`;
     }).join("") : i18n("<p class=\"muted\">ไม่มีเครื่องมือที่เปิดให้ใช้</p>");
   } catch (err) { toolsKpi("kpiMcp", "—"); out.innerHTML = `<span class="pill bad">${i18n("ดึงรายการไม่สำเร็จ:")} ${esc(err.message)}</span>`; }
-}
-function renderSafetyQuiz() {
-  const box = $("#quizBox"); if (!box) return;
-  const mc = window.AutoDevCrewMissionControl;
-  if (!mc) { window.addEventListener("load", renderSafetyQuiz, {once: true}); box.innerHTML = i18n("<p class=\"muted\">กำลังโหลดแบบทดสอบ…</p>"); return; }
-  const items = Array.isArray(mc.QUIZ_ITEMS) ? mc.QUIZ_ITEMS : [], passed = mc.hasPassedSafetyQuiz();
-  toolsKpi("kpiQuiz", passed ? i18n("ผ่านแล้ว") : i18n("ยังไม่ผ่าน"), passed ? "ok" : "warn");
-  box.innerHTML = `${passed ? i18n("<p class=\"pill ok\" style=\"margin-bottom:8px\">ผ่านแล้ว · ทำซ้ำได้ถ้าต้องการ</p>") : ""}
-    <form id="quizForm">${items.map((it, i) => `
-      <fieldset class="adc-quiz-q"><legend>${i + 1}. ${esc(it.q)}</legend>
-        ${(it.opts || []).map((o, j) => `<label><input type="radio" name="${esc(it.id)}" value="${j}"><span>${esc(o)}</span></label>`).join("")}
-      </fieldset>`).join("")}
-      <div class="row" style="margin-top:12px"><button class="btn btn-sm primary" type="submit">${i18n("ตรวจคำตอบ")}</button></div>
-      <div id="quizResult" aria-live="polite" style="margin-top:8px"></div>
-    </form>`;
-  $("#quizForm").onsubmit = (e) => { e.preventDefault(); gradeSafetyQuiz(items); };
-}
-function gradeSafetyQuiz(items) {
-  const result = $("#quizResult"), unanswered = items.filter(it => !document.querySelector(`input[name="${CSS.escape(it.id)}"]:checked`));
-  if (unanswered.length) { result.innerHTML = `<span class="pill warn">${i18n("ยังตอบไม่ครบ (เหลือ")} ${unanswered.length} ${i18n("ข้อ)")}</span>`; return; }
-  const correct = items.filter(it => Number(document.querySelector(`input[name="${CSS.escape(it.id)}"]:checked`).value) === Number(it.ans)).length;
-  if (correct === items.length) {
-    try { localStorage.setItem("adc_safety_quiz_passed", "true"); } catch {}
-    result.innerHTML = `<span class="pill ok">${i18n("ตอบถูก")} ${correct}/${items.length} ${i18n("· ผ่านแบบทดสอบแล้ว")}</span>`;
-    toolsKpi("kpiQuiz", i18n("ผ่านแล้ว"), "ok");
-  } else {
-    result.innerHTML = `<span class="pill bad">${i18n("ตอบถูก")} ${correct}/${items.length} ${i18n("· ยังไม่ผ่าน ลองตอบใหม่ทั้งหมด")}</span>`;
-    toolsKpi("kpiQuiz", i18n("ยังไม่ผ่าน"), "warn");
-  }
 }
 async function runRevertPlan() {
   const out = $("#revertOut"), repo = $("#revertRepo").value.trim(), sha = $("#revertSha").value.trim(), pr = Number($("#revertPr").value);
@@ -4011,6 +4025,105 @@ if ($("#addAllAutoCapableBtn")) $("#addAllAutoCapableBtn").onclick = async () =>
   btn.disabled = false; btn.textContent = i18n("⚡ เพิ่มทุก repo ที่พร้อม");
   await refresh(); await loadScannedRepos();
 };
+
+// ---------- Simple Mode & Guided Tutorial
+function getUiMode() {
+  try { return localStorage.getItem("adc_ui_mode") === "advanced" ? "advanced" : "simple"; }
+  catch { return "simple"; }
+}
+function setUiMode(mode, persist = true) {
+  const next = mode === "advanced" ? "advanced" : "simple";
+  const isSimple = next === "simple";
+  document.body.classList.toggle("simple-mode", isSimple);
+  if (persist) { try { localStorage.setItem("adc_ui_mode", next); } catch {} }
+  const lbl = $("#modeToggleLabel");
+  if (lbl) lbl.textContent = isSimple ? i18n("โหมดง่าย") : i18n("โหมดขั้นสูง");
+  const sel = $("#uiModeSel");
+  if (sel && sel.value !== next) sel.value = next;
+  if (isSimple) {
+    const activePanel = document.querySelector(".main-panel.active");
+    if (activePanel && (activePanel.id === "main-work" || activePanel.id === "main-studio")) {
+      go("overview", null);
+    }
+  }
+}
+if ($("#modeToggleBtn")) {
+  $("#modeToggleBtn").onclick = () => setUiMode(getUiMode() === "simple" ? "advanced" : "simple");
+}
+if ($("#uiModeSel")) {
+  $("#uiModeSel").onchange = (e) => setUiMode(e.target.value);
+}
+setUiMode(getUiMode(), false);
+
+const TOUR_STEPS = [
+  { target: "#agentRepoSelect", title: "เลือกคลังโค้ดและดูสถานะ", body: "เลือก repository ที่ต้องการให้ AI ช่วยทำงาน และดูสถานะการทำงานปัจจุบันได้ที่นี่" },
+  { target: "#newTaskBtn", title: "สั่งงานใหม่", body: "กดปุ่มนี้เพื่อสร้างงาน (issue) ใหม่ให้เอเจนต์เริ่มพัฒนาหรือแก้บั๊ก" },
+  { target: "#runOnce", title: "รันงานและรอตัดสินใจ", body: "กด ทำ 1 งาน เพื่อเริ่มรัน แล้วตรวจสอบผลลัพธ์หรืออนุมัติ PR ในกล่อง รอคุณตัดสินใจ" },
+  { target: "#modeToggleBtn", title: "สลับ Simple / Advanced Mode", body: "โหมดง่ายเหมาะสำหรับเริ่มต้น หากต้องการดู งาน & บันทึก สตูดิโอ หรือรันต่อเนื่อง ให้กดสลับเป็น Advanced Mode ได้ที่นี่" }
+];
+let tourIdx = -1;
+function closeGuidedTour(markDone = true) {
+  tourIdx = -1;
+  if (markDone) { try { localStorage.setItem("adc_tutorial_done", "true"); } catch {} }
+  document.querySelectorAll(".adc-tour-backdrop,.adc-tour-spotlight,.adc-tour-card").forEach(el => el.remove());
+  document.removeEventListener("keydown", onTourKeyDown);
+}
+function onTourKeyDown(e) {
+  if (e.key === "Escape") closeGuidedTour(true);
+}
+function renderTourStep() {
+  document.querySelectorAll(".adc-tour-backdrop,.adc-tour-spotlight,.adc-tour-card").forEach(el => el.remove());
+  if (tourIdx < 0 || tourIdx >= TOUR_STEPS.length) { closeGuidedTour(true); return; }
+  const step = TOUR_STEPS[tourIdx];
+  const targetEl = document.querySelector(step.target);
+  if (!targetEl) { tourIdx++; renderTourStep(); return; }
+  targetEl.scrollIntoView({ block: "nearest", inline: "nearest" });
+  const r = targetEl.getBoundingClientRect();
+  const pad = 6;
+  const backdrop = document.createElement("div");
+  backdrop.className = "adc-tour-backdrop";
+  backdrop.onclick = () => closeGuidedTour(true);
+  const spot = document.createElement("div");
+  spot.className = "adc-tour-spotlight";
+  spot.style.top = Math.max(4, r.top - pad) + "px";
+  spot.style.left = Math.max(4, r.left - pad) + "px";
+  spot.style.width = (r.width + pad * 2) + "px";
+  spot.style.height = (r.height + pad * 2) + "px";
+  const card = document.createElement("div");
+  card.className = "adc-tour-card";
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-modal", "true");
+  const isLast = tourIdx === TOUR_STEPS.length - 1;
+  card.innerHTML = `
+    <h3>${esc(i18n(step.title))}</h3>
+    <p>${esc(i18n(step.body))}</p>
+    <div class="adc-tour-foot">
+      <span class="adc-tour-step">${tourIdx + 1} / ${TOUR_STEPS.length}</span>
+      <button type="button" class="btn btn-sm ghost" id="tourSkipBtn">${esc(i18n("ข้าม"))}</button>
+      ${tourIdx > 0 ? `<button type="button" class="btn btn-sm" id="tourPrevBtn">${esc(i18n("ย้อนกลับ"))}</button>` : ""}
+      <button type="button" class="btn btn-sm primary" id="tourNextBtn">${esc(i18n(isLast ? "เสร็จสิ้น" : "ถัดไป"))}</button>
+    </div>`;
+  document.body.append(backdrop, spot, card);
+  const cardRect = card.getBoundingClientRect();
+  const top = (r.bottom + 14 + cardRect.height <= window.innerHeight) ? (r.bottom + 14) : Math.max(12, r.top - cardRect.height - 14);
+  const left = Math.min(Math.max(12, r.left), Math.max(12, window.innerWidth - cardRect.width - 12));
+  card.style.top = top + "px";
+  card.style.left = left + "px";
+  $("#tourSkipBtn").onclick = () => closeGuidedTour(true);
+  if ($("#tourPrevBtn")) $("#tourPrevBtn").onclick = () => { tourIdx--; renderTourStep(); };
+  $("#tourNextBtn").onclick = () => { if (isLast) closeGuidedTour(true); else { tourIdx++; renderTourStep(); } };
+}
+function startGuidedTour(force = false) {
+  if (!force) {
+    try { if (localStorage.getItem("adc_tutorial_done") === "true") return; } catch {}
+  }
+  go("overview", null);
+  tourIdx = 0;
+  document.addEventListener("keydown", onTourKeyDown);
+  renderTourStep();
+}
+if ($("#tourBtn")) $("#tourBtn").onclick = () => startGuidedTour(true);
+window.addEventListener("load", () => { setTimeout(() => startGuidedTour(false), 350); }, { once: true });
 </script>
 </body>
 </html>

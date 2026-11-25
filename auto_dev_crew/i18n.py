@@ -12,7 +12,7 @@ from pathlib import Path
 from auto_dev_crew import yaml_io
 
 SUPPORTED: tuple[str, ...] = ("th", "en")
-DEFAULT = "th"
+DEFAULT = "en"
 
 ROOT = Path(__file__).resolve().parent.parent
 LOCALES_DIR = Path(__file__).resolve().parent / "locales"
@@ -54,7 +54,7 @@ def t(key: str, lang: str | None = None, **params: object) -> str:
     code = normalize_lang(lang) if lang is not None else current_lang()
     text = load_locale(code).get(key)
     if text is None:
-        text = load_locale(DEFAULT).get(key)
+        text = load_locale("th").get(key)
     if text is None:
         text = key  # ไม่มีคำแปล: ใช้ข้อความต้นฉบับ (ไทย) แล้วยังต้องแทนตัวแปรด้วย
     return _PARAM.sub(lambda m: str(params[m.group(1)]) if m.group(1) in params else m.group(0), text)

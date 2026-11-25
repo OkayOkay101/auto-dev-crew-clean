@@ -26,6 +26,13 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - Watch out (2026-11-18, after rename): README pair passes check_bilingual. Pairs are `NAME_EN.md` / `NAME_TH.md` in `docs/`; anchors differ by language, so per-page check_bilingual flags anchor text (checker limitation). Not committed yet.
 
 ## Done (verified)
+- **2026-11-25 English Default, Remove Security Quiz, Simple Mode & Guided Tutorial:**
+  - เปลี่ยนภาษาเริ่มต้นเป็น English (`auto_dev_crew/i18n.py` `DEFAULT = "en"`, `auto_dev_crew/static/i18n.js`, `auto_dev_crew/static/index_sidebar.html`) พร้อมคงตัวเลือกสลับ EN/TH และเพิ่มคำแปลใหม่ 20 คีย์ใน `auto_dev_crew/locales/en.json`
+  - ลบ Security Quiz (`#quizBox`, `#toolSafety`, `#kpiQuiz`, `renderSafetyQuiz`, `gradeSafetyQuiz`, `QUIZ_ITEMS`, `hasPassedSafetyQuiz`, `guardHighAutonomySelection`, `adc_safety_quiz_passed`) ออกทั้งหมด โดยคง 1-click `confirm()` เฉพาะตอนเปลี่ยน `merge_mode` เป็น `merge-all`
+  - เพิ่ม **Simple Mode** (ค่าเริ่มต้น `adc_ui_mode = "simple"`): ปุ่มสลับ `#modeToggleBtn` บน Topbar + `#uiModeSel` ใน Settings, ซ่อนแท็บ `Work & Logs` / `Studio` และตัวเลือกขั้นสูงบน Overview
+  - เพิ่ม **4-Step Spotlight Guided Tutorial**: เปิดอัตโนมัติครั้งแรก (`adc_tutorial_done`) และกดเปิดซ้ำได้ผ่าน `#tourBtn` บน Topbar, รองรับ `Back`/`Next`/`Skip`/`Esc` และ `prefers-reduced-motion`
+  - Spec: `docs/superpowers/specs/2026-11-25-english-simple-mode-tutorial-design.md` · Plan: `docs/superpowers/plans/2026-11-25-english-simple-mode-tutorial.md`
+  - ตรวจแล้ว: `python -m pytest -q tests/test_i18n_core.py tests/test_i18n_routes.py tests/test_i18n_js_loader.py tests/test_i18n_english_coverage.py tests/test_gui_i18n_wiring.py tests/test_gui_sidebar.py tests/test_gui_layout.py tests/test_gui_security.py` -> **88 passed**
 - **2026-11-25 UI/UX Redesign (Modern SaaS / Linear-style, 4-Menu Action-First):**
   - รื้อโครงสร้าง `auto_dev_crew/static/index_sidebar.html` ใหม่เป็นสไตล์ Modern SaaS / Linear (Light, Dark, Auto + Responsive Mobile Bottom Bar), ยุบเหลือ 4 เมนูหลัก (`ภาพรวม`, `งาน & บันทึก`, `สตูดิโอ`, `ตั้งค่า`), คลีน Top Bar (ปุ่ม `+ สั่งงาน` ปุ่มเดียว), Action Inbox กดจัดการ/ดู Diff ได้ทันที, แถบ 3 ช่องทำงานแถวเดียว, รายการคลังโค้ดแบบ Compact กดขยายได้, สตูดิโอแบ่ง 2 คอลัมน์, และหน้าตั้งค่าแบบ Sub-tabs พร้อมเมนู `⋯` ในแถวโมเดล BYOP/Provider และ Tooltip `(?)` แทนคำอธิบายยาว
   - ซิงค์คำแปลภาษาอังกฤษใน `auto_dev_crew/locales/en.json` (+130 คีย์) และอัปเดต `tests/test_gui_sidebar.py`
