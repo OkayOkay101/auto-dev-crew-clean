@@ -13,45 +13,39 @@ The GUI is a local web server built with Python's `http.server`. It uses no exte
 - **Confirmation:** buttons that scan or create issues ask for confirmation first (`confirm()`). Do not bypass this with JavaScript.
 - **Limits:** there is no password login in the GUI any more; the login system was removed. Remote access requires an SSH tunnel or another method set up by the administrator.
 
-## 2. The five left-menu pages
+## 2. The four main pages
+
+The left navigation rail collapses and expands on desktop (and turns into a bottom bar on mobile). The top bar shows the page title, active slot count, a single **+ New task** button, and the theme switcher (Auto / Light / Dark).
 
 ### 2.1 Overview
-- **▶ Run one job:** do one piece of work, then stop automatically.
-- **⟳ Run continuously:** start `--loop` mode; keep working until you press stop or work runs out.
+- **▶ Run 1 task:** do one piece of work, then stop automatically.
+- **⟳ Run loop:** start `--loop` mode; keep working until you press stop or work runs out.
 - **■ Stop:** cancel the job in progress. You are asked to confirm.
-- **🔄 Restart:** under "More". Cancels the job in progress and starts a new round with the same settings. Open PRs are not closed.
-- **Slot cards (3 slots):** show each slot's status; you can assign a persona or repository to a slot.
-- **Repository cards:** show each repository with its status, enabled state, and merge level.
-- **The `merge:` badge** in the top-right shows the current `merge_mode`.
+- **🔄 Restart:** icon button next to Stop. Cancels the job in progress and starts a new round with the same settings. Open PRs are not closed.
+- **Action Inbox (Needs attention):** lists PRs awaiting review and failed issues with direct **View diff** or **Manage →** buttons.
+- **3 work slots:** single-row strip showing slots 1–3, a run-mode selector dropdown, and a **Slots 2–3** toggle to assign a persona or repository.
+- **Managed repositories:** compact expandable rows; expand a row to view its issue / PR tables and per-repo settings.
 
 Before restarting or stopping, check whether slots are idle. If a job is running, it will be cancelled.
 
-### 2.2 Jobs
-- **Live log:** the runner's log, updated in real time.
-- **Job history:** past jobs. You can open the diff of each one.
+### 2.2 Work & Logs
+- **Queue & Attention:** unified filterable table of failed issues, queued/running tasks, and open PRs.
+- **Live log:** the runner's log, updated in real time with slot 1–3 filters.
+- **Task history:** past jobs. You can open the diff of each one.
 
 ### 2.3 Studio
-- Ask the AI to change code in a selected repository.
-- Review the resulting diff.
+- Two-column workspace: the left column handles AI edit prompts, quick checks (tests, syntax, security), and explorer tabs (**Files / Issues / Scan / Feature Plan**); the right column shows **Diff / File / Console** output.
 - Find `[AI-TODO]` tags and create issues from them.
 - Run a deep scan. See [architecture.md](architecture.md#10-deep-scan).
 - Feature plans (`ai-plan`). See [github-workflow.md](github-workflow.md#4-feature-plans-ai-plan).
 
-### 2.4 Keys (AI keys)
-- View and add provider keys.
-- Assign roles: `coder`, `judge`, `scan`.
-- Set the failover order of engines.
-- See today's usage per engine (from `state/usage.jsonl`).
-
-Details: [providers-and-keys.md](providers-and-keys.md).
-
-### 2.5 Settings
-- Merge mode (`review-all`, `small-only`, `merge-all`).
-- CI checks (`allow_no_ci`).
-- Quality gate (judge) on or off.
-- UI language (`th` / `en`).
-- **Glossary:** explains the system's terms.
-- **Shut down the server.**
+### 2.4 Settings
+Organized into five sub-tabs:
+- **General & Merge:** UI language (`th` / `en`), merge mode (`review-all`, `small-only`, `merge-all`), CI checks (`allow_no_ci`), AI quality check (`judge`), and **Shut down server**.
+- **AI Keys & Models:** manage Pollinations (BYOP), provider keys, `coder` / `judge` / `scan` roles, and the `⋯` overflow menu (test, promote, delete). Details: [providers-and-keys.md](providers-and-keys.md).
+- **Failover:** set the failover order of engines.
+- **AI Usage:** today's call history and per-key outcomes (from `state/usage.jsonl`).
+- **System Tools:** Doctor, Playground, MCP Hub, Safety Quiz, Safe Revert Plan, and Terminology glossary.
 
 ## 3. Terms you will see
 

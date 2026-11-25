@@ -26,6 +26,7 @@ Auto Dev Crew: local GUI (`auto_dev_crew/gui.py`) + runner. Thai and English UI 
 - **2026-11-25 UI/UX Redesign (Modern SaaS / Linear-style, 4-Menu Action-First):**
   - รื้อโครงสร้าง `auto_dev_crew/static/index_sidebar.html` ใหม่เป็นสไตล์ Modern SaaS / Linear (Light, Dark, Auto + Responsive Mobile Bottom Bar), ยุบเหลือ 4 เมนูหลัก (`ภาพรวม`, `งาน & บันทึก`, `สตูดิโอ`, `ตั้งค่า`), คลีน Top Bar (ปุ่ม `+ สั่งงาน` ปุ่มเดียว), Action Inbox กดจัดการ/ดู Diff ได้ทันที, แถบ 3 ช่องทำงานแถวเดียว, รายการคลังโค้ดแบบ Compact กดขยายได้, สตูดิโอแบ่ง 2 คอลัมน์, และหน้าตั้งค่าแบบ Sub-tabs พร้อมเมนู `⋯` ในแถวโมเดล BYOP/Provider และ Tooltip `(?)` แทนคำอธิบายยาว
   - ซิงค์คำแปลภาษาอังกฤษใน `auto_dev_crew/locales/en.json` (+130 คีย์) และอัปเดต `tests/test_gui_sidebar.py`
+  - อัปเดตเอกสาร `docs/gui.md`, `docs/en/gui.md` และภาพหน้าจอ `docs/images/gui_main.png` ให้ตรงกับ UI 4 เมนูใหม่
   - Spec: `docs/superpowers/specs/2026-11-25-ui-redesign-design.md` · Plan: `docs/superpowers/plans/2026-11-25-ui-redesign.md`
 - **2026-11-25 UI Remake (Google Material 3 + Google Fonts):**
   - รีเมค `auto_dev_crew/static/index_sidebar.html`, `auto_dev_crew/public/index.html`, `auto_dev_crew/static/index.html`, และ `auto_dev_crew/static/mission_control.js` ด้วย Google Material 3 Tokens (`--md-sys-color-*`, Google Blue `#1a73e8` / `#a8c7fa`), Google Fonts (`Plus Jakarta Sans` + `Noto Sans Thai` + `JetBrains Mono`), `Material Symbols Rounded`, Collapsible Navigation Rail (80px ↔ 256px), และสวิตช์ธีม Auto / Light / Dark
