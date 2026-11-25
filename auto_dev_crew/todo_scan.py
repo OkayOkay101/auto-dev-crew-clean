@@ -1,6 +1,5 @@
 """สแกนแท็ก [AI-TODO] ในโค้ดแล้วแปลงเป็น issue ติดป้าย ai-task (ไม่สแกน TODO/FIXME ทั่วไป กัน issue ท่วม)."""
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import hashlib
 import json
@@ -173,9 +172,9 @@ def run_scan(repo: str, cfg: dict, create: bool = False) -> dict:
                              encoding="utf-8", errors="replace", timeout=60,
                              env={**os.environ, "GIT_TERMINAL_PROMPT": "0"})
         if res.returncode != 0:
-            warnings.append(redact_secrets(_i18n.t("git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {p0}", p0=(res.stderr or res.stdout).strip()[:300])))
+            warnings.append(redact_secrets(f"git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {(res.stderr or res.stdout).strip()[:300]}"))
     except Exception as exc:
-        warnings.append(redact_secrets(_i18n.t("git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {p0}", p0=exc)))
+        warnings.append(redact_secrets(f"git pull ล้มเหลว (สแกนจากข้อมูลเดิม): {exc}"))
     items = scan_todos(root)
     result: dict = {"ok": True, "repo": repo, "items": [i.to_dict() for i in items], "warnings": warnings}
     if create:

@@ -36,13 +36,13 @@ Before restarting or stopping, check whether slots are idle. If a job is running
 ### 2.3 Studio
 - Two-column workspace: the left column handles AI edit prompts, quick checks (tests, syntax, security), and explorer tabs (**Files / Issues / Scan / Feature Plan**); the right column shows **Diff / File / Console** output.
 - Find `[AI-TODO]` tags and create issues from them.
-- Run a deep scan. See [architecture.md](architecture.md#10-deep-scan).
-- Feature plans (`ai-plan`). See [github-workflow.md](github-workflow.md#4-feature-plans-ai-plan).
+- Run a deep scan. See [architecture.md](architecture_EN.md#10-deep-scan).
+- Feature plans (`ai-plan`). See [github-workflow.md](github-workflow_EN.md#4-feature-plans-ai-plan).
 
 ### 2.4 Settings
 Organized into five sub-tabs:
 - **General & Merge:** UI language (`th` / `en`), merge mode (`review-all`, `small-only`, `merge-all`), CI checks (`allow_no_ci`), AI quality check (`judge`), and **Shut down server**.
-- **AI Keys & Models:** manage Pollinations (BYOP), provider keys, `coder` / `judge` / `scan` roles, and the `⋯` overflow menu (test, promote, delete). Details: [providers-and-keys.md](providers-and-keys.md).
+- **AI Keys & Models:** manage Pollinations (BYOP), provider keys, `coder` / `judge` / `scan` roles, and the `⋯` overflow menu (test, promote, delete). Details: [providers-and-keys.md](providers-and-keys_EN.md).
 - **Failover:** set the failover order of engines.
 - **AI Usage:** today's call history and per-key outcomes (from `state/usage.jsonl`).
 - **System Tools:** Doctor, Playground, MCP Hub, Safety Quiz, Safe Revert Plan, and Terminology glossary.
@@ -53,7 +53,7 @@ Organized into five sub-tabs:
 |---|---|
 | Slot | One worker. Up to three can run in parallel. |
 | Judge | The AI that scores code before a PR. Needs a key with the judge role. |
-| Gates 1–4 | Checks before a PR is opened. See [architecture.md](architecture.md#6-quality-gates). |
+| Gates 1–4 | Checks before a PR is opened. See [architecture.md](architecture_EN.md#6-quality-gates). |
 | Key role | `coder` (writes the main code), `judge` (scores), `scan` (looks for problems). |
 | F6 failover | Move to the next provider when a quota runs out. |
 | `ai-task` | An issue the agent will pick up. |
@@ -75,8 +75,8 @@ If you run `python -m auto_dev_crew --loop` from a terminal, the GUI sees that r
 - `python scripts/gui_smoke.py`: read-only check that the page loads with no JavaScript errors. The GUI must be running and slots must be idle.
 - `python scripts/gui_e2e.py --repo OWNER/NAME`: presses the run button in a dry run. Use a test repository only, and run only when slots are idle.
 
-Details: [tools-and-scripts.md](tools-and-scripts.md).
+Details: [tools-and-scripts.md](tools-and-scripts_EN.md).
 
 ## 7. Known limitations
 
-See [troubleshooting.md](troubleshooting.md#2-known-limitations).
+See [troubleshooting.md](troubleshooting_EN.md#2-known-limitations).

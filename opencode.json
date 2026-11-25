@@ -6,14 +6,52 @@
   "autoupdate": false,
   "provider": {
     "pollinations": {
-      "name": "Pollinations",
+      "name": "Pollinations AI",
       "options": {
         "baseURL": "https://gen.pollinations.ai/v1",
         "apiKey": "{env:POLLINATIONS_API_KEY_1}"
       },
       "models": {
+        "deepseek/deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash"
+        },
+        "deepseek/deepseek-v4.1-flash-1017": {
+          "name": "DeepSeek V4.1 Flash 1017"
+        },
         "openai/gpt-6-luna": {
-          "name": "openai/gpt-6-luna"
+          "name": "GPT-6 Luna"
+        },
+        "openai/gpt-oss-20b": {
+          "name": "GPT-OSS 20B"
+        },
+        "stealth/glyph-cluster": {
+          "name": "Glyph Cluster"
+        }
+      }
+    }
+  },
+  "providers": {
+    "pollinations": {
+      "name": "Pollinations AI",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "env": [
+        "POLLINATIONS_API_KEY_1"
+      ],
+      "settings": {
+        "baseURL": "https://gen.pollinations.ai/v1"
+      },
+      "models": {
+        "deepseek/deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash"
+        },
+        "deepseek/deepseek-v4.1-flash-1017": {
+          "name": "DeepSeek V4.1 Flash 1017"
+        },
+        "openai/gpt-6-luna": {
+          "name": "GPT-6 Luna"
+        },
+        "openai/gpt-oss-20b": {
+          "name": "GPT-OSS 20B"
         }
       }
     }

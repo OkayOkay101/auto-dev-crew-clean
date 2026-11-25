@@ -71,7 +71,7 @@ How it works:
 ```bash
 python -m pytest -q -p no:cacheprovider
 ```
-Latest recorded result (2026-11-18): **1442 passed, 6 skipped** (see `STATE.md`).
+Latest recorded result (2026-11-18): **1401 passed, 6 skipped** (see `STATE.md`).
 
 The `tests/` folder holds about 170 entries, including test files and some support files.
 

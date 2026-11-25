@@ -4,7 +4,7 @@
 
 **How values are read:** if a key is missing from the file, the code uses the default listed in the "Code default" column. Some keys have a different value in the file than in the code. The file value always wins.
 
-**Editing:** you can edit the file by hand, or use the GUI, which writes the values for you. After a manual edit, restart the agent so the change takes effect for sure (see [gui.md](gui.md)).
+**Editing:** you can edit the file by hand, or use the GUI, which writes the values for you. After a manual edit, restart the agent so the change takes effect for sure (see [gui.md](gui_EN.md)).
 
 ---
 
@@ -13,7 +13,7 @@
 | Key | Type | Value in file | Code default | Meaning |
 |---|---|---|---|---|
 | `owner` | string | `example-owner` | (none) | GitHub account of the owner. Issues are picked up only if their author matches this value (case-insensitive). If unset, the agent picks up nothing. |
-| `merge_mode` | string | `review-all` | `review-all` | Global merge policy: `review-all`, `small-only`, or `merge-all`. See [architecture.md](architecture.md#8-merge-decisions). |
+| `merge_mode` | string | `review-all` | `review-all` | Global merge policy: `review-all`, `small-only`, or `merge-all`. See [architecture.md](architecture_EN.md#8-merge-decisions). |
 | `max_fix_attempts` | integer | `3` | `2` | Maximum repair rounds when tests fail or the coder changes nothing. The file value (3) applies. |
 | `engine_timeout_cooldown_minutes` | number | `20` | `20` | After an engine times out, it is paused for this many minutes. |
 | `ui_language` | string | (not in file) | `th` | UI and backend message language: `th` or `en`. Any other or unreadable value falls back to `th`. Set from the **Settings** page or `POST /api/settings/language`. |
@@ -102,7 +102,7 @@ The result is a `fast` or `heavy` path. `routing` uses that path to keep separat
 
 Currently only `opencode-pollinations` is enabled. The others are set to `enabled: false`.
 
-Details on keys and roles: [providers-and-keys.md](providers-and-keys.md).
+Details on keys and roles: [providers-and-keys.md](providers-and-keys_EN.md).
 
 ---
 
@@ -116,7 +116,7 @@ Details on keys and roles: [providers-and-keys.md](providers-and-keys.md).
 | `failed` | `ai-failed` | Added when the job fails or does not pass evaluation. |
 | `pr` | `ai-generated` | Added to PRs the agent opens. |
 
-The life cycle of these labels is described in [github-workflow.md](github-workflow.md).
+The life cycle of these labels is described in [github-workflow.md](github-workflow_EN.md).
 
 ---
 
@@ -154,7 +154,7 @@ Each entry in the list has these keys:
 | `scanners` | Map from persona name to the list of scan commands run for that persona in this repository. |
 | `ci` | Per-repository override of `ci` settings, such as `auto_bootstrap_ci`. |
 | `enabled` | `false` = skip this repository. |
-| `merge_level` | (not in file) Per-repository merge level, set from a feature plan in the GUI: 1 = human reviews, 2 = auto-merge once CI passes and no risky files, 3 = auto-merge once CI passes. If unset, the global `merge_mode` applies (see [architecture](architecture.md#8-merge-decisions)). |
+| `merge_level` | (not in file) Per-repository merge level, set from a feature plan in the GUI: 1 = human reviews, 2 = auto-merge once CI passes and no risky files, 3 = auto-merge once CI passes. If unset, the global `merge_mode` applies (see [architecture](architecture_EN.md#8-merge-decisions)). |
 
 Repository currently in the file: `OkayOkay101/cyberpunk-pomodoro` (base `main`, test `node test-runner.js`).
 

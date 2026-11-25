@@ -69,7 +69,7 @@ Flow:
 3. The system creates an `ai-task` issue for each step of the plan.
 4. From there, the normal issue flow applies.
 
-Proposing and approving go through `/api/feature-gen/propose` and `/api/feature-gen/approve` (see [api.md](api.md)).
+Proposing and approving go through `/api/feature-gen/propose` and `/api/feature-gen/approve` (see [api.md](api_EN.md)).
 
 The merge level for a plan can be set when it is created (per-repository `merge_level`).
 
@@ -80,7 +80,7 @@ The merge level for a plan can be set when it is created (per-repository `merge_
 - Branch names: `ai/issue-<number>-<timestamp>` for issues, or `ai/<persona>-<timestamp>` for personas.
 - Label: `ai-generated`.
 - Titles carry an icon that depends on the job type (`ICONS` in the code).
-- The body is built by `pr_body.py`.
+- The body is built by `pr_body.py` (the full list of what it includes has not been traced line by line).
 
 Reviewers should check:
 - Whether the diff matches the issue.
@@ -92,7 +92,7 @@ Reviewers should check:
 ## 6. Permissions and tokens
 
 - The GitHub account used by `gh` needs write access to the target repository, to push branches, open PRs, create labels, and comment.
-- The system does not force-push, according to the rules in this documentation. (The enforced limits are described in [troubleshooting.md](troubleshooting.md#2-known-limitations).)
+- The system does not force-push, according to the rules in this documentation. (The enforced limits are described in [troubleshooting.md](troubleshooting_EN.md#2-known-limitations).)
 - Never paste a token into an issue or comment. The system hides known token formats (`redact.py`) before showing or logging text, but cannot guarantee that every format is caught.
 
 ---

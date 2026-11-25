@@ -3,9 +3,9 @@
 There are two entry points from a terminal:
 
 1. **Runner:** `python -m auto_dev_crew` (the main worker that reads the queue and opens PRs)
-2. **GUI:** `python -m auto_dev_crew.gui` (the web control panel, see [gui.md](gui.md))
+2. **GUI:** `python -m auto_dev_crew.gui` (the web control panel, see [gui.md](gui_EN.md))
 
-There are also helper tools: `python -m auto_dev_crew.mcp_server` and the scripts in `scripts/` (see [tools-and-scripts.md](tools-and-scripts.md)).
+There are also helper tools: `python -m auto_dev_crew.mcp_server` and the scripts in `scripts/` (see [tools-and-scripts.md](tools-and-scripts_EN.md)).
 
 Run every command from the project root, because `config.yaml` and `.env` are resolved from there.
 
@@ -86,7 +86,7 @@ python -m auto_dev_crew --scan-todos OkayOkay101/cyberpunk-pomodoro
 
 Prints each `[AI-TODO]` hit as `path:line text` and exits. It never creates issues.
 
-To create issues from the results, use the **Studio** page in the GUI, or schedule scans with `todo_scan.schedule_minutes` (see [configuration.md](configuration.md)).
+To create issues from the results, use the **Studio** page in the GUI, or schedule scans with `todo_scan.schedule_minutes` (see [configuration.md](configuration_EN.md)).
 
 ---
 

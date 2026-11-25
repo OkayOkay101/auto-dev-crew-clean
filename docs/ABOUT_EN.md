@@ -1,6 +1,6 @@
 # About Auto Dev Crew
 
-This document explains what the program does, how it works, where AI is used (both to build it and at runtime), and which parts of the GUI are still incomplete. Installation steps and commands are in the [README](../../README.md). Requirements are in [REQUIREMENTS.md](../../REQUIREMENTS.md), which is an early draft (see [the index](README.md)).
+This document explains what the program does, how it works, where AI is used (both to build it and at runtime), and which parts of the GUI are still incomplete. Installation steps and commands are in the [README](../README.md). Requirements are in [REQUIREMENTS.md](../REQUIREMENTS.md), which is an early draft (see [the index](README_EN.md)).
 
 > Status: **experimental project, not production-ready.** The repository is private.
 
@@ -56,16 +56,16 @@ GitHub issue (ai-task)  or  deep-scan / persona
 
 - **Slots:** up to three jobs run at the same time. Slot 1 handles issues you request. Slots 2 and 3 handle personas or extra issues.
 - **F6 failover:** when one provider's quota is used up, the agent moves to the next engine in the configured order.
-- **Quality gates 1–4:** gate 1, the judge confirms a bug is real before a fix (only when the issue names an existing file); gate 2, the judge reviews the whole file after the fix; gate 3, the change must touch a file the issue names (applies to every issue run); gate 4, deep-scan re-checks findings before an automatic issue is created. See [architecture](architecture.md#6-quality-gates) for the code details and [troubleshooting](troubleshooting.md) row 16 for the GUI wording mismatch.
+- **Quality gates 1–4:** gate 1, the judge confirms a bug is real before a fix (only when the issue names an existing file); gate 2, the judge reviews the whole file after the fix; gate 3, the change must touch a file the issue names (applies to every issue run); gate 4, deep-scan re-checks findings before an automatic issue is created. See [architecture](architecture_EN.md#6-quality-gates) for the code details and [troubleshooting](troubleshooting_EN.md) row 16 for the GUI wording mismatch.
 - **ai-plan:** a proposed feature waiting for approval. When approved, the system creates `ai-task` issues for it.
 - **ai-pause:** add this label to any issue to stop new work in that repository.
 - **Memory:** `state/history.json` records what was already proposed and how it turned out. It is not committed.
 
 ### Boundaries and safety
 
-- The GUI listens only on `127.0.0.1`. Actions that change data (POST) need a token embedded in the page.
+- The GUI listens only on `127.0.0.1`. Actions that change data (POST) need a token embedded in the page, and some read endpoints that read repo data also need it.
 - API keys live in `.env`, which is git-ignored.
-- Autonomous-mode hooks for Claude Code block `git push`, `gh pr merge`, `gh release`, `deploy`, `git reset --hard`, `git clean -f`, recursive deletes (`rm -r…`, `Remove-Item -Recurse`, `del /s`), and deletion of the autonomous flag file. They do **not** single out force-push.
+- The rules against force-push and direct pushes to `main` are written in this documentation. The guard script for autonomous mode (`scripts/autonomous_guard_hook.py`) blocks `git push`, `gh pr merge`, `gh release`, `deploy`, `git reset --hard`, `git clean -f`, recursive deletes (`rm -r…`, `Remove-Item -Recurse`, `del /s`), and deletion of the autonomous flag file. They do **not** single out force-push.
 - Code written by the agent must pass tests, quality gates, and CI before merging. It has **not** undergone a professional security audit.
 
 ---
@@ -76,7 +76,7 @@ GitHub issue (ai-task)  or  deep-scan / persona
 
 - Many parts of the project were done together with AI: the GUI translation, removing the password login, and fixing a flaky test. Progress is recorded in `STATE.md` and `docs/superpowers/`.
 - The developer set the goals, made architecture decisions, and checked the results.
-- The most recent recorded test run (2026-11-18) was `pytest`: **1442 passed, 6 skipped**.
+- The most recent recorded test run (2026-11-18) was `pytest`: **1401 passed, 6 skipped**.
 - **AI-written code can still contain bugs or security issues nobody has found yet.** Read and test it before relying on it.
 
 The program **also uses AI while it runs**. It sends code from the target repository to the configured AI providers (Antigravity, OpenCode, NVIDIA Build, Pollinations.ai, Mistral, and others). Code from those repositories therefore leaves your machine and is processed by those providers under their terms.
@@ -104,6 +104,6 @@ If you find a GUI problem that is not in this table, treat it as not yet checked
 ## 5. Before you use it
 
 - **Never commit or share `.env`.** Do not print key values into logs or chat.
-- `config.yaml` holds owner-specific settings and should not be committed to a public repository. It is no longer tracked by git (removed in `6d9e186`).
+- `config.yaml` holds owner-specific settings and and the README says it should not be committed. It is no longer tracked by git (removed in `6d9e186`).
 - Automatic merging (`merge-all`) can put unreviewed code into the main branch. Start with `review-all`.
 - Run `--dry-run` first whenever you change settings or add a new repository.

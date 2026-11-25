@@ -7,7 +7,6 @@
 """
 
 from __future__ import annotations
-from auto_dev_crew import i18n as _i18n
 
 import json
 import re
@@ -29,17 +28,17 @@ _ENV_REF_RE = re.compile(r"^\{env:([A-Za-z_][A-Za-z0-9_]*)\}$")
 def validate_provider_id(pid: str) -> str:
     pid = (pid or "").strip().lower()
     if not _ID_RE.match(pid):
-        raise ValueError(_i18n.t("id ผู้ให้บริการต้องเป็นตัวอักษรภาษาอังกฤษพิมพ์เล็ก ตัวเลข หรือ - ยาว 2–31 ตัว เช่น deepseek"))
+        raise ValueError("id ผู้ให้บริการต้องเป็นตัวอักษรภาษาอังกฤษพิมพ์เล็ก ตัวเลข หรือ - ยาว 2–31 ตัว เช่น deepseek")
     return pid
 
 
 def validate_base_url(url: str) -> str:
     url = (url or "").strip()
     if not url or any(c.isspace() for c in url):
-        raise ValueError(_i18n.t("URL ต้องไม่ว่างและห้ามมีช่องว่าง"))
+        raise ValueError("URL ต้องไม่ว่างและห้ามมีช่องว่าง")
     parts = urllib.parse.urlsplit(url)
     if parts.scheme != "https" or not parts.netloc:
-        raise ValueError(_i18n.t("URL ต้องขึ้นต้นด้วย https:// และมีชื่อโดเมน"))
+        raise ValueError("URL ต้องขึ้นต้นด้วย https:// และมีชื่อโดเมน")
     return url.rstrip("/")
 
 
@@ -127,22 +126,22 @@ def add_provider(*, pid: str, display_name: str, base_url: str, api_key: str, mo
     api_key = (api_key or "").strip()
     model = (model or "").strip()
     if not api_key:
-        raise ValueError(_i18n.t("ต้องระบุ API Key"))
+        raise ValueError("ต้องระบุ API Key")
     if "/" not in model:
-        raise ValueError(_i18n.t("โมเดลต้องอยู่ในรูป provider/model เช่น deepseek/deepseek-chat"))
+        raise ValueError("โมเดลต้องอยู่ในรูป provider/model เช่น deepseek/deepseek-chat")
     display_name = (display_name or "").strip() or pid
 
     providers = load_providers(providers_path, opencode_path)
     if pid in providers:
-        raise ValueError(_i18n.t("มีผู้ให้บริการ '{p0}' อยู่แล้ว", p0=pid))
+        raise ValueError(f"มีผู้ให้บริการ '{pid}' อยู่แล้ว")
     engine_name = f"opencode-{pid}"
     engine_kw = {"cfg_path": cfg_path} if cfg_path is not None else {}
     if keys.get_engine(engine_name, **engine_kw):
-        raise ValueError(_i18n.t("มี Engine ชื่อ '{p0}' อยู่แล้ว", p0=engine_name))
+        raise ValueError(f"มี Engine ชื่อ '{engine_name}' อยู่แล้ว")
 
     key_var = keys.validate_dotenv_key_name(provider_key_var(pid))
     if keys.load_env_file(env_path).get(key_var):
-        raise ValueError(_i18n.t("มีคีย์ {p0} ใน .env อยู่แล้ว ไม่เขียนทับ", p0=key_var))
+        raise ValueError(f"มีคีย์ {key_var} ใน .env อยู่แล้ว ไม่เขียนทับ")
 
     engine = {
         "name": engine_name, "provider": display_name, "command": "opencode", "model": model,

@@ -36,13 +36,13 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 ### 2.3 สตูดิโอ (Studio)
 - แบ่ง 2 คอลัมน์: ฝั่งซ้ายสำหรับสั่ง AI แก้โค้ดใน repo ที่เลือก, รันเทสต์/ตรวจไวยากรณ์/สแกนความปลอดภัย และสลับแท็บสำรวจ **ไฟล์ / Issue / สแกนหาปัญหา / วางแผนฟีเจอร์** ส่วนฝั่งขวาแสดง **ผลต่างโค้ด (Diff) / ดูไฟล์ / ผลการรัน**
 - หา `[AI-TODO]` และสร้าง issue จากผล
-- สแกนลึก (deep-scan) ดู [architecture.md](architecture.md#10-deep-scan)
-- วางแผนฟีเจอร์ (`ai-plan`) ดู [github-workflow.md](github-workflow.md#4-แผนฟีเจอร์-ai-plan)
+- สแกนลึก (deep-scan) ดู [architecture.md](architecture_TH.md#10-deep-scan)
+- วางแผนฟีเจอร์ (`ai-plan`) ดู [github-workflow.md](github-workflow_TH.md#4-แผนฟีเจอร์-ai-plan)
 
 ### 2.4 ตั้งค่า (Settings)
 แบ่งเป็น 5 แท็บย่อย:
 - **ทั่วไป & Merge:** ภาษาของ UI (`th` / `en`), โหมด merge (`review-all`, `small-only`, `merge-all`), การตรวจ CI (`allow_no_ci`), AI ตรวจคุณภาพ (`judge`) และ **ปิดเซิร์ฟเวอร์**
-- **คีย์ AI & โมเดล:** จัดการ Pollinations (BYOP), คีย์ผู้ให้บริการ, บทบาท `coder` / `judge` / `scan` และเมนู `⋯` สำหรับทดสอบ/ตั้งเป็นหลัก/ลบ ดูรายละเอียดที่ [providers-and-keys.md](providers-and-keys.md)
+- **คีย์ AI & โมเดล:** จัดการ Pollinations (BYOP), คีย์ผู้ให้บริการ, บทบาท `coder` / `judge` / `scan` และเมนู `⋯` สำหรับทดสอบ/ตั้งเป็นหลัก/ลบ ดูรายละเอียดที่ [providers-and-keys.md](providers-and-keys_TH.md)
 - **ลำดับสำรอง:** จัดลำดับ failover ของ engine
 - **ประวัติ AI:** สถิติการเรียกใช้งานและผลแยกตามคีย์ต่อวัน (จาก `state/usage.jsonl`)
 - **เครื่องมือระบบ:** ตรวจสุขภาพ (Doctor), สนามทดลอง (Playground), MCP Hub, แบบทดสอบความปลอดภัย, แผน Revert และคำศัพท์ระบบ
@@ -53,7 +53,7 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 |---|---|
 | ช่อง (slot) | ตัวทำงานหนึ่งตัว ทำงานพร้อมกันได้ 3 ช่อง |
 | judge | AI ที่ให้คะแนนโค้ดก่อนเปิด PR ต้องใช้คีย์บทบาท judge |
-| ด่านตรวจ 1–4 | ขั้นตรวจก่อนเปิด PR ดู [architecture.md](architecture.md#6-ด่านตรวจ) |
+| ด่านตรวจ 1–4 | ขั้นตรวจก่อนเปิด PR ดู [architecture.md](architecture_TH.md#6-ด่านตรวจ) |
 | key role | บทบาทของคีย์: `coder` (เขียนโค้ดหลัก), `judge` (ให้คะแนน), `scan` (สแกนหาปัญหา) |
 | F6 failover | สลับไปผู้ให้บริการตัวถัดไปเมื่อโควตาหมด |
 | ai-task | issue ที่เอเจนต์จะหยิบไปทำ |
@@ -75,8 +75,8 @@ GUI เป็นเว็บเซิร์ฟเวอร์ในเครื�
 - `python scripts/gui_smoke.py`: อ่านอย่างเดียว ตรวจว่าหน้าโหลดได้โดยไม่มี JS error (ต้องเปิด GUI อยู่และช่องว่าง)
 - `python scripts/gui_e2e.py --repo OWNER/NAME`: กดปุ่มทำงานแบบ dry-run จริง ใช้ repo ทดสอบเท่านั้น และรันเมื่อช่องว่าง
 
-รายละเอียดที่ [tools-and-scripts.md](tools-and-scripts.md)
+รายละเอียดที่ [tools-and-scripts.md](tools-and-scripts_TH.md)
 
 ## 7. ข้อจำกัดที่ทราบแล้ว
 
-ดู [troubleshooting.md](troubleshooting.md#2-ข้อจำกัดที่ทราบแล้ว)
+ดู [troubleshooting.md](troubleshooting_TH.md#2-ข้อจำกัดที่ทราบแล้ว)
