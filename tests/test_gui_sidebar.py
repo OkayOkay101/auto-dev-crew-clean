@@ -17,25 +17,31 @@ class TestGuiSidebarVariant(unittest.TestCase):
     def test_nav_tabs_match_main_panels(self):
         nav = re.search(r'<nav class="side"[^>]*>(.*?)</nav>', SIDEBAR, re.S).group(1)
         values = sorted(re.findall(r'data-main="([^"]+)"', nav))
-        self.assertEqual(values, ["keys", "overview", "settings", "studio", "work"])
+        self.assertEqual(values, ["overview", "settings", "studio", "work"])
         for v in values:
             self.assertIn(f'id="main-{v}"', SIDEBAR, v)
 
     def test_required_ids_kept_for_shared_js(self):
-        ids = ["dot", "agentText", "mergeMode", "newTaskBtn", "themeBtn", "pageTitle", "topSlots",
+        ids = ["dot", "agentText", "newTaskBtn", "themeBtn", "pageTitle", "topSlots",
                "bigStatus", "navIssueCount", "sideMerge", "runOnce", "runLoop", "agentRepoSelect",
                "persona", "dryRun", "stopBtn", "restartBtn", "serverToggleBtn", "needsList",
                "needsCount", "stats", "ciToggleBtn", "evalToggleBtn", "mergeModeSel", "repos",
-               "toast", "log", "studioRepoSelect", "historyRows", "taskRepo", "createTask"]
+               "toast", "log", "studioRepoSelect", "historyRows", "taskRepo", "createTask",
+               "workQueueRows", "activeSlotSelect"]
         for id_ in ids:
             self.assertIn(f'id="{id_}"', SIDEBAR, id_)
 
     def test_shell_wrappers_balanced(self):
-        self.assertEqual(SIDEBAR.count('<div class="app">'), 1)
+        self.assertEqual(SIDEBAR.count('<div class="app" id="appShell">'), 1)
         self.assertEqual(SIDEBAR.count('<div class="shell">'), 1)
         # app + shell ต้องปิดหลัง </main> ก่อน dialog
         close_main = SIDEBAR.index("</main>\n</div>\n</div>")
         self.assertLess(close_main, SIDEBAR.index('<dialog id="shutdownDlg"'))
+
+    def test_design_tokens_and_google_fonts(self):
+        for token in ["Plus+Jakarta+Sans", "Noto+Sans+Thai", "JetBrains+Mono", "Material+Symbols+Rounded",
+                      "--md-sys-color-primary", 'id="railToggleBtn"', 'id="themeIcon"']:
+            self.assertIn(token, SIDEBAR, token)
 
     def test_confirm_dialogs_not_removed(self):
         # ข้อกำหนดใน AGENTS.md: GUI ต้องมี confirm() ก่อนสแกน/สร้าง issue
